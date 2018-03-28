@@ -15,7 +15,7 @@ namespace MoviesLib
         #region Properties
 
         private const string RESOLUTION_PATTERN = "[0-9]{3,4}p";
-        private const string QUALITY_PATTERN = @"([HP]DTV|HDCAM|B[rR]Rip|TS|WEB-DL|H[dD]Rip|DVDRip|DVDRiP|DVDRIP|CamRip|W[EB]B[rR]ip|[Bb]lu[Rr]ay|DvDScr|hdtv|[Hh][Dd][Ll]ight)";
+        private const string QUALITY_PATTERN = @"([HP]DTV|HDCAM|B[rR]Rip|TS|WEB-DL|H[dD]Rip|DVDRip|DVDRiP|DVDRIP|CamRip|webrip|W[EB]B[rR]ip|[Bb]lu[Rr]ay|DvDScr|hdtv|[Hh][Dd][Ll]ight)";
         private const string INCONNU = "Inconnu";
 
         private string _languesPattern;
@@ -117,14 +117,22 @@ namespace MoviesLib
         private string GetTitle(string title)
         {
             int indexDoublePoint = title.IndexOf("..");
+            string result;
 
-            string tempTitle = title.Substring(0, indexDoublePoint);
-            string retourTitle = tempTitle.Replace('.', ' ');
+            if (indexDoublePoint > -1)
+            {
+                string tempTitle = title.Substring(0, indexDoublePoint);
+                string retourTitle = tempTitle.Replace('.', ' ');
 
-            // J'enlève tous caractères qui n'est pas alphabétique.
-            // \W tous les caractères qui ne sont pas alphanumérique
-            // ^\s exception sur les espaces.
-            string result = Regex.Replace(retourTitle, @"\W^\s", string.Empty);
+                // J'enlève tous caractères qui n'est pas alphabétique.
+                // \W tous les caractères qui ne sont pas alphanumérique
+                // ^\s exception sur les espaces.
+                result = Regex.Replace(retourTitle, @"\W^\s", string.Empty);
+            }
+            else
+            {
+                result = title;
+            }
 
             return result;
         }
@@ -157,7 +165,7 @@ namespace MoviesLib
             string titleTempMajuscule = title.ToUpper();
             Match matchResult = Regex.Match(titleTempMajuscule, _languesPattern);
 
-            title = RemoveResultRegex(matchResult.Value, title);
+            title = RemoveResultRegex(matchResult.Value, titleTempMajuscule);
 
             return string.IsNullOrEmpty(matchResult.Value)
                 ? INCONNU

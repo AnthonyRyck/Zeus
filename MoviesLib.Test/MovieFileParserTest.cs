@@ -113,7 +113,7 @@ namespace MoviesLib.Test
             Assert.AreEqual("DVDRip", resultParser.Qualite);
             Assert.AreEqual("2005", resultParser.Annee);
             Assert.AreEqual("TRUEFRENCH", resultParser.Langage);
-            Assert.AreEqual("An American Haunting", resultParser.Titre);
+            Assert.AreEqual("AN AMERICAN HAUNTING", resultParser.Titre);
 
             #endregion
         }
@@ -143,7 +143,7 @@ namespace MoviesLib.Test
             Assert.AreEqual("DVDRIP", resultParser.Qualite);
             Assert.AreEqual("2006", resultParser.Annee);
             Assert.AreEqual("TRUEFRENCH", resultParser.Langage);
-            Assert.AreEqual("Black Christmas", resultParser.Titre);
+            Assert.AreEqual("BLACK CHRISTMAS", resultParser.Titre);
 
             #endregion
         }
