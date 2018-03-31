@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zeus", "Zeus\Zeus.csproj", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestsUnitaires", "TestsUnitaires", "{0C3F4253-A125-4C3F-8FB8-FE5C238201E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoviesLib.Test", "MoviesLib.Test\MoviesLib.Test.csproj", "{D66E2AE2-CDFC-45B0-ADF8-8F561D528379}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoviesLib.Test", "MoviesLib.Test\MoviesLib.Test.csproj", "{D66E2AE2-CDFC-45B0-ADF8-8F561D528379}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoviesLib", "MoviesLib\MoviesLib.csproj", "{991ABB89-4FB5-4CAC-8AF8-69BC77045203}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zeus.Test", "Zeus.Test\Zeus.Test.csproj", "{50A46F6B-FB9A-4739-B9D0-CF8FCA92F27E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,12 +31,17 @@ Global
 		{991ABB89-4FB5-4CAC-8AF8-69BC77045203}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{991ABB89-4FB5-4CAC-8AF8-69BC77045203}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{991ABB89-4FB5-4CAC-8AF8-69BC77045203}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50A46F6B-FB9A-4739-B9D0-CF8FCA92F27E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50A46F6B-FB9A-4739-B9D0-CF8FCA92F27E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50A46F6B-FB9A-4739-B9D0-CF8FCA92F27E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50A46F6B-FB9A-4739-B9D0-CF8FCA92F27E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D66E2AE2-CDFC-45B0-ADF8-8F561D528379} = {0C3F4253-A125-4C3F-8FB8-FE5C238201E4}
+		{50A46F6B-FB9A-4739-B9D0-CF8FCA92F27E} = {0C3F4253-A125-4C3F-8FB8-FE5C238201E4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EDB09C17-9972-42EA-8C34-155BA4DE407F}
