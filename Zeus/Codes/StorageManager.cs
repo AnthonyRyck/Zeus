@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using MoviesLib.Entities;
 using Newtonsoft.Json;
+using TMDbLib.Objects.Movies;
+using Zeus.Models;
 
 namespace Zeus.Codes
 {
@@ -16,8 +18,22 @@ namespace Zeus.Codes
         #region Properties
 
         private string _pathSauvegarde;
+
+        /// <summary>
+        /// Nom du fichier de sauvegarde pour les informations de films en locale.
+        /// </summary>
         private const string FILE_MOVIES_INFORMATIONS = "saveMoviesInformations.json";
+
+        /// <summary>
+        /// Nom du fichier de sauvegarde pour les informations de séries en locale.
+        /// </summary>
         private const string FILE_SHOWS_INFORMATIONS = "saveShowsInformations.json";
+
+        /// <summary>
+        /// Nom du fichier de sauvegarde contenant toutes les informations TmDB des films
+        /// présent en local.
+        /// </summary>
+        private const string FILE_MOVIES_MODELS = "saveMoviesModels.json";
 
         private string _pathConfiguration;
         private const string NAME_FILE_CONFIG = "config_app.json";
@@ -45,13 +61,13 @@ namespace Zeus.Codes
 
         #endregion
 
-        #region Public Methods
+        #region Internal Methods
 
         /// <summary>
         /// Récupère la liste de film qui est sauvegarder en local.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<MovieInformation> GetMoviesOnLocal(string pathFolderMovies)
+        internal IEnumerable<MovieInformation> GetMoviesOnLocal(string pathFolderMovies)
         {
             // Si c'est null, c'est que l'application n'a pas encore fait de 
             return MovieInformationsCollection ?? (MovieInformationsCollection = LoadMovies(pathFolderMovies));
@@ -61,7 +77,7 @@ namespace Zeus.Codes
         /// Récupére les informations de configuration.
         /// </summary>
         /// <returns></returns>
-        public ConfigurationApp GetConfiguration()
+        internal ConfigurationApp GetConfiguration()
         {
             ConfigurationApp config;
 
@@ -80,6 +96,37 @@ namespace Zeus.Codes
             }
             
             return config;
+        }
+
+        /// <summary>
+        /// Retourne les informations des films, d'après le site The Movie Database.
+        /// </summary>
+        /// <returns></returns>
+        internal IEnumerable<MovieModel> GetMoviesTmDb()
+        {
+            List<MovieModel> listeMovieModels = null;
+
+            // Voir en fichier de sauvegarde s'il y a des informations.
+            string fullPathMovieModel = Path.Combine(_pathSauvegarde, FILE_MOVIES_MODELS);
+            if (File.Exists(fullPathMovieModel))
+            {
+                string contentJson = File.ReadAllText(fullPathMovieModel);
+                listeMovieModels = JsonConvert.DeserializeObject<List<MovieModel>>(contentJson);
+            }
+
+            return listeMovieModels;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="retourMovieModels"></param>
+        internal void SaveMoviesModels(IEnumerable<MovieModel> retourMovieModels)
+        {
+            string contentJson = JsonConvert.SerializeObject(retourMovieModels);
+
+            string pathSaveMovieModel = Path.Combine(_pathSauvegarde, FILE_MOVIES_MODELS);
+            File.WriteAllText(pathSaveMovieModel, contentJson);
         }
 
         #endregion
@@ -204,5 +251,6 @@ namespace Zeus.Codes
         #endregion
 
 
+        
     }
 }
