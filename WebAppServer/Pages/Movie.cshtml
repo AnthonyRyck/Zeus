@@ -1,0 +1,27 @@
+﻿@page
+@model WebAppServer.Pages.MovieModel
+@{
+	ViewData["Title"] = "Movie";
+}
+
+<h2>Movie</h2>
+
+
+<div class="flex">
+
+	@foreach (var item in Model.Movies)
+	{
+		<div class="card">
+			<img src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @item.MovieTmDb.PosterPath)" width=200 />
+			<div class="info">
+				<p class="overview">
+					@item.MovieTmDb.Title
+				</p>
+
+				<p class="overview">@item.MovieTmDb.Overview</p>
+			</div>
+
+		</div>
+	}
+
+</div>

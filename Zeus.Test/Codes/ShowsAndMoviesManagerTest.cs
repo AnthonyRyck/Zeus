@@ -47,12 +47,12 @@ namespace Zeus.Test.Codes
         #region Method GetListMoviesLocal
         
         [TestMethod]
-        public void RecuperationDeFilms_When_MovieFolderIsEmpty_Then_NoFilm()
+        public async void RecuperationDeFilms_When_MovieFolderIsEmpty_Then_NoFilm()
         {
             #region Act
 
             ShowsAndMoviesManager manager = new ShowsAndMoviesManager();
-            var result = manager.GetListMoviesLocal();
+            var result = await manager.GetListMoviesLocal();
 
             #endregion
 
@@ -65,7 +65,7 @@ namespace Zeus.Test.Codes
 
 
         [TestMethod]
-        public void RecuperationDeFilms_When_MovieFolderHas3Films_Then_3Films()
+        public async void RecuperationDeFilms_When_MovieFolderHas3Films_Then_3Films()
         {
             #region Arrange
 
@@ -94,7 +94,7 @@ namespace Zeus.Test.Codes
             #region Act
 
             ShowsAndMoviesManager manager = new ShowsAndMoviesManager();
-            var result = manager.GetListMoviesLocal();
+            var result = await manager.GetListMoviesLocal();
 
             #endregion
 

@@ -31,5 +31,10 @@ namespace WebAppServer.Codes
         /// Chemin d'accés pour les séries.
         /// </summary>
         public string PathShows { get; set; }
+
+        /// <summary>
+        /// Temps en milliseconde pour faire un update sur les films/séries.
+        /// </summary>
+        public int TempsEnMillisecondPourTimerRefresh { get; set; }
     }
 }

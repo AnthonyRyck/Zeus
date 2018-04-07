@@ -33,3 +33,47 @@ body {
         display: none;
     }
 }
+
+
+/* Perso */
+.float-my-children > * {
+	float:left;
+	margin-right:5px;
+}
+
+.flex {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.info {
+	width: 198px;
+	height: 278px;
+	box-sizing: border-box;
+	padding: 10px 16px 16px 16px;
+	overflow: hidden;
+}
+
+.item {
+	margin-top: 30px;
+	color: #000;
+	display: flex;
+}
+
+p.overview {
+	word-wrap: break-word;
+	white-space: normal;
+	color: #4d4d4d;
+	font-size: 0.9em;
+	line-height: 1.2em;
+	margin-top: 30px;
+}
+
+.card {
+	height: 300px;
+	width: 450px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+	background-color: #bbb;
+	align-items: center;
+	display: flex;
+}

@@ -55,6 +55,7 @@ namespace MoviesLib
             {
                 string fileName = RemoveExtension(file);
                 MovieInformation information = _movieFileParser.GetInformation(fileName);
+                information.PathFile = file.FullName;
 
                 retourInformations.Add(information);
             }

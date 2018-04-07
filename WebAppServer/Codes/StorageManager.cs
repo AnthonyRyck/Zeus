@@ -39,11 +39,6 @@ namespace WebAppServer.Codes
         private const string NAME_FILE_CONFIG = "config_app.json";
 
         /// <summary>
-        /// Liste de tous les films présents sur le "serveur".
-        /// </summary>
-        public List<MovieInformation> MovieInformationsCollection { get; private set; }
-
-        /// <summary>
         /// Func pour la récupération des films sur le local.
         /// </summary>
         private Func<string, IEnumerable<MovieInformation>> _funcGetMovies;
@@ -62,16 +57,6 @@ namespace WebAppServer.Codes
         #endregion
 
         #region Internal Methods
-
-        /// <summary>
-        /// Récupère la liste de film qui est sauvegarder en local.
-        /// </summary>
-        /// <returns></returns>
-        internal IEnumerable<MovieInformation> GetMoviesOnLocal(string pathFolderMovies)
-        {
-            // Si c'est null, c'est que l'application n'a pas encore fait de 
-            return MovieInformationsCollection ?? (MovieInformationsCollection = LoadMovies(pathFolderMovies));
-        }
 
         /// <summary>
         /// Récupére les informations de configuration.
@@ -166,70 +151,6 @@ namespace WebAppServer.Codes
         }
 
         /// <summary>
-        /// Charge le fichiers de sauvegarde, ou a défault va rechercher les films
-        /// sur le local.
-        /// </summary>
-        /// <returns></returns>
-        private List<MovieInformation> LoadMovies(string pathFolderMovies)
-        {
-            List<MovieInformation> tempMovies;
-
-            // Vérification du fichier de sauvegarde.
-            string fileMovies = _pathSauvegarde + @"/" + FILE_MOVIES_INFORMATIONS;
-            if (File.Exists(fileMovies))
-            {
-                try
-                {
-                    tempMovies = JsonConvert.DeserializeObject<List<MovieInformation>>(fileMovies);
-                }
-                catch (Exception e)
-                {
-                    // TODO : Mettre en log.
-
-                    tempMovies = GetMoviesInformationOnLocal(pathFolderMovies).ToList();
-                    SaveMovies(tempMovies, fileMovies);
-                }
-            }
-            else
-            {
-                // Si aucun fichier, récupération des fichiers sur le local.
-                tempMovies = GetMoviesInformationOnLocal(pathFolderMovies).ToList();
-                SaveMovies(tempMovies, fileMovies);
-            }
-
-            return tempMovies;
-        }
-
-        /// <summary>
-        /// Récupère les informations des films sur le local.
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerable<MovieInformation> GetMoviesInformationOnLocal(string pathFolderMovies)
-        {
-            var resultMovies = _funcGetMovies.Invoke(pathFolderMovies);
-            return resultMovies;
-        }
-
-        /// <summary>
-        /// Permet de sauvegarde en json la liste des films présent sur le local.
-        /// </summary>
-        /// <param name="movies"></param>
-        /// <param name="pathFile"></param>
-        private void SaveMovies(IEnumerable<MovieInformation> movies, string pathFile)
-        {
-            try
-            {
-                string contentJson = JsonConvert.SerializeObject(movies);
-                File.WriteAllText(pathFile, contentJson);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
-
-        /// <summary>
         /// Permet de créer une configuration par défault.
         /// </summary>
         /// <returns></returns>
@@ -244,7 +165,8 @@ namespace WebAppServer.Codes
                     "FRENCH", "TRUEFRENCH", "FR"
                 },
                 PathMovies = "/movies",
-                PathShows = "/shows"
+                PathShows = "/shows",
+                TempsEnMillisecondPourTimerRefresh = 60000
             };
         }
 

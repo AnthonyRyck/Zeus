@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MoviesLib;
 using MoviesLib.Entities;
@@ -16,7 +17,7 @@ namespace WebAppServer.Codes
     /// Classe qui va faire la gestion des acquisitions des séries
     /// et des films.
     /// </summary>
-    public class ShowsAndMoviesManager
+    public class ShowsAndMoviesManager : IShowsAndMovies
     {
         #region Properties
 
@@ -40,10 +41,12 @@ namespace WebAppServer.Codes
         /// </summary>
         private List<MovieModel> _movieModelsCollection = null;
 
+        private Timer _timerUpdate;
+
         /// <summary>
-        /// Contient la liste des films présent en local.
+        /// Object utilisé pour faire les locks.
         /// </summary>
-        private List<MovieInformation> _moviesLocal = null;
+        private static readonly Object _lock = new object();
 
         #endregion
 
@@ -61,23 +64,22 @@ namespace WebAppServer.Codes
 
             _storage = new StorageManager(_movieManager.GetMoviesInformations);
             _configurationApp = _storage.GetConfiguration();
+
+            // Démarre dans 5secondes et toutes les 15 minutes.
+            _timerUpdate = new Timer(TimerUpdate, null, 5000, _configurationApp.TempsEnMillisecondPourTimerRefresh);
         }
 
         #endregion
 
-        #region Public Methods
+        #region Public Methods - Implements IShowsAndMovies
 
         /// <summary>
         /// Retourne la liste des films qui sont présent sur le local.
         /// </summary>
-        public IEnumerable<MovieInformation> GetListMoviesLocal()
+        public async Task<IEnumerable<MovieInformation>> GetListMoviesLocal()
         {
-            if (_moviesLocal == null)
-            {
-                _moviesLocal = _storage.GetMoviesOnLocal(_configurationApp.PathMovies).ToList();
-            }
-            
-            return _moviesLocal;
+            var temp = await GetMovies();
+            return temp.Select(x => x.MovieInformation).ToList();
         }
 
         /// <summary>
@@ -100,10 +102,28 @@ namespace WebAppServer.Codes
             }
 
             // Dans le cas ou il n'y a pas de fichier de sauvegarde.
-            IEnumerable<MovieInformation> tempMovieLocal = GetListMoviesLocal();
-            _movieModelsCollection = new List<MovieModel>();
+            IEnumerable<MovieInformation> tempMovieLocal = _movieManager.GetMoviesInformations(_configurationApp.PathMovies);
 
-            foreach (MovieInformation movieInformation in tempMovieLocal)
+            _movieModelsCollection = await GetMovieDbInformation(tempMovieLocal);
+            _storage.SaveMoviesModels(_movieModelsCollection);
+
+            return _movieModelsCollection;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Méthode permettant d'aller chercher sur l'API de TmDb les informations sur les films.
+        /// </summary>
+        /// <param name="moviesInfomration"></param>
+        /// <returns></returns>
+        private async Task<List<MovieModel>> GetMovieDbInformation(IEnumerable<MovieInformation> moviesInfomration)
+        {
+            List<MovieModel> returnMovieModels = new List<MovieModel>();
+
+            foreach (MovieInformation movieInformation in moviesInfomration)
             {
                 SearchMovie movieSelected;
 
@@ -124,21 +144,16 @@ namespace WebAppServer.Codes
                 }
 
                 Movie movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id);
-                
-                _movieModelsCollection.Add(new MovieModel()
+
+                returnMovieModels.Add(new MovieModel()
                 {
                     MovieInformation = movieInformation,
                     MovieTmDb = movieDb
                 });
             }
 
-            _storage.SaveMoviesModels(_movieModelsCollection);
-            return _movieModelsCollection;
+            return returnMovieModels;
         }
-
-        #endregion
-
-        #region Private Methods
 
         private SearchMovie GetTheGoodMovie(SearchContainer<SearchMovie> allMovies, MovieInformation movieInformation)
         {
@@ -155,6 +170,63 @@ namespace WebAppServer.Codes
             }
 
             return retourMovie;
+        }
+        
+        #endregion
+
+        #region Timer Methods
+
+        /// <summary>
+        /// Méthode qui appelé lorsque le Timer arrive à la fin.
+        /// </summary>
+        /// <param name="state"></param>
+        private async void TimerUpdate(object state)
+        {
+            // Récupération des films en locale.
+            IEnumerable<MovieInformation> moviesOnLocal = _movieManager.GetMoviesInformations(_configurationApp.PathMovies);
+
+            List<MovieModel> listeToDelete = new List<MovieModel>();
+
+            // Détermination des différences entre ce qui est présent sur le disque
+            // et ce qui est connu en mémoire.
+            foreach (MovieModel movieLocal in _movieModelsCollection)
+            {
+                if (!moviesOnLocal.Contains(movieLocal.MovieInformation))
+                {
+                    listeToDelete.Add(movieLocal);
+                }
+            }
+
+            lock (_lock)
+            {
+                // Suppression des films n'existant plus
+                foreach (var toDelete in listeToDelete)
+                {
+                    _movieModelsCollection.Remove(toDelete);
+                }
+            }
+            
+            // Voir s'il y a des rajouts.
+            List<MovieInformation> tempMovieInformations =
+                _movieModelsCollection.Select(x => x.MovieInformation).ToList();
+            List<MovieInformation> listeToAdd = new List<MovieInformation>();
+
+            foreach (MovieInformation movieLocal in moviesOnLocal)
+            {
+                if (!tempMovieInformations.Contains(movieLocal))
+                {
+                    listeToAdd.Add(movieLocal);
+                }
+            }
+            
+            var tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
+            lock (_lock)
+            {
+                _movieModelsCollection.AddRange(tempAddMovieModels);
+            }
+
+            // Sauvegarde
+            _storage.SaveMoviesModels(_movieModelsCollection);
         }
 
         #endregion
