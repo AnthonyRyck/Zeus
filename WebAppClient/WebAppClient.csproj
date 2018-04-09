@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\MoviesLib\Entities\MovieInformation.cs" Link="Codes\Entities\MovieInformation.cs" />
+    <Compile Include="..\MoviesLib\Entities\ShowInformation.cs" Link="Codes\Entities\ShowInformation.cs" />
+    <Compile Include="..\MoviesLib\MovieFileParser.cs" Link="Codes\MovieFileParser.cs" />
+    <Compile Include="..\MoviesLib\MovieManager.cs" Link="Codes\MovieManager.cs" />
+    <Compile Include="..\MoviesLib\ShowFileParser.cs" Link="Codes\ShowFileParser.cs" />
+    <Compile Include="..\WebAppServer\Models\MovieModel.cs" Link="Models\MovieModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.0-preview1-final" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="2.1.0-preview1-final" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.0-preview1-final" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.0-preview1-final" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.0-preview1-final" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0-preview1-final" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.0-preview1-final" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.0-preview1-final" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.1.0-preview1-final" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0-preview1-final" />
+    <PackageReference Include="TMDbLib" Version="1.2.0-alpha" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="CustomWebHostService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Codes\Entities\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+  
+</Project>

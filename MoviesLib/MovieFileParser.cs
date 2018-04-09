@@ -46,6 +46,7 @@ namespace MoviesLib
         public MovieInformation GetInformation(string title)
         {
             MovieInformation result = new MovieInformation();
+            result.FileName = title;
 
             // Ajout de "." à la place des espaces.
             title = title.Replace(' ', '.')

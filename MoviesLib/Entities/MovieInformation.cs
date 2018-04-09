@@ -41,6 +41,11 @@ namespace MoviesLib.Entities
         /// </summary>
         public string PathFile { get; set; }
 
+        /// <summary>
+        /// Nom du fichier à l'origine avec l'extension.
+        /// </summary>
+        public string FileName { get; set; }
+
         #endregion
 
         #region Implement IEquatable
@@ -49,7 +54,8 @@ namespace MoviesLib.Entities
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(PathFile, other.PathFile);
+
+            return string.Equals(Titre, other.Titre);
         }
 
         public override bool Equals(object obj)
@@ -63,7 +69,7 @@ namespace MoviesLib.Entities
 
         public override int GetHashCode()
         {
-            return (PathFile != null ? PathFile.GetHashCode() : 0);
+            return (Titre != null ? Titre.GetHashCode() : 0);
         }
 
         #endregion
