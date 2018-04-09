@@ -54,7 +54,7 @@ namespace MoviesLib
             foreach (var file in videoFiles)
             {
                 string fileName = RemoveExtension(file);
-                MovieInformation information = _movieFileParser.GetInformation(fileName);
+                MovieInformation information = _movieFileParser.GetInformation(fileName, file.Name, file.Length);
                 information.PathFile = file.FullName;
 
                 retourInformations.Add(information);

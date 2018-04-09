@@ -164,7 +164,7 @@ namespace WebAppServer.Codes
                 {
                     "FRENCH", "TRUEFRENCH", "FR"
                 },
-                PathMovies = "/movies",
+                PathMovies = new List<string> {"/movies"},
                 PathShows = "/shows",
                 TempsEnMillisecondPourTimerRefresh = 60000
             };

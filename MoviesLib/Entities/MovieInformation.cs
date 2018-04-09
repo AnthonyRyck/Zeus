@@ -46,6 +46,11 @@ namespace MoviesLib.Entities
         /// </summary>
         public string FileName { get; set; }
 
+        /// <summary>
+        /// Taille en octet.
+        /// </summary>
+        public long Size { get; set; }
+
         #endregion
 
         #region Implement IEquatable

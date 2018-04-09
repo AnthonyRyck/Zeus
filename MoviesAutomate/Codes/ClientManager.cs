@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -74,7 +75,7 @@ namespace MoviesAutomate.Codes
 
             _storage = new StorageManager(_movieManager.GetMoviesInformations);
             _configurationApp = _storage.GetConfiguration();
-            _moviesServer = new MoviesServer(_configurationApp.UrlServer);
+            _moviesServer = new MoviesServer(_configurationApp.UrlServer, GetPathToSave);
 
             _timerUpdate = new Timer(TimerUpdate, null, 5000, _configurationApp.TempsEnMillisecondPourTimerRefresh);
             _timerUpdateMovieServer = new Timer(TimerUpdateServerMovies, null, 15000, _configurationApp.TempsPourRefreshMovieServer);
@@ -148,6 +149,33 @@ namespace MoviesAutomate.Codes
             return retourMovie;
         }
 
+        /// <summary>
+        /// Retourne l'endroit ou sauvegarde le film.
+        /// </summary>
+        /// <param name="movieInformation"></param>
+        /// <returns></returns>
+        private string GetPathToSave(MovieInformation movieInformation)
+        {
+            // En fonction de la taille du fichier il faut trouver un endroit ou le stocker.
+            string emplacement = String.Empty;
+
+            foreach (string pathMovie in _configurationApp.PathMovies)
+            {
+                // Récupération de la lettre du Drive
+                string drive = pathMovie[0].ToString();
+                DriveInfo di = new DriveInfo(drive);
+
+                if (di.AvailableFreeSpace > movieInformation.Size)
+                {
+                    // TODO : Lever une exception quand pas assez de place sur aucun lecteur.
+                    emplacement = pathMovie;
+                    break;
+                }
+            }
+
+            return emplacement;
+        }
+
         #endregion
 
         #region Timer Methods
@@ -159,8 +187,15 @@ namespace MoviesAutomate.Codes
         private async void TimerUpdate(object state)
         {
             // Récupération des films en locale.
-            IEnumerable<MovieInformation> moviesOnLocal = _movieManager.GetMoviesInformations(_configurationApp.PathMovies);
+            List<MovieInformation> moviesOnLocal = new List<MovieInformation>();
+            foreach (var pathMovie in _configurationApp.PathMovies)
+            {
+                IEnumerable<MovieInformation> tempMoviesOnLocal = _movieManager.GetMoviesInformations(pathMovie);
 
+                if(tempMoviesOnLocal.Any())
+                    moviesOnLocal.AddRange(tempMoviesOnLocal);
+            }
+            
             List<MovieModel> listeToDelete = new List<MovieModel>();
 
             // Détermination des différences entre ce qui est présent sur le disque

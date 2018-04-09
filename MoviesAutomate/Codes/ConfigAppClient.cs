@@ -26,7 +26,7 @@ namespace MoviesAutomate.Codes
         /// <summary>
         /// Chemin d'accés pour les Films.
         /// </summary>
-        public string PathMovies { get; set; }
+        public IEnumerable<string> PathMovies { get; set; }
 
         /// <summary>
         /// Chemin d'accés pour les séries.

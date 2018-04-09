@@ -15,18 +15,24 @@ namespace MoviesAutomate.Codes
     {
         #region Properties
 
-        public string UrlServer { get; private set; }
+        public string UrlServer { get; }
 
         private const string API_GET_MOVIES = "api/movies";
         private const string API_DOWNLOAD_MOVIES = "api/movies/download";
+
+        /// <summary>
+        /// C'est ce Func qui donne l'endroit ou sauvegarder le film.
+        /// </summary>
+        private Func<MovieInformation, string> _findGoodPlace;
 
         #endregion
 
         #region Constructeur
 
-        public MoviesServer(string urlServer)
+        public MoviesServer(string urlServer, Func<MovieInformation, string> findGoodPlace)
         {
             UrlServer = urlServer;
+            _findGoodPlace = findGoodPlace;
         }
 
         #endregion
@@ -72,7 +78,7 @@ namespace MoviesAutomate.Codes
             Stream responseString = await response.Content.ReadAsStreamAsync();
             responseString.Position = 0;
 
-            using (var fileStream = File.Create(movieInformation.FileName))
+            using (var fileStream = File.Create(_findGoodPlace.Invoke(movieInformation) + movieInformation.FileName))
             {
                 await responseString.CopyToAsync(fileStream);
             }

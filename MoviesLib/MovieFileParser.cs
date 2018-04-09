@@ -41,12 +41,15 @@ namespace MoviesLib
         /// Permet de récupérer les informations sur un film par rapport
         /// à son titre.
         /// </summary>
-        /// <param name="title"></param>
+        /// <param name="title">Nom du fichier sans l'extension</param>
+        /// <param name="fileName">Nom du fichier avec son extension.</param>
+        /// <param name="sizeByte">Taille en Bytes du fichier.</param>
         /// <returns></returns>
-        public MovieInformation GetInformation(string title)
+        public MovieInformation GetInformation(string title, string fileName, long sizeByte)
         {
             MovieInformation result = new MovieInformation();
-            result.FileName = title;
+            result.FileName = fileName;
+            result.Size = sizeByte;
 
             // Ajout de "." à la place des espaces.
             title = title.Replace(' ', '.')

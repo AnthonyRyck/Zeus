@@ -23,7 +23,7 @@ namespace MoviesLib.Test
             #region ACT
 
             MovieFileParser parser = new MovieFileParser();
-            var resultParser = parser.GetInformation(titre);
+            var resultParser = parser.GetInformation(titre, String.Empty, 0);
 
             #endregion
 
@@ -50,7 +50,7 @@ namespace MoviesLib.Test
             #region ACT
 
             MovieFileParser parser = new MovieFileParser();
-            var resultParser = parser.GetInformation(titre);
+            var resultParser = parser.GetInformation(titre, String.Empty, 0);
 
             #endregion
 
@@ -77,7 +77,7 @@ namespace MoviesLib.Test
             #region ACT
 
             MovieFileParser parser = new MovieFileParser("french", "TRUEFRENCH");
-            var resultParser = parser.GetInformation(titre);
+            var resultParser = parser.GetInformation(titre, String.Empty, 0);
 
             #endregion
 
@@ -103,7 +103,7 @@ namespace MoviesLib.Test
             #region ACT
 
             MovieFileParser parser = new MovieFileParser("VOSTFR", "french", "TRUEFRENCH");
-            var resultParser = parser.GetInformation(titreSeries);
+            var resultParser = parser.GetInformation(titreSeries, String.Empty, 0);
 
             #endregion
 
@@ -133,7 +133,7 @@ namespace MoviesLib.Test
             #region ACT
 
             MovieFileParser parser = new MovieFileParser("VOSTFR", "french", "TRUEFRENCH");
-            var resultParser = parser.GetInformation(titreSeries);
+            var resultParser = parser.GetInformation(titreSeries, String.Empty, 0);
 
             #endregion
 

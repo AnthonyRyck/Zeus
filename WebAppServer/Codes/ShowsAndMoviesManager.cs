@@ -102,9 +102,16 @@ namespace WebAppServer.Codes
             }
 
             // Dans le cas ou il n'y a pas de fichier de sauvegarde.
-            IEnumerable<MovieInformation> tempMovieLocal = _movieManager.GetMoviesInformations(_configurationApp.PathMovies);
+            List<MovieInformation> moviesOnLocal = new List<MovieInformation>();
+            foreach (var pathMovie in _configurationApp.PathMovies)
+            {
+                IEnumerable<MovieInformation> tempMovieLocal = _movieManager.GetMoviesInformations(pathMovie);
 
-            _movieModelsCollection = await GetMovieDbInformation(tempMovieLocal);
+                if(tempMovieLocal.Any())
+                    moviesOnLocal.AddRange(tempMovieLocal);
+            }
+
+            _movieModelsCollection = await GetMovieDbInformation(moviesOnLocal);
             _storage.SaveMoviesModels(_movieModelsCollection);
 
             return _movieModelsCollection;
@@ -183,7 +190,14 @@ namespace WebAppServer.Codes
         private async void TimerUpdate(object state)
         {
             // Récupération des films en locale.
-            IEnumerable<MovieInformation> moviesOnLocal = _movieManager.GetMoviesInformations(_configurationApp.PathMovies);
+            List<MovieInformation> moviesOnLocal = new List<MovieInformation>();
+            foreach (var pathMovie in _configurationApp.PathMovies)
+            {
+                IEnumerable<MovieInformation> tempMoviesOnLocal = _movieManager.GetMoviesInformations(pathMovie);
+
+                if (tempMoviesOnLocal.Any())
+                    moviesOnLocal.AddRange(tempMoviesOnLocal);
+            }
 
             List<MovieModel> listeToDelete = new List<MovieModel>();
 
