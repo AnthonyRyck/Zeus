@@ -127,9 +127,7 @@ namespace WebAppServer.Codes
             string localFolderConfig = AppContext.BaseDirectory + @"/config";
             if (!Directory.Exists(localFolderConfig))
             {
-                DirectoryInfo folderConfig = Directory.CreateDirectory(localFolderConfig);
-
-                // TODO : Copier le fichier de configuration par défault.
+                Directory.CreateDirectory(localFolderConfig);
             }
 
             return localFolderConfig;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -193,6 +194,11 @@ namespace WebAppServer.Codes
             List<MovieInformation> moviesOnLocal = new List<MovieInformation>();
             foreach (var pathMovie in _configurationApp.PathMovies)
             {
+                if (!Directory.Exists(pathMovie))
+                {
+                    continue;
+                }
+
                 IEnumerable<MovieInformation> tempMoviesOnLocal = _movieManager.GetMoviesInformations(pathMovie);
 
                 if (tempMoviesOnLocal.Any())
@@ -201,28 +207,33 @@ namespace WebAppServer.Codes
 
             List<MovieModel> listeToDelete = new List<MovieModel>();
 
-            // Détermination des différences entre ce qui est présent sur le disque
-            // et ce qui est connu en mémoire.
-            foreach (MovieModel movieLocal in _movieModelsCollection)
+            if (_movieModelsCollection != null)
             {
-                if (!moviesOnLocal.Contains(movieLocal.MovieInformation))
+                // Détermination des différences entre ce qui est présent sur le disque
+                // et ce qui est connu en mémoire.
+                foreach (MovieModel movieLocal in _movieModelsCollection)
                 {
-                    listeToDelete.Add(movieLocal);
+                    if (!moviesOnLocal.Contains(movieLocal.MovieInformation))
+                    {
+                        listeToDelete.Add(movieLocal);
+                    }
+                }
+
+                lock (_lock)
+                {
+                    // Suppression des films n'existant plus
+                    foreach (var toDelete in listeToDelete)
+                    {
+                        _movieModelsCollection.Remove(toDelete);
+                    }
                 }
             }
 
-            lock (_lock)
-            {
-                // Suppression des films n'existant plus
-                foreach (var toDelete in listeToDelete)
-                {
-                    _movieModelsCollection.Remove(toDelete);
-                }
-            }
-            
-            // Voir s'il y a des rajouts.
-            List<MovieInformation> tempMovieInformations =
-                _movieModelsCollection.Select(x => x.MovieInformation).ToList();
+            if(_movieModelsCollection == null)
+                _movieModelsCollection = new List<MovieModel>();
+
+           // Voir s'il y a des rajouts.
+            List<MovieInformation> tempMovieInformations = _movieModelsCollection.Select(x => x.MovieInformation).ToList();
             List<MovieInformation> listeToAdd = new List<MovieInformation>();
 
             foreach (MovieInformation movieLocal in moviesOnLocal)
