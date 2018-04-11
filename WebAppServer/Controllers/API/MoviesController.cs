@@ -50,7 +50,7 @@ namespace WebAppServer.Controllers.API
             {
                 using (var zipArchive = new ZipArchive(new WriteOnlyStreamWrapper(outputStream), ZipArchiveMode.Create))
                 {
-                    var zipEntry = zipArchive.CreateEntry(movieInformation.Titre);
+                    ZipArchiveEntry zipEntry = zipArchive.CreateEntry(movieInformation.Titre);
                     using (var zipStream = zipEntry.Open())
                     {
                         using (var stream = file)

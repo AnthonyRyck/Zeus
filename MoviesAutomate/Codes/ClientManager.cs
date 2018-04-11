@@ -59,6 +59,9 @@ namespace MoviesAutomate.Codes
         /// </summary>
         private readonly MoviesServer _moviesServer;
 
+
+        private static bool _isUpdateMovies;
+
         #endregion
 
         #region Constructeur
@@ -186,6 +189,9 @@ namespace MoviesAutomate.Codes
         /// <param name="state"></param>
         private async void TimerUpdate(object state)
         {
+            if (_isUpdateMovies)
+                return;
+
             // Récupération des films en locale.
             List<MovieInformation> moviesOnLocal = new List<MovieInformation>();
             foreach (var pathMovie in _configurationApp.PathMovies)
@@ -255,6 +261,11 @@ namespace MoviesAutomate.Codes
             if (string.IsNullOrEmpty(_configurationApp.UrlServer))
                 return;
 
+            if (_isUpdateMovies)
+                return;
+
+            _isUpdateMovies = true;
+
             IEnumerable<MovieInformation> moviesInformations = await _moviesServer.GetMoviesInformationAsync();
 
             List<MovieInformation> tempLocalMovie = _movieModelsCollection.Select(x => x.MovieInformation).ToList();
@@ -273,6 +284,8 @@ namespace MoviesAutomate.Codes
             {
                 await _moviesServer.DownloadMovies(newMovie);
             }
+
+            _isUpdateMovies = false;
         }
 
         #endregion
