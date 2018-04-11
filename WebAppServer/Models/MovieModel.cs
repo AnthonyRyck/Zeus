@@ -15,7 +15,16 @@ namespace WebAppServer.Models
         /// Information sur le fichier
         /// </summary>
         public MovieInformation MovieInformation { get; set; }
+
+        /// <summary>
+        /// Informations venant de TmDb
+        /// </summary>
         public Movie MovieTmDb { get; set; }
+
+        /// <summary>
+        /// Indicateur pour savoir si le fichier est déjà DL.
+        /// </summary>
+        public bool IsDownloaded { get; set; }
 
         #endregion
     }

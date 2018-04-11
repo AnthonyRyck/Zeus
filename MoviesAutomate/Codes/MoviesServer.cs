@@ -78,7 +78,7 @@ namespace MoviesAutomate.Codes
             Stream responseString = await response.Content.ReadAsStreamAsync();
             responseString.Position = 0;
 
-            using (var fileStream = File.Create(_findGoodPlace.Invoke(movieInformation) + movieInformation.FileName))
+            using (var fileStream = File.Create(_findGoodPlace.Invoke(movieInformation) + @"\" + movieInformation.FileName))
             {
                 await responseString.CopyToAsync(fileStream);
             }
