@@ -20,5 +20,11 @@ namespace WebAppServer.Codes
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<MovieModel>> GetMovies();
+
+        /// <summary>
+        /// Indique que ce film a été téléchargé.
+        /// </summary>
+        /// <param name="movieInformation"></param>
+        void SetMovieDownloaded(MovieInformation movieInformation);
     }
 }

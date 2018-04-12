@@ -39,12 +39,6 @@ namespace MoviesAutomate.Codes
         public int TempsEnMillisecondPourTimerRefresh { get; set; }
 
         /// <summary>
-        /// Temps en milliseconde pour faire une nouvelle recherche sur le server
-        /// s'il y a des nouveaux films.
-        /// </summary>
-        public int TempsPourRefreshMovieServer { get; set; }
-
-        /// <summary>
         /// URL du server contenant les films.
         /// </summary>
         public string UrlServer { get; set; }

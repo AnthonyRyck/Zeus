@@ -21,45 +21,32 @@ namespace MoviesAutomate.Codes
     {
         #region Properties
 
-        private MovieManager _movieManager;
-        private TMDbClient _clientTmDb;
-        private StorageManager _storage;
-        private ConfigAppClient _configurationApp;
-
-        /// <summary>
-        /// Chemin d'accès pour les films.
-        /// </summary>
-        private string _pathMoviesLocal;
-
-        /// <summary>
-        /// Chemin d'accès pour les séries.
-        /// </summary>
-        private string _pathShowsLocal;
+        private readonly MovieManager _movieManager;
+        private readonly TMDbClient _clientTmDb;
+        private readonly StorageManager _storage;
+        private readonly ConfigAppClient _configurationApp;
 
         /// <summary>
         /// Contient des informations de TmDB.
         /// </summary>
         private List<MovieModel> _movieModelsCollection = null;
 
-        private Timer _timerUpdate;
         private Timer _timerUpdateMovieServer;
 
         /// <summary>
         /// Object utilisé pour faire les locks.
         /// </summary>
-        private static readonly Object _lock = new object();
-
-        /// <summary>
-        /// Object utilisé pour faire les locks.
-        /// </summary>
-        private static readonly Object _lockAddItem = new object();
+        private static readonly Object Lock = new object();
 
         /// <summary>
         /// Objet permettant d'aller taper sur notre serveur.
         /// </summary>
         private readonly MoviesServer _moviesServer;
 
-
+        /// <summary>
+        /// Indicateur si l'application est entrain de mettre à jour
+        /// ces informations de films.
+        /// </summary>
         private static bool _isUpdateMovies;
 
         #endregion
@@ -80,8 +67,7 @@ namespace MoviesAutomate.Codes
             _configurationApp = _storage.GetConfiguration();
             _moviesServer = new MoviesServer(_configurationApp.UrlServer, GetPathToSave);
 
-            _timerUpdate = new Timer(TimerUpdate, null, 5000, _configurationApp.TempsEnMillisecondPourTimerRefresh);
-            _timerUpdateMovieServer = new Timer(TimerUpdateServerMovies, null, 15000, _configurationApp.TempsPourRefreshMovieServer);
+            _timerUpdateMovieServer = new Timer(TimerUpdateServerMovies, null, 15000, _configurationApp.TempsEnMillisecondPourTimerRefresh);
         }
 
         #endregion
@@ -184,22 +170,25 @@ namespace MoviesAutomate.Codes
         #region Timer Methods
 
         /// <summary>
-        /// Méthode qui appelé lorsque le Timer arrive à la fin.
+        /// Méthode permettant de mettre à jour les films en local.
         /// </summary>
-        /// <param name="state"></param>
-        private async void TimerUpdate(object state)
+        private async Task UpdateLocalMovies()
         {
-            if (_isUpdateMovies)
-                return;
-
             // Récupération des films en locale.
             List<MovieInformation> moviesOnLocal = new List<MovieInformation>();
             foreach (var pathMovie in _configurationApp.PathMovies)
             {
-                IEnumerable<MovieInformation> tempMoviesOnLocal = _movieManager.GetMoviesInformations(pathMovie);
+                if (Directory.Exists(pathMovie))
+                {
+                    IEnumerable<MovieInformation> tempMoviesOnLocal = _movieManager.GetMoviesInformations(pathMovie);
 
-                if(tempMoviesOnLocal.Any())
-                    moviesOnLocal.AddRange(tempMoviesOnLocal);
+                    if (tempMoviesOnLocal.Any())
+                        moviesOnLocal.AddRange(tempMoviesOnLocal);
+                }
+                else
+                {
+                    // TODO : Mettre en log l'erreur que le repertoire n'existe pas.
+                }
             }
             
             List<MovieModel> listeToDelete = new List<MovieModel>();
@@ -219,7 +208,7 @@ namespace MoviesAutomate.Codes
                 }
             }
 
-            lock (_lock)
+            lock (Lock)
             {
                 // Suppression des films n'existant plus
                 foreach (var toDelete in listeToDelete)
@@ -242,7 +231,7 @@ namespace MoviesAutomate.Codes
             }
 
             var tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
-            lock (_lock)
+            lock (Lock)
             {
                 _movieModelsCollection.AddRange(tempAddMovieModels);
             }
@@ -258,14 +247,19 @@ namespace MoviesAutomate.Codes
         /// <param name="state"></param>
         private async void TimerUpdateServerMovies(object state)
         {
-            if (string.IsNullOrEmpty(_configurationApp.UrlServer))
-                return;
-
             if (_isUpdateMovies)
                 return;
 
             _isUpdateMovies = true;
 
+            await UpdateLocalMovies();
+
+            if (string.IsNullOrEmpty(_configurationApp.UrlServer))
+            {
+                _isUpdateMovies = false;
+                return;
+            }
+            
             IEnumerable<MovieInformation> moviesInformations = await _moviesServer.GetMoviesInformationAsync();
 
             List<MovieInformation> tempLocalMovie = _movieModelsCollection.Select(x => x.MovieInformation).ToList();

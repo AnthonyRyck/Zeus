@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,11 +43,20 @@ namespace MoviesAutomate.Codes
         /// <returns></returns>
         public async Task<IEnumerable<MovieInformation>> GetMoviesInformationAsync()
         {
-            string urlMovies = UrlServer + API_GET_MOVIES;
+            IEnumerable<MovieInformation> movieInformations = new List<MovieInformation>();
 
-            HttpClient client = new HttpClient();
-            string movies = await client.GetStringAsync(urlMovies);
-            IEnumerable<MovieInformation> movieInformations = JsonConvert.DeserializeObject<IEnumerable<MovieInformation>>(movies);
+            try
+            {
+                string urlMovies = UrlServer + API_GET_MOVIES;
+
+                HttpClient client = new HttpClient();
+                string movies = await client.GetStringAsync(urlMovies);
+                movieInformations = JsonConvert.DeserializeObject<IEnumerable<MovieInformation>>(movies);
+            }
+            catch (Exception e)
+            {
+                // TODO : Log de l'erreur pour l'acces au server.
+            }
 
             return movieInformations;
         }
@@ -61,26 +68,34 @@ namespace MoviesAutomate.Codes
         /// <returns></returns>
         public async Task DownloadMovies(MovieInformation movieInformation)
         {
-            string urlMovies = UrlServer + API_DOWNLOAD_MOVIES;
-            HttpClient client = new HttpClient
+            try
             {
-                Timeout = TimeSpan.FromMinutes(30)
-            };
+                string urlMovies = UrlServer + API_DOWNLOAD_MOVIES;
+                HttpClient client = new HttpClient
+                {
+                    Timeout = TimeSpan.FromMinutes(30)
+                };
 
-            HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, urlMovies);
+                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, urlMovies);
 
-            requestMessage.Content = new StringContent(JsonConvert.SerializeObject(movieInformation), Encoding.UTF8, "application/json");
+                requestMessage.Content = new StringContent(JsonConvert.SerializeObject(movieInformation), Encoding.UTF8, "application/json");
 
-            // Envoie la requete au serveur
-            HttpResponseMessage response = await client.SendAsync(requestMessage);
+                // Envoie la requete au serveur
+                HttpResponseMessage response = await client.SendAsync(requestMessage);
 
-            // Reception du message.
-            Stream responseString = await response.Content.ReadAsStreamAsync();
-            responseString.Position = 0;
+                // Reception du message.
+                Stream responseString = await response.Content.ReadAsStreamAsync();
+                responseString.Position = 0;
 
-            using (var fileStream = File.Create(_findGoodPlace.Invoke(movieInformation) + @"\" + movieInformation.FileName))
+                using (var fileStream = File.Create(_findGoodPlace.Invoke(movieInformation) + @"\" + movieInformation.FileName))
+                {
+                    await responseString.CopyToAsync(fileStream);
+                }
+            }
+            catch (Exception e)
             {
-                await responseString.CopyToAsync(fileStream);
+                // TODO : Log exception sur non récupération du film.
+                // TODO : Mettre d'autres types d'exception.
             }
         }
 

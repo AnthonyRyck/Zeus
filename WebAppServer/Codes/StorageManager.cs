@@ -70,8 +70,19 @@ namespace WebAppServer.Codes
             string fileConfig = _pathConfiguration + @"/" + NAME_FILE_CONFIG;
             if (File.Exists(fileConfig))
             {
-                string configJson = File.ReadAllText(fileConfig);
-                config = JsonConvert.DeserializeObject<ConfigurationApp>(configJson);
+                try
+                {
+                    string configJson = File.ReadAllText(fileConfig);
+                    config = JsonConvert.DeserializeObject<ConfigurationApp>(configJson);
+                }
+                catch (Exception exception)
+                {
+                    // TODO : Mettre en log l'exception.
+                    
+                    config = GetDefaultConfiguration();
+                    string contentJson = JsonConvert.SerializeObject(config);
+                    File.WriteAllText(fileConfig, contentJson);
+                }
             }
             else
             {
@@ -124,13 +135,7 @@ namespace WebAppServer.Codes
         /// <returns></returns>
         private string GetConfigPath()
         {
-            string localFolderConfig = AppContext.BaseDirectory + @"/config";
-            if (!Directory.Exists(localFolderConfig))
-            {
-                Directory.CreateDirectory(localFolderConfig);
-            }
-
-            return localFolderConfig;
+            return GetFolder(@"/config");
         }
 
         /// <summary>
@@ -139,7 +144,12 @@ namespace WebAppServer.Codes
         /// <returns></returns>
         private string GetSavePath()
         {
-            string folder = AppContext.BaseDirectory + @"/save";
+            return GetFolder(@"/save");
+        }
+
+        private string GetFolder(string folderName)
+        {
+            string folder = AppContext.BaseDirectory + folderName;
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
@@ -162,7 +172,7 @@ namespace WebAppServer.Codes
                 {
                     "FRENCH", "TRUEFRENCH", "FR"
                 },
-                PathMovies = new List<string> {"/movies"},
+                PathMovies = new List<string> {"/app/movies"},
                 PathShows = "/shows",
                 TempsEnMillisecondPourTimerRefresh = 60000
             };

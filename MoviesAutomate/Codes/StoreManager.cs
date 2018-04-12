@@ -164,7 +164,6 @@ namespace MoviesAutomate.Codes
                 PathMovies = new List<string> { "/moviesClient" },
                 PathShows = "/shows",
                 TempsEnMillisecondPourTimerRefresh = 60000,
-                TempsPourRefreshMovieServer = 60000,
                 UrlServer = string.Empty
             };
         }

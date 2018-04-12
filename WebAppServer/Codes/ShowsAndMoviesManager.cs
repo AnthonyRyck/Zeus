@@ -66,7 +66,7 @@ namespace WebAppServer.Codes
             _storage = new StorageManager(_movieManager.GetMoviesInformations);
             _configurationApp = _storage.GetConfiguration();
 
-            // Démarre dans 5secondes et toutes les 15 minutes.
+            // Démarre dans 5 secondes et toutes les 15 minutes.
             _timerUpdate = new Timer(TimerUpdate, null, 5000, _configurationApp.TempsEnMillisecondPourTimerRefresh);
         }
 
@@ -80,7 +80,7 @@ namespace WebAppServer.Codes
         public async Task<IEnumerable<MovieInformation>> GetListMoviesLocal()
         {
             var temp = await GetMovies();
-            return temp.Select(x => x.MovieInformation).ToList();
+            return temp.Where(x => !x.IsDownloaded).Select(x => x.MovieInformation).ToList();
         }
 
         /// <summary>
@@ -118,6 +118,26 @@ namespace WebAppServer.Codes
             return _movieModelsCollection;
         }
 
+        /// <summary>
+        /// Indication qu'il faut mettre à jour ce film, car il a été téléchargé.
+        /// </summary>
+        /// <param name="movieInformation"></param>
+        public void SetMovieDownloaded(MovieInformation movieInformation)
+        {
+            MovieModel movieDownloaded = _movieModelsCollection.FirstOrDefault(x => !x.IsDownloaded
+                                                                      && x.MovieInformation.Titre == movieInformation.Titre
+                                                                      && x.MovieInformation.FileName == movieInformation.FileName);
+
+            if (movieDownloaded == null)
+            {
+                // TODO : Mettre un log sur une erreur produite.
+            }
+            else
+            {
+                movieDownloaded.IsDownloaded = true;
+            }
+        }
+
         #endregion
 
         #region Private Methods
@@ -151,13 +171,23 @@ namespace WebAppServer.Codes
                     movieSelected = GetTheGoodMovie(temp, movieInformation);
                 }
 
-                Movie movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id);
-
-                returnMovieModels.Add(new MovieModel()
+                if (movieSelected == null)
                 {
-                    MovieInformation = movieInformation,
-                    MovieTmDb = movieDb
-                });
+                    // TODO : Mettre en log le fait qu'aucun film de trouvé.
+                    // TODO : Faire un objet Movie "factice" pour juste l'affichage.
+                    Movie movieDb = new Movie();
+
+                }
+                else
+                {
+                    Movie movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id);
+
+                    returnMovieModels.Add(new MovieModel()
+                    {
+                        MovieInformation = movieInformation,
+                        MovieTmDb = movieDb
+                    });
+                }
             }
 
             return returnMovieModels;
@@ -166,6 +196,9 @@ namespace WebAppServer.Codes
         private SearchMovie GetTheGoodMovie(SearchContainer<SearchMovie> allMovies, MovieInformation movieInformation)
         {
             SearchMovie retourMovie = null;
+
+            if (allMovies.Results.Count == 1)
+                return allMovies.Results[0];
 
             foreach (var movie in allMovies.Results)
             {

@@ -66,6 +66,8 @@ namespace WebAppServer.Controllers.API
                 FileDownloadName = movieInformation.FileName
             };
 
+            _moviesManager.SetMovieDownloaded(movieInformation);
+
             return temp;
         }
 
