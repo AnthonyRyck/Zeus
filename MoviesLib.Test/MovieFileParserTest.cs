@@ -148,5 +148,34 @@ namespace MoviesLib.Test
             #endregion
         }
 
+        [TestMethod]
+        [TestProperty("MoviesLib", "MovieFileParser")]
+        [Description("")]
+        public void ExtraireDeToutesLesInfosDuTitre_When_TorrentIsTorrent9()
+        {
+            #region ARRANGE
+
+            string titreSeries = "[ Torrent9.red ] Maze.Runner.The.Death.Cure.2018.MULTi.TRUEFRENCH.1080p.WEB.H264-SiGeRiS.mkv";
+
+            #endregion
+
+            #region ACT
+
+            MovieFileParser parser = new MovieFileParser("VOSTFR", "french", "TRUEFRENCH");
+            var resultParser = parser.GetInformation(titreSeries, String.Empty, 0);
+
+            #endregion
+
+            #region ASSERT
+
+            Assert.AreEqual("1080p", resultParser.Resolution);
+            Assert.AreEqual("Inconnu", resultParser.Qualite);
+            Assert.AreEqual("2018", resultParser.Annee);
+            Assert.AreEqual("TRUEFRENCH", resultParser.Langage);
+            Assert.AreEqual("MAZE RUNNER THE DEATH CURE", resultParser.Titre);
+
+            #endregion
+        }
+
     }
 }

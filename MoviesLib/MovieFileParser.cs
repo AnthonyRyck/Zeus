@@ -51,6 +51,8 @@ namespace MoviesLib
             result.FileName = fileName;
             result.Size = sizeByte;
 
+            title = RemoveExtraInformation(title);
+
             // Ajout de "." à la place des espaces.
             title = title.Replace(' ', '.')
                          .Replace('-','.');
@@ -198,6 +200,30 @@ namespace MoviesLib
             result += @")";
 
             return result;
+        }
+
+        /// <summary>
+        /// Méthode permettant d'enlever les informations inutiles.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <returns></returns>
+        private string RemoveExtraInformation(string title)
+        {
+            string tempTitle = title;
+
+            if(tempTitle.Contains("[") && tempTitle.Contains("]"))
+            {
+                int indexStart = tempTitle.IndexOf('[');
+                int indexStop = tempTitle.IndexOf(']');
+                int count = indexStop - indexStart + 1;
+
+                tempTitle = tempTitle.Remove(indexStart, count);
+            }
+
+            if (tempTitle[0] == '.' || tempTitle[0] == ' ')
+                tempTitle = tempTitle.Remove(0, 1);
+
+            return tempTitle;
         }
 
         #endregion
