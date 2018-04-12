@@ -55,7 +55,9 @@ namespace MoviesLib
 
             // Ajout de "." à la place des espaces.
             title = title.Replace(' ', '.')
-                         .Replace('-','.');
+                         .Replace('-','.')
+                         .Replace('(','.')
+                         .Replace(')', '.');
 
             result.Resolution = GetResolution(ref title, RESOLUTION_PATTERN);
             result.Qualite = GetQuality(ref title, QUALITY_PATTERN);

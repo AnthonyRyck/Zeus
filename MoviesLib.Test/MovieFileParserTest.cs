@@ -117,7 +117,6 @@ namespace MoviesLib.Test
 
             #endregion
         }
-        //Black Christmas 2006 TRUEFRENCH DVDRIP Xvid MP3.avi 
 
         [TestMethod]
         [TestProperty("MoviesLib", "MovieFileParser")]
@@ -177,5 +176,33 @@ namespace MoviesLib.Test
             #endregion
         }
 
+        [TestMethod]
+        [TestProperty("MoviesLib", "MovieFileParser")]
+        [Description("")]
+        public void ExtraireDeToutesLesInfosDuTitre_When_TitreContientParenthese()
+        {
+            #region ARRANGE
+
+            string titreSeries = "American Made (2017) VFF-ENG AC3 BluRay 1080p x264.GHT.mkv";
+
+            #endregion
+
+            #region ACT
+
+            MovieFileParser parser = new MovieFileParser("VOSTFR", "french", "TRUEFRENCH");
+            var resultParser = parser.GetInformation(titreSeries, String.Empty, 0);
+
+            #endregion
+
+            #region ASSERT
+
+            Assert.AreEqual("1080p", resultParser.Resolution);
+            Assert.AreEqual("BluRay", resultParser.Qualite);
+            Assert.AreEqual("2017", resultParser.Annee);
+            Assert.AreEqual("Inconnu", resultParser.Langage);
+            Assert.AreEqual("AMERICAN MADE", resultParser.Titre);
+
+            #endregion
+        }
     }
 }
