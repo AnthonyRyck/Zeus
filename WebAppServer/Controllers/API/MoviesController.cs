@@ -48,15 +48,11 @@ namespace WebAppServer.Controllers.API
 
             Func<Stream, ActionContext, Task> funcTemp = async (outputStream, context) =>
             {
-                using (var zipArchive = new ZipArchive(new WriteOnlyStreamWrapper(outputStream), ZipArchiveMode.Create))
+                using (var fileStream = new WriteOnlyStreamWrapper(outputStream))
                 {
-                    ZipArchiveEntry zipEntry = zipArchive.CreateEntry(movieInformation.Titre);
-                    using (var zipStream = zipEntry.Open())
+                    using (var stream = file)
                     {
-                        using (var stream = file)
-                        {
-                            await stream.CopyToAsync(zipStream);
-                        }
+                        await stream.CopyToAsync(fileStream);
                     }
                 }
             };
