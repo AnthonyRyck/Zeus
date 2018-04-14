@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,34 +67,48 @@ namespace MoviesAutomate.Codes
         /// </summary>
         /// <param name="movieInformation"></param>
         /// <returns></returns>
-        public async Task DownloadMovies(MovieInformation movieInformation)
+        public void DownloadMovies(MovieInformation movieInformation)
         {
             try
             {
                 string urlMovies = UrlServer + API_DOWNLOAD_MOVIES;
-                HttpClient client = new HttpClient
+                string pathSave = Path.Combine(_findGoodPlace.Invoke(movieInformation), movieInformation.FileName);
+                Console.WriteLine("..Chemin de destination " + pathSave);
+                
+                HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(urlMovies);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+
+                Console.WriteLine("..Récupération de " + movieInformation.Titre + " - " + DateTime.Now);
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                 {
-                    Timeout = TimeSpan.FromMinutes(30)
-                };
+                    string json = JsonConvert.SerializeObject(movieInformation);
+                    streamWriter.Write(json);
+                }
 
-                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, urlMovies);
+                Console.WriteLine("..Json donné.");
+                
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                Console.WriteLine("..httpResponse - terminé." + " - " + DateTime.Now);
 
-                requestMessage.Content = new StringContent(JsonConvert.SerializeObject(movieInformation), Encoding.UTF8, "application/json");
-
-                // Envoie la requete au serveur
-                HttpResponseMessage response = await client.SendAsync(requestMessage);
-
-                // Reception du message.
-                Stream responseString = await response.Content.ReadAsStreamAsync();
-                responseString.Position = 0;
-
-                using (var fileStream = File.Create(_findGoodPlace.Invoke(movieInformation) + @"\" + movieInformation.FileName))
+                using (var stream = httpResponse.GetResponseStream())
                 {
-                    await responseString.CopyToAsync(fileStream);
+                    using (FileStream fileStream = new FileStream(pathSave, FileMode.Create))
+                    {
+                        byte[] buffer = new byte[65536];
+                        int bytesRead;
+                        while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+
+                            fileStream.Write(buffer, 0, bytesRead);
+                        }
+                    }
+                    Console.WriteLine("..Fin de récupération.." + " - " + DateTime.Now);
                 }
             }
             catch (Exception e)
             {
+                Console.WriteLine("Exception lors de la récupération du film : " + e.Message + " - " + e.StackTrace);
                 // TODO : Log exception sur non récupération du film.
                 // TODO : Mettre d'autres types d'exception.
             }

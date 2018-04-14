@@ -103,13 +103,23 @@ namespace MoviesAutomate.Codes
                     movieSelected = GetTheGoodMovie(temp, movieInformation);
                 }
 
-                Movie movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id);
-
-                returnMovieModels.Add(new MovieModel()
+                if (movieSelected == null)
                 {
-                    MovieInformation = movieInformation,
-                    MovieTmDb = movieDb
-                });
+                    // TODO : Mettre en log le fait qu'aucun film de trouvé.
+                    // TODO : Faire un objet Movie "factice" pour juste l'affichage.
+                    //Movie movieDb = new Movie();
+
+                }
+                else
+                {
+                    Movie movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id);
+
+                    returnMovieModels.Add(new MovieModel()
+                    {
+                        MovieInformation = movieInformation,
+                        MovieTmDb = movieDb
+                    });
+                }
             }
 
             return returnMovieModels;
@@ -276,7 +286,7 @@ namespace MoviesAutomate.Codes
             // Récupérer chaque nouveau film.
             foreach (MovieInformation newMovie in listNewMovies)
             {
-                await _moviesServer.DownloadMovies(newMovie);
+                _moviesServer.DownloadMovies(newMovie);
             }
 
             _isUpdateMovies = false;

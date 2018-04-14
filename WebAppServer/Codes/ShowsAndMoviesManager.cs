@@ -175,7 +175,7 @@ namespace WebAppServer.Codes
                 {
                     // TODO : Mettre en log le fait qu'aucun film de trouvé.
                     // TODO : Faire un objet Movie "factice" pour juste l'affichage.
-                    Movie movieDb = new Movie();
+                    //Movie movieDb = new Movie();
 
                 }
                 else
