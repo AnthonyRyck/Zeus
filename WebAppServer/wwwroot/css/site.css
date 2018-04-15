@@ -1,6 +1,7 @@
 body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+	padding-top: 50px;
+	padding-bottom: 20px;
+	background: #f4f4f4
 }
 
 /* Wrapping element */
@@ -73,7 +74,7 @@ p.overview {
 	height: 300px;
 	width: 450px;
 	box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-	background-color: #bbb;
+	background-color: #fff;
 	align-items: center;
 	display: flex;
 	margin: 16px;

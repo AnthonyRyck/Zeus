@@ -43,5 +43,11 @@
     <Folder Include="Codes\Entities\" />
     <Folder Include="Models\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   
 </Project>
