@@ -35,7 +35,7 @@ namespace WebAppServer.Pages
         #endregion
 
 
-        public void OnGet()
+        public async void OnGet()
         {
             DessinAnimes = await _animeManager.GetDessinAnimes();
         }
