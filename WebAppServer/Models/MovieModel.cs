@@ -12,6 +12,11 @@ namespace WebAppServer.Models
         #region Properties
 
         /// <summary>
+        /// ID du film.
+        /// </summary>
+        public Guid Id { get; set; }
+
+        /// <summary>
         /// Information sur le fichier
         /// </summary>
         public MovieInformation MovieInformation { get; set; }
@@ -27,5 +32,10 @@ namespace WebAppServer.Models
         public bool IsDownloaded { get; set; }
 
         #endregion
+
+        public MovieModel(Guid id)
+        {
+            Id = id;
+        }
     }
 }

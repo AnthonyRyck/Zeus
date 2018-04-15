@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MoviesLib.Entities;
 using WebAppServer.Codes;
 
 namespace WebAppServer.Pages
@@ -39,6 +41,19 @@ namespace WebAppServer.Pages
         public async void OnGet()
         {
             Movies = await _moviesManager.GetMovies();
+        }
+
+
+        public FileResult Download(Guid id)
+        {
+            //var fileName = movieInformation.FileName;
+            //var filepath = movieInformation.PathFile;
+
+
+            var movie = Movies.FirstOrDefault(x => x.Id == id);
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(movie.MovieInformation.PathFile);
+            return File(fileBytes, "application/octet-stream", movie.MovieInformation.FileName);
         }
     }
 }

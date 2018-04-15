@@ -26,5 +26,12 @@ namespace WebAppServer.Codes
         /// </summary>
         /// <param name="movieInformation"></param>
         void SetMovieDownloaded(MovieInformation movieInformation);
+
+        /// <summary>
+        /// Récupère le film par rapport à son ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        MovieModel GetMovie(Guid id);
     }
 }

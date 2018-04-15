@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
 using MoviesLib.Entities;
 using WebAppServer.Codes;
+using WebAppServer.Models;
 
 namespace WebAppServer.Controllers.API
 {
@@ -65,6 +66,15 @@ namespace WebAppServer.Controllers.API
             _moviesManager.SetMovieDownloaded(movieInformation);
 
             return temp;
+        }
+
+        // GET api/values/5
+        [HttpGet("{id}")]
+        public IActionResult Download(Guid id)
+        {
+            MovieModel movie = _moviesManager.GetMovie(id);
+
+            return GetMovieFile(movie.MovieInformation);
         }
 
     }
