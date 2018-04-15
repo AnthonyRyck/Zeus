@@ -204,6 +204,9 @@ namespace WebAppServer.Codes
             {
                 SearchMovie movieSelected;
 
+                // Pour palier le limit rate du site j'attend 1 sec avant de refaire une recherche.
+                await Task.Delay(1000);
+
                 if (movieInformation.Annee != "Inconnu")
                 {
                     SearchContainer<SearchMovie> temp = await _clientTmDb.SearchMovieAsync(movieInformation.Titre,
