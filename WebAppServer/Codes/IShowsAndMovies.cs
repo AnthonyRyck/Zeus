@@ -22,6 +22,18 @@ namespace WebAppServer.Codes
         Task<IEnumerable<MovieModel>> GetMovies();
 
         /// <summary>
+        /// Retourne la liste des dessin animes qui sont présent sur le local.
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<MovieInformation>> GetListDessinAnimesLocal();
+
+        /// <summary>
+        /// Retourne la liste des dessin animes avec toutes les informations.
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<MovieModel>> GetDessinAnimes();
+
+        /// <summary>
         /// Indique que ce film a été téléchargé.
         /// </summary>
         /// <param name="movieInformation"></param>

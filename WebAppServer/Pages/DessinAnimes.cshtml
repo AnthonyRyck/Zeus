@@ -1,15 +1,14 @@
 ﻿@page
-@model WebAppServer.Pages.MovieModel
+@model WebAppServer.Pages.DessinAnimesModel
 @{
-	ViewData["Title"] = "Movie";
+    ViewData["Title"] = "DessinAnimes";
 }
 
-<h2>Films</h2>
-
+<h2>Dessin Animés</h2>
 
 <div class="flex">
 
-	@foreach (var item in Model.Movies)
+	@foreach (var item in Model.DessinAnimes)
 	{
 		<div class="card">
 			<div class="test">

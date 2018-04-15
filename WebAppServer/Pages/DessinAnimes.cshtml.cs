@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using MoviesLib.Entities;
 using WebAppServer.Codes;
 
 namespace WebAppServer.Pages
 {
-    public class MovieModel : PageModel
+    public class DessinAnimesModel : PageModel
     {
         #region Fields
 
-        private IShowsAndMovies _moviesManager;
+        private IShowsAndMovies _animeManager;
 
         #endregion
 
@@ -23,24 +21,23 @@ namespace WebAppServer.Pages
         /// <summary>
         /// Liste de tous les films.
         /// </summary>
-        public IEnumerable<Models.MovieModel> Movies { get; set; }
+        public IEnumerable<Models.MovieModel> DessinAnimes { get; set; }
 
         #endregion
 
         #region Constructeur
 
-        public MovieModel(IShowsAndMovies movieManager)
+        public DessinAnimesModel(IShowsAndMovies animeManager)
         {
-            _moviesManager = movieManager;
+            _animeManager = animeManager;
         }
 
         #endregion
 
 
-
-        public async void OnGet()
+        public void OnGet()
         {
-            Movies = await _moviesManager.GetMovies();
+            DessinAnimes = await _animeManager.GetDessinAnimes();
         }
     }
 }

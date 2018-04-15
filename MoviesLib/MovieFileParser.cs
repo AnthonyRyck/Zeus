@@ -44,12 +44,14 @@ namespace MoviesLib
         /// <param name="title">Nom du fichier sans l'extension</param>
         /// <param name="fileName">Nom du fichier avec son extension.</param>
         /// <param name="sizeByte">Taille en Bytes du fichier.</param>
+        /// <param name="type">Donne le type de vidéo.</param>
         /// <returns></returns>
-        public MovieInformation GetInformation(string title, string fileName, long sizeByte)
+        public MovieInformation GetInformation(string title, string fileName, long sizeByte, TypeVideo type)
         {
             MovieInformation result = new MovieInformation();
             result.FileName = fileName;
             result.Size = sizeByte;
+            result.TypeVideo = type;
 
             title = RemoveExtraInformation(title);
 

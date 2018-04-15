@@ -45,8 +45,9 @@ namespace MoviesLib
         /// Récupère les informations de films sur le chemin donnée.
         /// </summary>
         /// <param name="path"></param>
+        /// <param name="type">Donne le type de vidéo.</param>
         /// <returns></returns>
-        public IEnumerable<MovieInformation> GetMoviesInformations(string path)
+        public IEnumerable<MovieInformation> GetMoviesInformations(string path, TypeVideo type)
         {
             List<MovieInformation> retourInformations = new List<MovieInformation>();
             FileInfo[] videoFiles = GetAllVideoFiles(path);
@@ -54,7 +55,7 @@ namespace MoviesLib
             foreach (var file in videoFiles)
             {
                 string fileName = RemoveExtension(file);
-                MovieInformation information = _movieFileParser.GetInformation(fileName, file.Name, file.Length);
+                MovieInformation information = _movieFileParser.GetInformation(fileName, file.Name, file.Length, type);
                 information.PathFile = file.FullName;
 
                 retourInformations.Add(information);

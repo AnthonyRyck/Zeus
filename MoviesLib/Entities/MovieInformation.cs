@@ -50,6 +50,11 @@ namespace MoviesLib.Entities
         /// Taille en octet.
         /// </summary>
         public long Size { get; set; }
+        
+        /// <summary>
+        /// Détermine le type de vidéo.
+        /// </summary>
+        public TypeVideo TypeVideo { get; set; }
 
         #endregion
 
@@ -78,5 +83,12 @@ namespace MoviesLib.Entities
         }
 
         #endregion
+    }
+
+    public enum TypeVideo
+    {
+        DessinAnime,
+        Movie,
+        Show
     }
 }

@@ -28,16 +28,6 @@ namespace WebAppServer.Codes
         private ConfigurationApp _configurationApp;
 
         /// <summary>
-        /// Chemin d'accès pour les films.
-        /// </summary>
-        private string _pathMoviesLocal;
-
-        /// <summary>
-        /// Chemin d'accès pour les séries.
-        /// </summary>
-        private string _pathShowsLocal;
-
-        /// <summary>
         /// Contient des informations de TmDB.
         /// </summary>
         private List<MovieModel> _movieModelsCollection = null;
@@ -48,6 +38,8 @@ namespace WebAppServer.Codes
         /// Object utilisé pour faire les locks.
         /// </summary>
         private static readonly Object _lock = new object();
+
+        private static bool _isUpdateTime = false;
 
         #endregion
 
@@ -80,7 +72,20 @@ namespace WebAppServer.Codes
         public async Task<IEnumerable<MovieInformation>> GetListMoviesLocal()
         {
             var temp = await GetMovies();
-            return temp.Where(x => !x.IsDownloaded).Select(x => x.MovieInformation).ToList();
+            return temp.Where(x => !x.IsDownloaded
+                            && x.MovieInformation.TypeVideo == TypeVideo.Movie)
+                       .Select(x => x.MovieInformation).ToList();
+        }
+
+        /// <summary>
+        /// Retourne la liste des films qui sont présent sur le local.
+        /// </summary>
+        public async Task<IEnumerable<MovieInformation>> GetListDessinAnimesLocal()
+        {
+            var temp = await GetMovies();
+            return temp.Where(x => !x.IsDownloaded
+                                   && x.MovieInformation.TypeVideo == TypeVideo.DessinAnime)
+                .Select(x => x.MovieInformation).ToList();
         }
 
         /// <summary>
@@ -91,7 +96,7 @@ namespace WebAppServer.Codes
         {
             if (_movieModelsCollection != null)
             {
-                return _movieModelsCollection;
+                return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.Movie).ToList();
             }
 
             // Voir dans le fichier de sauvegarde.
@@ -99,23 +104,62 @@ namespace WebAppServer.Codes
             if (tempMovieModels != null)
             {
                 _movieModelsCollection = tempMovieModels.ToList();
-                return _movieModelsCollection;
+                return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.Movie).ToList();
             }
 
             // Dans le cas ou il n'y a pas de fichier de sauvegarde.
-            List<MovieInformation> moviesOnLocal = new List<MovieInformation>();
+            List<MovieInformation> videosOnLocal = new List<MovieInformation>();
+
+            // Récupération des films.
             foreach (var pathMovie in _configurationApp.PathMovies)
             {
-                IEnumerable<MovieInformation> tempMovieLocal = _movieManager.GetMoviesInformations(pathMovie);
+                IEnumerable<MovieInformation> tempMovieLocal = _movieManager.GetMoviesInformations(pathMovie, TypeVideo.Movie);
 
                 if(tempMovieLocal.Any())
-                    moviesOnLocal.AddRange(tempMovieLocal);
+                    videosOnLocal.AddRange(tempMovieLocal);
             }
-
-            _movieModelsCollection = await GetMovieDbInformation(moviesOnLocal);
+            
+            _movieModelsCollection = await GetMovieDbInformation(videosOnLocal);
             _storage.SaveMoviesModels(_movieModelsCollection);
 
-            return _movieModelsCollection;
+            return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.Movie).ToList();
+        }
+
+        /// <summary>
+        /// Retourne la liste des films avec toutes les informations de chaque film.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<MovieModel>> GetDessinAnimes()
+        {
+            if (_movieModelsCollection != null)
+            {
+                return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.DessinAnime).ToList();
+            }
+
+            // Voir dans le fichier de sauvegarde.
+            IEnumerable<MovieModel> tempMovieModels = _storage.GetMoviesTmDb();
+            if (tempMovieModels != null)
+            {
+                _movieModelsCollection = tempMovieModels.ToList();
+                return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.DessinAnime).ToList();
+            }
+
+            // Dans le cas ou il n'y a pas de fichier de sauvegarde.
+            List<MovieInformation> videosOnLocal = new List<MovieInformation>();
+
+            // Récupération des dessins animés.
+            foreach (var dessinAnimes in _configurationApp.PathDessinAnimes)
+            {
+                IEnumerable<MovieInformation> tempAnimes = _movieManager.GetMoviesInformations(dessinAnimes, TypeVideo.DessinAnime);
+
+                if (tempAnimes.Any())
+                    videosOnLocal.AddRange(tempAnimes);
+            }
+
+            _movieModelsCollection = await GetMovieDbInformation(videosOnLocal);
+            _storage.SaveMoviesModels(_movieModelsCollection);
+
+            return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.DessinAnime).ToList();
         }
 
         /// <summary>
@@ -228,8 +272,13 @@ namespace WebAppServer.Codes
         /// <param name="state"></param>
         private async void TimerUpdate(object state)
         {
+            if (_isUpdateTime)
+                return;
+
+            _isUpdateTime = true;
+
             // Récupération des films en locale.
-            List<MovieInformation> moviesOnLocal = new List<MovieInformation>();
+            List<MovieInformation> videosOnLocal = new List<MovieInformation>();
             foreach (var pathMovie in _configurationApp.PathMovies)
             {
                 if (!Directory.Exists(pathMovie))
@@ -237,10 +286,24 @@ namespace WebAppServer.Codes
                     continue;
                 }
 
-                IEnumerable<MovieInformation> tempMoviesOnLocal = _movieManager.GetMoviesInformations(pathMovie);
+                IEnumerable<MovieInformation> tempMoviesOnLocal = _movieManager.GetMoviesInformations(pathMovie, TypeVideo.Movie);
 
                 if (tempMoviesOnLocal.Any())
-                    moviesOnLocal.AddRange(tempMoviesOnLocal);
+                    videosOnLocal.AddRange(tempMoviesOnLocal);
+            }
+
+            // Récupération des dessins animés.
+            foreach (var dessinAnimes in _configurationApp.PathDessinAnimes)
+            {
+                if (!Directory.Exists(dessinAnimes))
+                {
+                    continue;
+                }
+
+                IEnumerable<MovieInformation> tempAnimes = _movieManager.GetMoviesInformations(dessinAnimes, TypeVideo.DessinAnime);
+
+                if (tempAnimes.Any())
+                    videosOnLocal.AddRange(tempAnimes);
             }
 
             List<MovieModel> listeToDelete = new List<MovieModel>();
@@ -251,7 +314,7 @@ namespace WebAppServer.Codes
                 // et ce qui est connu en mémoire.
                 foreach (MovieModel movieLocal in _movieModelsCollection)
                 {
-                    if (!moviesOnLocal.Contains(movieLocal.MovieInformation))
+                    if (!videosOnLocal.Contains(movieLocal.MovieInformation))
                     {
                         listeToDelete.Add(movieLocal);
                     }
@@ -274,7 +337,7 @@ namespace WebAppServer.Codes
             List<MovieInformation> tempMovieInformations = _movieModelsCollection.Select(x => x.MovieInformation).ToList();
             List<MovieInformation> listeToAdd = new List<MovieInformation>();
 
-            foreach (MovieInformation movieLocal in moviesOnLocal)
+            foreach (MovieInformation movieLocal in videosOnLocal)
             {
                 if (!tempMovieInformations.Contains(movieLocal))
                 {
@@ -290,6 +353,7 @@ namespace WebAppServer.Codes
 
             // Sauvegarde
             _storage.SaveMoviesModels(_movieModelsCollection);
+            _isUpdateTime = false;
         }
 
         

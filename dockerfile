@@ -29,6 +29,7 @@ WORKDIR /app
 RUN mkdir -p movies
 RUN mkdir -p save
 RUN mkdir -p config
+RUN mkdir -p animes
 
 COPY --from=build-env /src/WebAppServer/out .
 EXPOSE 80
