@@ -106,7 +106,7 @@ namespace WebAppClient.Codes
 
                 Movie movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id);
 
-                returnMovieModels.Add(new MovieModel()
+                returnMovieModels.Add(new MovieModel(Guid.NewGuid())
                 {
                     MovieInformation = movieInformation,
                     MovieTmDb = movieDb

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
 using MoviesLib.Entities;
 using WebAppServer.Codes;
+using WebAppServer.Models;
 
 namespace WebAppServer.Controllers.API
 {
@@ -48,15 +49,11 @@ namespace WebAppServer.Controllers.API
 
             Func<Stream, ActionContext, Task> funcTemp = async (outputStream, context) =>
             {
-                using (var zipArchive = new ZipArchive(new WriteOnlyStreamWrapper(outputStream), ZipArchiveMode.Create))
+                using (var fileStream = new WriteOnlyStreamWrapper(outputStream))
                 {
-                    ZipArchiveEntry zipEntry = zipArchive.CreateEntry(movieInformation.Titre);
-                    using (var zipStream = zipEntry.Open())
+                    using (var stream = file)
                     {
-                        using (var stream = file)
-                        {
-                            await stream.CopyToAsync(zipStream);
-                        }
+                        await stream.CopyToAsync(fileStream);
                     }
                 }
             };
@@ -69,6 +66,15 @@ namespace WebAppServer.Controllers.API
             _moviesManager.SetMovieDownloaded(movieInformation);
 
             return temp;
+        }
+
+        // GET api/values/5
+        [HttpGet("{id}")]
+        public IActionResult Download(Guid id)
+        {
+            MovieModel movie = _moviesManager.GetMovie(id);
+
+            return GetMovieFile(movie.MovieInformation);
         }
 
     }

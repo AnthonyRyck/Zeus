@@ -138,6 +138,11 @@ namespace WebAppServer.Codes
             }
         }
 
+        public MovieModel GetMovie(Guid id)
+        {
+            return _movieModelsCollection.FirstOrDefault(x => x.Id == id);
+        }
+
         #endregion
 
         #region Private Methods
@@ -182,10 +187,10 @@ namespace WebAppServer.Codes
                 {
                     Movie movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id);
 
-                    returnMovieModels.Add(new MovieModel()
+                    returnMovieModels.Add(new MovieModel(Guid.NewGuid())
                     {
                         MovieInformation = movieInformation,
-                        MovieTmDb = movieDb
+                        MovieTmDb = movieDb,
                     });
                 }
             }
@@ -286,6 +291,8 @@ namespace WebAppServer.Codes
             // Sauvegarde
             _storage.SaveMoviesModels(_movieModelsCollection);
         }
+
+        
 
         #endregion
 
