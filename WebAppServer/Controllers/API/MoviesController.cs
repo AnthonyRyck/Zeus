@@ -44,6 +44,28 @@ namespace WebAppServer.Controllers.API
         [HttpPost("download")]
         public IActionResult GetMovieFile([FromBody]MovieInformation movieInformation)
         {
+            var tempVideo = DownloadVideoCore(movieInformation);
+            _moviesManager.SetMovieDownloaded(movieInformation);
+
+            return tempVideo;
+        }
+
+        // GET api/values/5
+        [HttpGet("{id}")]
+        public IActionResult Download(Guid id)
+        {
+            MovieModel movie = _moviesManager.GetMovie(id);
+
+            return DownloadVideoCore(movie.MovieInformation);
+        }
+
+
+
+
+
+
+        private IActionResult DownloadVideoCore(MovieInformation movieInformation)
+        {
             FileStream file = new FileStream(movieInformation.PathFile, FileMode.Open, FileAccess.Read, FileShare.Read, 4096,
                 true);
 
@@ -63,18 +85,7 @@ namespace WebAppServer.Controllers.API
                 FileDownloadName = movieInformation.FileName
             };
 
-            _moviesManager.SetMovieDownloaded(movieInformation);
-
             return temp;
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public IActionResult Download(Guid id)
-        {
-            MovieModel movie = _moviesManager.GetMovie(id);
-
-            return GetMovieFile(movie.MovieInformation);
         }
 
     }
