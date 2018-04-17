@@ -37,13 +37,13 @@ namespace WebAppClient.Codes
         /// <summary>
         /// Func pour la récupération des films sur le local.
         /// </summary>
-        private Func<string, IEnumerable<MovieInformation>> _funcGetMovies;
+        private Func<string, TypeVideo, IEnumerable<MovieInformation>> _funcGetMovies;
 
         #endregion
 
         #region Constructeur
 
-        public StorageManager(Func<string, IEnumerable<MovieInformation>> getMovies)
+        public StorageManager(Func<string, TypeVideo, IEnumerable<MovieInformation>> getMovies)
         {
             _pathConfiguration = GetConfigPath();
             _pathSauvegarde = GetSavePath();

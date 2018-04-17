@@ -150,7 +150,7 @@ namespace WebAppClient.Codes
         private async void TimerUpdate(object state)
         {
             // Récupération des films en locale.
-            IEnumerable<MovieInformation> moviesOnLocal = _movieManager.GetMoviesInformations(_configurationApp.PathMovies);
+            IEnumerable<MovieInformation> moviesOnLocal = _movieManager.GetMoviesInformations(_configurationApp.PathMovies, TypeVideo.Movie);
 
             List<MovieModel> listeToDelete = new List<MovieModel>();
 

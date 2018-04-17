@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using WebAppServer.Codes;
 
 namespace WebAppServer
@@ -34,7 +36,7 @@ namespace WebAppServer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -46,12 +48,18 @@ namespace WebAppServer
                 app.UseExceptionHandler("/Error");
             }
 
+            Directory.CreateDirectory(env.ContentRootPath + "/Logs");
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.RollingFile(Path.Combine(env.ContentRootPath + "/Logs/", "log-{Date}.txt"))
+                .CreateLogger();
+
+            loggerFactory.AddSerilog();
+
             app.UseStaticFiles();
 
             app.UseMvc();
-
-
-           
         }
 
        

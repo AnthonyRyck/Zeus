@@ -65,7 +65,7 @@ namespace MoviesLib.Test
             #region ACT
 
             MovieManager manager = new MovieManager("TRUEFRENCH", "FRENCH", "FR");
-            IEnumerable<MovieInformation> result = manager.GetMoviesInformations(_pathFilmsTest);
+            IEnumerable<MovieInformation> result = manager.GetMoviesInformations(_pathFilmsTest, TypeVideo.Movie);
 
             #endregion
 

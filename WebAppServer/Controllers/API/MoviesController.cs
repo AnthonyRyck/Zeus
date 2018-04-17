@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using MoviesLib.Entities;
 using WebAppServer.Codes;
@@ -22,10 +23,12 @@ namespace WebAppServer.Controllers.API
     public class MoviesController : Controller
     {
         private IShowsAndMovies _moviesManager;
+        private readonly ILogger _logger;
 
-        public MoviesController(IShowsAndMovies moviesManager)
+        public MoviesController(IShowsAndMovies moviesManager, ILogger<MoviesController> logger)
         {
             _moviesManager = moviesManager;
+            _logger = logger;
         }
 
         /// <summary>
@@ -35,6 +38,7 @@ namespace WebAppServer.Controllers.API
         [HttpGet]
         public async Task<IEnumerable<MovieInformation>> Get()
         {
+            _logger.LogInformation("Demande de récupération des films en local.");
             return await _moviesManager.GetListMoviesLocal();
         }
 
@@ -47,6 +51,8 @@ namespace WebAppServer.Controllers.API
             var tempVideo = DownloadVideoCore(movieInformation);
             _moviesManager.SetMovieDownloaded(movieInformation);
 
+            _logger.LogInformation("Récupération par API du film : " + movieInformation.Titre);
+
             return tempVideo;
         }
 
@@ -56,6 +62,7 @@ namespace WebAppServer.Controllers.API
         {
             MovieModel movie = _moviesManager.GetMovie(id);
 
+            _logger.LogInformation("Récupération par Web du film : " + movie.MovieInformation.Titre);
             return DownloadVideoCore(movie.MovieInformation);
         }
 
@@ -66,24 +73,35 @@ namespace WebAppServer.Controllers.API
 
         private IActionResult DownloadVideoCore(MovieInformation movieInformation)
         {
-            FileStream file = new FileStream(movieInformation.PathFile, FileMode.Open, FileAccess.Read, FileShare.Read, 4096,
-                true);
+            IActionResult temp = null;
 
-            Func<Stream, ActionContext, Task> funcTemp = async (outputStream, context) =>
+            try
             {
-                using (var fileStream = new WriteOnlyStreamWrapper(outputStream))
+                FileStream file = new FileStream(movieInformation.PathFile, FileMode.Open, FileAccess.Read, FileShare.Read, 4096,
+                    true);
+
+                Func<Stream, ActionContext, Task> funcTemp = async (outputStream, context) =>
                 {
-                    using (var stream = file)
+                    using (var fileStream = new WriteOnlyStreamWrapper(outputStream))
                     {
-                        await stream.CopyToAsync(fileStream);
+                        using (var stream = file)
+                        {
+                            await stream.CopyToAsync(fileStream);
+                        }
                     }
-                }
-            };
+                };
 
-            var temp = new FileCallbackResult("application/octet-stream", funcTemp)
+                temp = new FileCallbackResult("application/octet-stream", funcTemp)
+                {
+                    FileDownloadName = movieInformation.FileName
+                };
+            }
+            catch (Exception exception)
             {
-                FileDownloadName = movieInformation.FileName
-            };
+                _logger.LogError(exception, "Erreur sur la récupération du film " + movieInformation.Titre);
+                temp = NoContent();
+            }
+            
 
             return temp;
         }

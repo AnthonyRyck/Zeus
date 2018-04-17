@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using MoviesLib.Entities;
 using Newtonsoft.Json;
-using TMDbLib.Objects.Movies;
 using WebAppServer.Models;
 
 namespace WebAppServer.Codes

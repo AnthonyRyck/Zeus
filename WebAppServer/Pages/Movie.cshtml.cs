@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 using MoviesLib.Entities;
 using WebAppServer.Codes;
 
@@ -15,6 +16,8 @@ namespace WebAppServer.Pages
         #region Fields
 
         private IShowsAndMovies _moviesManager;
+        private readonly ILogger _logger;
+
 
         #endregion
 
@@ -29,9 +32,10 @@ namespace WebAppServer.Pages
 
         #region Constructeur
 
-        public MovieModel(IShowsAndMovies movieManager)
+        public MovieModel(IShowsAndMovies movieManager, ILogger<MovieModel> logger)
         {
             _moviesManager = movieManager;
+            _logger = logger;
         }
 
         #endregion
@@ -40,7 +44,9 @@ namespace WebAppServer.Pages
 
         public async void OnGet()
         {
+            _logger.LogDebug("Consultation page - Films -");
             Movies = await _moviesManager.GetMovies();
+            _logger.LogDebug("Page Films - Movies = " + Movies.Count() + " films.");
         }
     }
 }

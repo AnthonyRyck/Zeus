@@ -190,7 +190,7 @@ namespace MoviesAutomate.Codes
             {
                 if (Directory.Exists(pathMovie))
                 {
-                    IEnumerable<MovieInformation> tempMoviesOnLocal = _movieManager.GetMoviesInformations(pathMovie);
+                    IEnumerable<MovieInformation> tempMoviesOnLocal = _movieManager.GetMoviesInformations(pathMovie, TypeVideo.Movie);
 
                     if (tempMoviesOnLocal.Any())
                         moviesOnLocal.AddRange(tempMoviesOnLocal);
