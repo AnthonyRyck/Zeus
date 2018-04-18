@@ -204,5 +204,34 @@ namespace MoviesLib.Test
 
             #endregion
         }
+
+        [TestMethod]
+        [TestProperty("MoviesLib", "MovieFileParser")]
+        [Description("")]
+        public void ExtraireDeToutesLesInfosDuTitre_When_TitreContientChiffreRomain()
+        {
+            #region ARRANGE
+
+            string titreSeries = "Cars Ii 1080p x264.GHT.mkv";
+
+            #endregion
+
+            #region ACT
+
+            MovieFileParser parser = new MovieFileParser("VOSTFR", "french", "TRUEFRENCH");
+            var resultParser = parser.GetInformation(titreSeries, String.Empty, 0, TypeVideo.DessinAnime);
+
+            #endregion
+
+            #region ASSERT
+
+            Assert.AreEqual("1080p", resultParser.Resolution);
+            Assert.AreEqual("Inconnu", resultParser.Qualite);
+            Assert.AreEqual("Inconnu", resultParser.Annee);
+            Assert.AreEqual("Inconnu", resultParser.Langage);
+            Assert.AreEqual("CARS 2", resultParser.Titre);
+
+            #endregion
+        }
     }
 }

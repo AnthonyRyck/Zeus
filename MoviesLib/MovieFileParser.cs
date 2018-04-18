@@ -17,8 +17,22 @@ namespace MoviesLib
         private const string RESOLUTION_PATTERN = "[0-9]{3,4}p";
         private const string QUALITY_PATTERN = @"([HP]DTV|HDCAM|B[rR]Rip|TS|WEB-DL|H[dD]Rip|DVDRip|DVDRiP|DVDRIP|CamRip|webrip|W[EB]B[rR]ip|[Bb]lu[Rr]ay|DvDScr|hdtv|[Hh][Dd][Ll]ight)";
         private const string INCONNU = "Inconnu";
+        private const string CHIFFRE_ROMAIN_PATTERN = @"\s{I|II|III|IV|V|VI|VII|VIII|IX|X}\s";
 
         private string _languesPattern;
+        private IEnumerable<ChiffreRomain> _chiffreRomainsCollection = new List<ChiffreRomain>()
+        {
+            ChiffreRomain.I,
+            ChiffreRomain.II,
+            ChiffreRomain.III,
+            ChiffreRomain.IV,
+            ChiffreRomain.V,
+            ChiffreRomain.VI,
+            ChiffreRomain.VII,
+            ChiffreRomain.VIII,
+            ChiffreRomain.IX,
+            ChiffreRomain.X
+        };
 
         #endregion
 
@@ -73,6 +87,30 @@ namespace MoviesLib
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Extrait du titre les chiffres romains, et remplace en chiffre.
+        /// </summary>
+        /// <param name="titre"></param>
+        /// <returns></returns>
+        private string ExtractRomanNumber(string titre)
+        {
+            string tempTitre = titre;
+            Match matchResult = Regex.Match(tempTitre, CHIFFRE_ROMAIN_PATTERN);
+
+            if (!string.IsNullOrEmpty(matchResult.Value))
+            {
+                foreach (ChiffreRomain chiffreRomain in _chiffreRomainsCollection)
+                {
+                    if (matchResult.Value == chiffreRomain.ToString("f"))
+                    {
+                        tempTitre = tempTitre.Replace(matchResult.Value, chiffreRomain.ToString("d"));
+                    }
+                }
+            }
+
+            return tempTitre;
+        }
 
         /// <summary>
         /// Récupère la résoluion de la vidéo.
@@ -143,6 +181,8 @@ namespace MoviesLib
             {
                 result = title;
             }
+
+            result = ExtractRomanNumber(result);
 
             return result;
         }
