@@ -93,6 +93,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\MoviesLib\Entities\ChiffreRomain.cs">
+      <Link>Codes\Entities\ChiffreRomain.cs</Link>
+    </Compile>
     <Compile Include="..\MoviesLib\Entities\MovieInformation.cs">
       <Link>Codes\Entities\MovieInformation.cs</Link>
     </Compile>

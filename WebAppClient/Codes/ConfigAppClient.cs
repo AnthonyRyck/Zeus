@@ -25,7 +25,12 @@ namespace WebAppClient.Codes
         /// <summary>
         /// Chemin d'accés pour les Films.
         /// </summary>
-        public string PathMovies { get; set; }
+        public IEnumerable<string> PathMovies { get; set; }
+
+        /// <summary>
+        /// Chemin d'accès pour les Dessin animés.
+        /// </summary>
+        public IEnumerable<string> PathDessinAnimes { get; set; }
 
         /// <summary>
         /// Chemin d'accés pour les séries.
@@ -36,12 +41,6 @@ namespace WebAppClient.Codes
         /// Temps en milliseconde pour faire un update sur les films/séries.
         /// </summary>
         public int TempsEnMillisecondPourTimerRefresh { get; set; }
-
-        /// <summary>
-        /// Temps en milliseconde pour faire une nouvelle recherche sur le server
-        /// s'il y a des nouveaux films.
-        /// </summary>
-        public int TempsPourRefreshMovieServer { get; set; }
 
         /// <summary>
         /// URL du server contenant les films.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,38 +18,33 @@ namespace WebAppClient.Codes
     {
         #region Properties
 
-        private MovieManager _movieManager;
-        private TMDbClient _clientTmDb;
-        private StorageManager _storage;
-        private ConfigAppClient _configurationApp;
-
-        /// <summary>
-        /// Chemin d'accès pour les films.
-        /// </summary>
-        private string _pathMoviesLocal;
-
-        /// <summary>
-        /// Chemin d'accès pour les séries.
-        /// </summary>
-        private string _pathShowsLocal;
+        private readonly MovieManager _movieManager;
+        private readonly TMDbClient _clientTmDb;
+        private readonly StorageManager _storage;
+        private readonly ConfigAppClient _configurationApp;
 
         /// <summary>
         /// Contient des informations de TmDB.
         /// </summary>
         private List<MovieModel> _movieModelsCollection = null;
 
-        private Timer _timerUpdate;
         private Timer _timerUpdateMovieServer;
 
         /// <summary>
         /// Object utilisé pour faire les locks.
         /// </summary>
-        private static readonly Object _lock = new object();
+        private static readonly Object Lock = new object();
 
         /// <summary>
-        /// Indication pour savoir si c'est le premier démarrage de l'instance.
+        /// Objet permettant d'aller taper sur notre serveur.
         /// </summary>
-        private bool _isFirstStart;
+        private readonly MoviesServer _moviesServer;
+
+        /// <summary>
+        /// Indicateur si l'application est entrain de mettre à jour
+        /// ces informations de films.
+        /// </summary>
+        private static bool _isUpdateMovies;
 
         #endregion
 
@@ -66,9 +62,9 @@ namespace WebAppClient.Codes
 
             _storage = new StorageManager(_movieManager.GetMoviesInformations);
             _configurationApp = _storage.GetConfiguration();
+            _moviesServer = new MoviesServer(_configurationApp.UrlServer, GetPathToSave);
 
-            _timerUpdate = new Timer(TimerUpdate, null, 5000, _configurationApp.TempsEnMillisecondPourTimerRefresh);
-            //_timerUpdateMovieServer = new Timer(TimerUpdateServerMovies, null, 5000, _configurationApp.TempsPourRefreshMovieServer);
+            _timerUpdateMovieServer = new Timer(TimerUpdateServerMovies, null, 15000, _configurationApp.TempsEnMillisecondPourTimerRefresh);
         }
 
         #endregion
@@ -104,13 +100,23 @@ namespace WebAppClient.Codes
                     movieSelected = GetTheGoodMovie(temp, movieInformation);
                 }
 
-                Movie movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id);
-
-                returnMovieModels.Add(new MovieModel(Guid.NewGuid())
+                if (movieSelected == null)
                 {
-                    MovieInformation = movieInformation,
-                    MovieTmDb = movieDb
-                });
+                    // TODO : Mettre en log le fait qu'aucun film de trouvé.
+                    // TODO : Faire un objet Movie "factice" pour juste l'affichage.
+                    //Movie movieDb = new Movie();
+
+                }
+                else
+                {
+                    Movie movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id);
+
+                    returnMovieModels.Add(new MovieModel(Guid.NewGuid())
+                    {
+                        MovieInformation = movieInformation,
+                        MovieTmDb = movieDb
+                    });
+                }
             }
 
             return returnMovieModels;
@@ -139,18 +145,73 @@ namespace WebAppClient.Codes
             return retourMovie;
         }
 
+        /// <summary>
+        /// Retourne l'endroit ou sauvegarde le film.
+        /// </summary>
+        /// <param name="movieInformation"></param>
+        /// <returns></returns>
+        private string GetPathToSave(MovieInformation movieInformation)
+        {
+            // En fonction de la taille du fichier il faut trouver un endroit ou le stocker.
+            string emplacement = String.Empty;
+
+            foreach (string pathMovie in _configurationApp.PathMovies)
+            {
+                // Récupération de la lettre du Drive
+                string drive = pathMovie[0].ToString();
+                DriveInfo di = new DriveInfo(drive);
+
+                if (di.AvailableFreeSpace > movieInformation.Size)
+                {
+                    // TODO : Lever une exception quand pas assez de place sur aucun lecteur.
+                    emplacement = pathMovie;
+                    break;
+                }
+            }
+
+            return emplacement;
+        }
+
         #endregion
 
         #region Timer Methods
 
         /// <summary>
-        /// Méthode qui appelé lorsque le Timer arrive à la fin.
+        /// Méthode permettant de mettre à jour les films en local.
         /// </summary>
-        /// <param name="state"></param>
-        private async void TimerUpdate(object state)
+        private async Task UpdateLocalMovies()
         {
             // Récupération des films en locale.
-            IEnumerable<MovieInformation> moviesOnLocal = _movieManager.GetMoviesInformations(_configurationApp.PathMovies, TypeVideo.Movie);
+            List<MovieInformation> videosOnLocal = new List<MovieInformation>();
+            foreach (var pathMovie in _configurationApp.PathMovies)
+            {
+                if (Directory.Exists(pathMovie))
+                {
+                    IEnumerable<MovieInformation> tempMoviesOnLocal = _movieManager.GetMoviesInformations(pathMovie, TypeVideo.Movie);
+
+                    if (tempMoviesOnLocal.Any())
+                        videosOnLocal.AddRange(tempMoviesOnLocal);
+                }
+                else
+                {
+                    // TODO : Mettre en log l'erreur que le repertoire n'existe pas.
+                }
+            }
+
+            foreach (var pathAnime in _configurationApp.PathDessinAnimes)
+            {
+                if (Directory.Exists(pathAnime))
+                {
+                    IEnumerable<MovieInformation> tempDessinAnimesOnLocal = _movieManager.GetMoviesInformations(pathAnime, TypeVideo.DessinAnime);
+
+                    if (tempDessinAnimesOnLocal.Any())
+                        videosOnLocal.AddRange(tempDessinAnimesOnLocal);
+                }
+                else
+                {
+                    // TODO : Mettre en log l'erreur que le repertoire n'existe pas.
+                }
+            }
 
             List<MovieModel> listeToDelete = new List<MovieModel>();
 
@@ -163,13 +224,13 @@ namespace WebAppClient.Codes
 
             foreach (MovieModel movieLocal in _movieModelsCollection)
             {
-                if (!moviesOnLocal.Contains(movieLocal.MovieInformation))
+                if (!videosOnLocal.Contains(movieLocal.MovieInformation))
                 {
                     listeToDelete.Add(movieLocal);
                 }
             }
 
-            lock (_lock)
+            lock (Lock)
             {
                 // Suppression des films n'existant plus
                 foreach (var toDelete in listeToDelete)
@@ -179,11 +240,10 @@ namespace WebAppClient.Codes
             }
 
             // Voir s'il y a des rajouts.
-            List<MovieInformation> tempMovieInformations =
-                _movieModelsCollection.Select(x => x.MovieInformation).ToList();
+            List<MovieInformation> tempMovieInformations = _movieModelsCollection.Select(x => x.MovieInformation).ToList();
             List<MovieInformation> listeToAdd = new List<MovieInformation>();
 
-            foreach (MovieInformation movieLocal in moviesOnLocal)
+            foreach (MovieInformation movieLocal in videosOnLocal)
             {
                 if (!tempMovieInformations.Contains(movieLocal))
                 {
@@ -192,7 +252,7 @@ namespace WebAppClient.Codes
             }
 
             var tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
-            lock (_lock)
+            lock (Lock)
             {
                 _movieModelsCollection.AddRange(tempAddMovieModels);
             }
@@ -208,7 +268,39 @@ namespace WebAppClient.Codes
         /// <param name="state"></param>
         private async void TimerUpdateServerMovies(object state)
         {
-            
+            if (_isUpdateMovies)
+                return;
+
+            _isUpdateMovies = true;
+
+            await UpdateLocalMovies();
+
+            if (string.IsNullOrEmpty(_configurationApp.UrlServer))
+            {
+                _isUpdateMovies = false;
+                return;
+            }
+
+            IEnumerable<MovieInformation> moviesInformations = await _moviesServer.GetMoviesInformationAsync();
+
+            List<MovieInformation> tempLocalMovie = _movieModelsCollection.Select(x => x.MovieInformation).ToList();
+            List<MovieInformation> listNewMovies = new List<MovieInformation>();
+
+            foreach (MovieInformation movieInformation in moviesInformations)
+            {
+                if (!tempLocalMovie.Contains(movieInformation))
+                {
+                    listNewMovies.Add(movieInformation);
+                }
+            }
+
+            // Récupérer chaque nouveau film.
+            foreach (MovieInformation newMovie in listNewMovies)
+            {
+                _moviesServer.DownloadMovies(newMovie);
+            }
+
+            _isUpdateMovies = false;
         }
 
         #endregion

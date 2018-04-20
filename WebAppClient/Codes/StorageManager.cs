@@ -160,17 +160,14 @@ namespace WebAppClient.Codes
                 {
                     "FRENCH", "TRUEFRENCH", "FR"
                 },
-                PathMovies = "/moviesClient",
+                PathMovies = new List<string> { "/moviesClient" },
+                PathDessinAnimes = new List<string> { "/animes"},
                 PathShows = "/shows",
                 TempsEnMillisecondPourTimerRefresh = 60000,
-                TempsPourRefreshMovieServer = 60000,
                 UrlServer = string.Empty
             };
         }
 
         #endregion
-
-
-
     }
 }

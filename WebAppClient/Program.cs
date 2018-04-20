@@ -18,6 +18,10 @@ namespace WebAppClient
         #region ServiceOrConsole
         public static void Main(string[] args)
         {
+            Console.WriteLine("***** Lancement de l'application *******");
+            Console.WriteLine("Appuyez sur une touche pour commencer.");
+            Console.ReadKey();
+
             //bool isService = true;
             //if (Debugger.IsAttached || args.Contains("--console"))
             //{

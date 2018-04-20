@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
-    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\MoviesLib\Entities\ChiffreRomain.cs" Link="Codes\Entities\ChiffreRomain.cs" />
     <Compile Include="..\MoviesLib\Entities\MovieInformation.cs" Link="Codes\Entities\MovieInformation.cs" />
     <Compile Include="..\MoviesLib\Entities\ShowInformation.cs" Link="Codes\Entities\ShowInformation.cs" />
     <Compile Include="..\MoviesLib\MovieFileParser.cs" Link="Codes\MovieFileParser.cs" />
@@ -26,6 +27,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.0-preview1-final" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.1.0-preview1-final" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0-preview1-final" />
+    <PackageReference Include="Serilog.Extensions.Logging.File" Version="1.1.0" />
     <PackageReference Include="TMDbLib" Version="1.2.0-alpha" />
   </ItemGroup>
   

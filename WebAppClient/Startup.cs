@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using WebAppClient.Codes;
 
 namespace WebAppClient
@@ -30,7 +32,9 @@ namespace WebAppClient
         {
             // Add framework services.
             services.AddMvc();
-            services.AddSingleton<IClientManager, ClientManager>();
+
+            ClientManager clientManager = new ClientManager();
+            services.AddSingleton<IClientManager>(clientManager);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +53,16 @@ namespace WebAppClient
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            Directory.CreateDirectory(env.ContentRootPath + "/Logs");
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.RollingFile(Path.Combine(env.ContentRootPath + "/Logs/", "log-{Date}.txt"))
+                .CreateLogger();
+
+            loggerFactory.AddSerilog();
+
+
             app.UseStaticFiles();
 
             app.UseMvc(routes =>
@@ -57,6 +71,7 @@ namespace WebAppClient
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }
