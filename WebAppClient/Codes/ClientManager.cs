@@ -160,6 +160,8 @@ namespace WebAppClient.Codes
 
             foreach (MovieInformation movieInformation in moviesInfomration)
             {
+                await Task.Delay(1000);
+
                 SearchMovie movieSelected;
 
                 if (movieInformation.Annee != "Inconnu")
