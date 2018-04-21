@@ -5,31 +5,40 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebAppClient.Codes;
+using WebAppServer.Models;
 
 namespace WebAppClient.Pages
 {
-    public class MoviesModel : PageModel
+    public class DessinAnimesModel : PageModel
     {
-        private IClientManager _clientManager;
+        #region Fields
+
+        private IClientManager _animeManager;
+
+        #endregion
 
         #region Properties
 
         /// <summary>
         /// Liste de tous les films.
         /// </summary>
-        public IEnumerable<WebAppServer.Models.MovieModel> Movies { get; set; }
+        public IEnumerable<MovieModel> DessinAnimes { get; set; }
 
         #endregion
 
-        public MoviesModel(IClientManager manager)
+        #region Constructeur
+
+        public DessinAnimesModel(IClientManager animeManager)
         {
-            _clientManager = manager;
+            _animeManager = animeManager;
         }
+
+        #endregion
 
 
         public async void OnGet()
         {
-            Movies = await _clientManager.GetMovies();
+            DessinAnimes = await _animeManager.GetDessinAnimes();
         }
     }
 }

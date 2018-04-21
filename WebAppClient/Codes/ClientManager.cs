@@ -69,6 +69,84 @@ namespace WebAppClient.Codes
 
         #endregion
 
+        #region Implement IClientManager
+
+        /// <summary>
+        /// Retourne la liste des films avec toutes les informations de chaque film.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<MovieModel>> GetMovies()
+        {
+            if (_movieModelsCollection != null)
+            {
+                return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.Movie).ToList();
+            }
+
+            // Voir dans le fichier de sauvegarde.
+            IEnumerable<MovieModel> tempMovieModels = _storage.GetMoviesTmDb();
+            if (tempMovieModels != null)
+            {
+                _movieModelsCollection = tempMovieModels.ToList();
+                return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.Movie).ToList();
+            }
+
+            // Dans le cas ou il n'y a pas de fichier de sauvegarde.
+            List<MovieInformation> videosOnLocal = new List<MovieInformation>();
+
+            // Récupération des films.
+            foreach (var pathMovie in _configurationApp.PathMovies)
+            {
+                IEnumerable<MovieInformation> tempMovieLocal = _movieManager.GetMoviesInformations(pathMovie, TypeVideo.Movie);
+
+                if (tempMovieLocal.Any())
+                    videosOnLocal.AddRange(tempMovieLocal);
+            }
+
+            _movieModelsCollection = await GetMovieDbInformation(videosOnLocal);
+            _storage.SaveMoviesModels(_movieModelsCollection);
+
+            return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.Movie).ToList();
+        }
+
+        /// <summary>
+        /// Retourne la liste des films avec toutes les informations de chaque film.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<MovieModel>> GetDessinAnimes()
+        {
+            if (_movieModelsCollection != null)
+            {
+                return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.DessinAnime).ToList();
+            }
+
+            // Voir dans le fichier de sauvegarde.
+            IEnumerable<MovieModel> tempMovieModels = _storage.GetMoviesTmDb();
+            if (tempMovieModels != null)
+            {
+                _movieModelsCollection = tempMovieModels.ToList();
+                return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.DessinAnime).ToList();
+            }
+
+            // Dans le cas ou il n'y a pas de fichier de sauvegarde.
+            List<MovieInformation> videosOnLocal = new List<MovieInformation>();
+
+            // Récupération des dessins animés.
+            foreach (var dessinAnimes in _configurationApp.PathDessinAnimes)
+            {
+                IEnumerable<MovieInformation> tempAnimes = _movieManager.GetMoviesInformations(dessinAnimes, TypeVideo.DessinAnime);
+
+                if (tempAnimes.Any())
+                    videosOnLocal.AddRange(tempAnimes);
+            }
+
+            _movieModelsCollection = await GetMovieDbInformation(videosOnLocal);
+            _storage.SaveMoviesModels(_movieModelsCollection);
+
+            return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.DessinAnime).ToList();
+        }
+
+        #endregion
+
         #region Private Methods
 
         /// <summary>
