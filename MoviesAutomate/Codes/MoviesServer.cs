@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
+using log4net;
 using MoviesLib.Entities;
 using Newtonsoft.Json;
 
@@ -18,6 +18,8 @@ namespace MoviesAutomate.Codes
 
         private const string API_GET_MOVIES = "api/movies";
         private const string API_DOWNLOAD_MOVIES = "api/movies/download";
+        private static readonly ILog _logger
+            = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// C'est ce Func qui donne l'endroit ou sauvegarder le film.
@@ -54,9 +56,10 @@ namespace MoviesAutomate.Codes
                 string movies = await client.GetStringAsync(urlMovies);
                 movieInformations = JsonConvert.DeserializeObject<IEnumerable<MovieInformation>>(movies);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
                 // TODO : Log de l'erreur pour l'acces au server.
+                _logger.Error("Erreur récupération de la liste des films présent sur le serveur", exception);
             }
 
             return movieInformations;
@@ -73,24 +76,24 @@ namespace MoviesAutomate.Codes
             {
                 string urlMovies = UrlServer + API_DOWNLOAD_MOVIES;
                 string pathSave = Path.Combine(_findGoodPlace.Invoke(movieInformation), movieInformation.FileName);
-                Console.WriteLine("..Chemin de destination " + pathSave);
+                _logger.Debug("..Chemin de destination " + pathSave);
                 
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(urlMovies);
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
-                Console.WriteLine("..Récupération de " + movieInformation.Titre + " - " + DateTime.Now);
+                _logger.Debug("..Récupération de " + movieInformation.Titre + " - " + DateTime.Now);
                 using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                 {
                     string json = JsonConvert.SerializeObject(movieInformation);
                     streamWriter.Write(json);
                 }
-
-                Console.WriteLine("..Json donné.");
+                _logger.Debug("..Json donné.");
                 
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                Console.WriteLine("..httpResponse - terminé." + " - " + DateTime.Now);
+                _logger.Debug("..httpResponse - terminé.");
 
+                _logger.Info("Début récupération - " + movieInformation.Titre);
                 using (var stream = httpResponse.GetResponseStream())
                 {
                     using (FileStream fileStream = new FileStream(pathSave, FileMode.Create))
@@ -103,14 +106,12 @@ namespace MoviesAutomate.Codes
                             fileStream.Write(buffer, 0, bytesRead);
                         }
                     }
-                    Console.WriteLine("..Fin de récupération.." + " - " + DateTime.Now);
                 }
+                _logger.Info("Fin récupération - " + movieInformation.Titre);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.WriteLine("Exception lors de la récupération du film : " + e.Message + " - " + e.StackTrace);
-                // TODO : Log exception sur non récupération du film.
-                // TODO : Mettre d'autres types d'exception.
+                _logger.Error("Exception lors de la récupération du film", exception);
             }
         }
 

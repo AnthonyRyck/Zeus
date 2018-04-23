@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using log4net;
 using MoviesLib;
 using MoviesLib.Entities;
-using Newtonsoft.Json;
 using TMDbLib.Client;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
@@ -25,6 +23,8 @@ namespace MoviesAutomate.Codes
         private readonly TMDbClient _clientTmDb;
         private readonly StorageManager _storage;
         private readonly ConfigAppClient _configurationApp;
+        private static readonly ILog _logger
+            = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Contient des informations de TmDB.
@@ -185,7 +185,7 @@ namespace MoviesAutomate.Codes
         private async Task UpdateLocalMovies()
         {
             // Récupération des films en locale.
-            List<MovieInformation> moviesOnLocal = new List<MovieInformation>();
+            List<MovieInformation> videosOnLocal = new List<MovieInformation>();
             foreach (var pathMovie in _configurationApp.PathMovies)
             {
                 if (Directory.Exists(pathMovie))
@@ -193,14 +193,29 @@ namespace MoviesAutomate.Codes
                     IEnumerable<MovieInformation> tempMoviesOnLocal = _movieManager.GetMoviesInformations(pathMovie, TypeVideo.Movie);
 
                     if (tempMoviesOnLocal.Any())
-                        moviesOnLocal.AddRange(tempMoviesOnLocal);
+                        videosOnLocal.AddRange(tempMoviesOnLocal);
                 }
                 else
                 {
-                    // TODO : Mettre en log l'erreur que le repertoire n'existe pas.
+                    _logger.Warn("Le répertoire Films n'existe pas  !!! - " + pathMovie);
                 }
             }
-            
+
+            foreach (var pathDessinAnimes in _configurationApp.PathDessinAnimes)
+            {
+                if (Directory.Exists(pathDessinAnimes))
+                {
+                    IEnumerable<MovieInformation> tempDessinAnimes = _movieManager.GetMoviesInformations(pathDessinAnimes, TypeVideo.DessinAnime);
+
+                    if (tempDessinAnimes.Any())
+                        videosOnLocal.AddRange(tempDessinAnimes);
+                }
+                else
+                {
+                    _logger.Warn("Le répertoire DessinAnimes n'existe pas  !!! - " + pathDessinAnimes);
+                }
+            }
+
             List<MovieModel> listeToDelete = new List<MovieModel>();
 
             // Détermination des différences entre ce qui est présent sur le disque
@@ -212,7 +227,7 @@ namespace MoviesAutomate.Codes
 
             foreach (MovieModel movieLocal in _movieModelsCollection)
             {
-                if (!moviesOnLocal.Contains(movieLocal.MovieInformation))
+                if (!videosOnLocal.Contains(movieLocal.MovieInformation))
                 {
                     listeToDelete.Add(movieLocal);
                 }
@@ -223,19 +238,20 @@ namespace MoviesAutomate.Codes
                 // Suppression des films n'existant plus
                 foreach (var toDelete in listeToDelete)
                 {
+                    _logger.Info("Suppression de la video en mémoire - " + toDelete.MovieInformation.Titre);
                     _movieModelsCollection.Remove(toDelete);
                 }
             }
 
             // Voir s'il y a des rajouts.
-            List<MovieInformation> tempMovieInformations =
-                _movieModelsCollection.Select(x => x.MovieInformation).ToList();
+            List<MovieInformation> tempMovieInformations = _movieModelsCollection.Select(x => x.MovieInformation).ToList();
             List<MovieInformation> listeToAdd = new List<MovieInformation>();
 
-            foreach (MovieInformation movieLocal in moviesOnLocal)
+            foreach (MovieInformation movieLocal in videosOnLocal)
             {
                 if (!tempMovieInformations.Contains(movieLocal))
                 {
+                    _logger.Info("Ajout de la video en mémoire - " + movieLocal.Titre);
                     listeToAdd.Add(movieLocal);
                 }
             }
@@ -247,6 +263,7 @@ namespace MoviesAutomate.Codes
             }
 
             // Sauvegarde
+            _logger.Info("Sauvegarde Films et DessinAnimes : " + _movieModelsCollection.Count + " éléments connus");
             _storage.SaveMoviesModels(_movieModelsCollection);
         }
 
@@ -258,7 +275,10 @@ namespace MoviesAutomate.Codes
         private async void TimerUpdateServerMovies(object state)
         {
             if (_isUpdateMovies)
+            {
+                _logger.Debug("_isUpdateMovie = TRUE - pas de mise à jour");
                 return;
+            }
 
             _isUpdateMovies = true;
 
@@ -267,6 +287,7 @@ namespace MoviesAutomate.Codes
             if (string.IsNullOrEmpty(_configurationApp.UrlServer))
             {
                 _isUpdateMovies = false;
+                _logger.Debug("Pas d'URL de server - Pas de synchronisation.");
                 return;
             }
             
@@ -279,6 +300,7 @@ namespace MoviesAutomate.Codes
             {
                 if (!tempLocalMovie.Contains(movieInformation))
                 {
+                    _logger.Info("Ajout du film - " + movieInformation.Titre);
                     listNewMovies.Add(movieInformation);
                 }
             }

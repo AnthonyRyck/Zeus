@@ -17,7 +17,7 @@ namespace MoviesLib
         private const string RESOLUTION_PATTERN = "[0-9]{3,4}p";
         private const string QUALITY_PATTERN = @"([HP]DTV|HDCAM|B[rR]Rip|TS|WEB-DL|H[dD]Rip|DVDRip|DVDRiP|DVDRIP|CamRip|webrip|W[EB]B[rR]ip|[Bb]lu[Rr]ay|DvDScr|hdtv|[Hh][Dd][Ll]ight)";
         private const string INCONNU = "Inconnu";
-        private const string CHIFFRE_ROMAIN_PATTERN = @"\s{I|II|III|IV|V|VI|VII|VIII|IX|X}\s";
+        private const string CHIFFRE_ROMAIN_PATTERN = @"(\sI(\s|$)|\sII(\s|$)|\sIII(\s|$)|\sIV(\s|$)|\sV(\s|$)|\sVI(\s|$)|\sVII(\s|$)|\sVIII(\s|$)|\sIX(\s|$)|\sX(\s|$))";
 
         private string _languesPattern;
         private IEnumerable<ChiffreRomain> _chiffreRomainsCollection = new List<ChiffreRomain>()
@@ -100,11 +100,13 @@ namespace MoviesLib
 
             if (!string.IsNullOrEmpty(matchResult.Value))
             {
+                string temp = matchResult.Value.Replace(" ", string.Empty);
+
                 foreach (ChiffreRomain chiffreRomain in _chiffreRomainsCollection)
                 {
-                    if (matchResult.Value == chiffreRomain.ToString("f"))
+                    if (temp == chiffreRomain.ToString("f"))
                     {
-                        tempTitre = tempTitre.Replace(matchResult.Value, chiffreRomain.ToString("d"));
+                        tempTitre = tempTitre.Replace(matchResult.Value, " " + chiffreRomain.ToString("d"));
                     }
                 }
             }

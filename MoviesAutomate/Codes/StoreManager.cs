@@ -162,6 +162,7 @@ namespace MoviesAutomate.Codes
                     "FRENCH", "TRUEFRENCH", "FR"
                 },
                 PathMovies = new List<string> { "/moviesClient" },
+                PathDessinAnimes = new List<string>() { "/dessinAnimes" },
                 PathShows = "/shows",
                 TempsEnMillisecondPourTimerRefresh = 60000,
                 UrlServer = string.Empty

@@ -42,7 +42,7 @@ namespace MoviesLib
         #region Public Methods
 
         /// <summary>
-        /// Récupère les informations de films sur le chemin donnée.
+        /// Récupère les informations sur les vidéos du chemin donnée.
         /// </summary>
         /// <param name="path"></param>
         /// <param name="type">Donne le type de vidéo.</param>

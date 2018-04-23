@@ -233,5 +233,34 @@ namespace MoviesLib.Test
 
             #endregion
         }
+
+        [TestMethod]
+        [TestProperty("MoviesLib", "MovieFileParser")]
+        [Description("")]
+        public void ExtraireDeToutesLesInfosDuTitre_When_TitreNeContientPasChiffreRomain()
+        {
+            #region ARRANGE
+
+            string titreSeries = "Bienvenue à Suburbicon FRENCH HDlight 1080p 2018.mkv";
+
+            #endregion
+
+            #region ACT
+
+            MovieFileParser parser = new MovieFileParser("VOSTFR", "FRENCH", "TRUEFRENCH");
+            var resultParser = parser.GetInformation(titreSeries, String.Empty, 0, TypeVideo.DessinAnime);
+
+            #endregion
+
+            #region ASSERT
+
+            Assert.AreEqual("1080p", resultParser.Resolution);
+            Assert.AreEqual("HDlight", resultParser.Qualite);
+            Assert.AreEqual("2018", resultParser.Annee);
+            Assert.AreEqual("FRENCH", resultParser.Langage);
+            Assert.AreEqual("BIENVENUE À SUBURBICON", resultParser.Titre);
+
+            #endregion
+        }
     }
 }
