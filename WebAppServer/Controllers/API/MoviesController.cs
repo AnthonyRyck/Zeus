@@ -43,6 +43,18 @@ namespace WebAppServer.Controllers.API
         }
 
         /// <summary>
+        /// Permet la récupération des films présent sur le serveur.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("dessinAnimes")]
+        public async Task<IEnumerable<MovieInformation>> GetDessinAnimes()
+        {
+            _logger.LogInformation("Demande de récupération des dessins animés en local.");
+            return await _moviesManager.GetListDessinAnimesLocal();
+        }
+
+
+        /// <summary>
         /// Serves a file as ZIP.
         /// </summary>
         [HttpPost("download")]

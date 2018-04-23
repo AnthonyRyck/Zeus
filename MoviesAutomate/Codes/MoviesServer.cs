@@ -17,23 +17,18 @@ namespace MoviesAutomate.Codes
         public string UrlServer { get; }
 
         private const string API_GET_MOVIES = "api/movies";
+        private const string API_GET_DESSINS_ANIMES = "api/movies/dessinAnimes";
         private const string API_DOWNLOAD_MOVIES = "api/movies/download";
         private static readonly ILog _logger
             = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        /// <summary>
-        /// C'est ce Func qui donne l'endroit ou sauvegarder le film.
-        /// </summary>
-        private Func<MovieInformation, string> _findGoodPlace;
-
+        
         #endregion
 
         #region Constructeur
 
-        public MoviesServer(string urlServer, Func<MovieInformation, string> findGoodPlace)
+        public MoviesServer(string urlServer)
         {
             UrlServer = urlServer;
-            _findGoodPlace = findGoodPlace;
         }
 
         #endregion
@@ -66,16 +61,41 @@ namespace MoviesAutomate.Codes
         }
 
         /// <summary>
+        /// Retourne la liste des films présent sur le serveur.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<MovieInformation>> GetDessinsAnimesInformationAsync()
+        {
+            IEnumerable<MovieInformation> movieInformations = new List<MovieInformation>();
+
+            try
+            {
+                string urlMovies = UrlServer + API_GET_DESSINS_ANIMES;
+
+                HttpClient client = new HttpClient();
+                string movies = await client.GetStringAsync(urlMovies);
+                movieInformations = JsonConvert.DeserializeObject<IEnumerable<MovieInformation>>(movies);
+            }
+            catch (Exception exception)
+            {
+                // TODO : Log de l'erreur pour l'acces au server.
+                _logger.Error("Erreur récupération de la liste des films présent sur le serveur", exception);
+            }
+
+            return movieInformations;
+        }
+
+        /// <summary>
         /// Télécharge le film voulu
         /// </summary>
         /// <param name="movieInformation"></param>
         /// <returns></returns>
-        public void DownloadMovies(MovieInformation movieInformation)
+        public void DownloadVideo(MovieInformation movieInformation, Func<MovieInformation, string> findGoodPlace)
         {
             try
             {
                 string urlMovies = UrlServer + API_DOWNLOAD_MOVIES;
-                string pathSave = Path.Combine(_findGoodPlace.Invoke(movieInformation), movieInformation.FileName);
+                string pathSave = Path.Combine(findGoodPlace.Invoke(movieInformation), movieInformation.FileName);
                 _logger.Debug("..Chemin de destination " + pathSave);
                 
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(urlMovies);

@@ -82,7 +82,7 @@ namespace WebAppServer.Codes
         /// </summary>
         public async Task<IEnumerable<MovieInformation>> GetListDessinAnimesLocal()
         {
-            var temp = await GetMovies();
+            var temp = await GetDessinAnimes();
             return temp.Where(x => !x.IsDownloaded
                                    && x.MovieInformation.TypeVideo == TypeVideo.DessinAnime)
                 .Select(x => x.MovieInformation).ToList();

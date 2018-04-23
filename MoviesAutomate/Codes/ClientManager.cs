@@ -65,7 +65,7 @@ namespace MoviesAutomate.Codes
 
             _storage = new StorageManager(_movieManager.GetMoviesInformations);
             _configurationApp = _storage.GetConfiguration();
-            _moviesServer = new MoviesServer(_configurationApp.UrlServer, GetPathToSave);
+            _moviesServer = new MoviesServer(_configurationApp.UrlServer);
 
             _timerUpdateMovieServer = new Timer(TimerUpdateServerMovies, null, 15000, _configurationApp.TempsEnMillisecondPourTimerRefresh);
         }
@@ -153,7 +153,7 @@ namespace MoviesAutomate.Codes
         /// </summary>
         /// <param name="movieInformation"></param>
         /// <returns></returns>
-        private string GetPathToSave(MovieInformation movieInformation)
+        private string GetPathToSaveMovies(MovieInformation movieInformation)
         {
             // En fonction de la taille du fichier il faut trouver un endroit ou le stocker.
             string emplacement = String.Empty;
@@ -175,9 +175,32 @@ namespace MoviesAutomate.Codes
             return emplacement;
         }
 
-        #endregion
+        /// <summary>
+        /// Retourne l'endroit ou sauvegarde le dessin animé.
+        /// </summary>
+        /// <param name="movieInformation"></param>
+        /// <returns></returns>
+        private string GetPathToSaveDessinAnimes(MovieInformation movieInformation)
+        {
+            // En fonction de la taille du fichier il faut trouver un endroit ou le stocker.
+            string emplacement = String.Empty;
 
-        #region Timer Methods
+            foreach (string pathMovie in _configurationApp.PathDessinAnimes)
+            {
+                // Récupération de la lettre du Drive
+                string drive = pathMovie[0].ToString();
+                DriveInfo di = new DriveInfo(drive);
+
+                if (di.AvailableFreeSpace > movieInformation.Size)
+                {
+                    // TODO : Lever une exception quand pas assez de place sur aucun lecteur.
+                    emplacement = pathMovie;
+                    break;
+                }
+            }
+
+            return emplacement;
+        }
 
         /// <summary>
         /// Méthode permettant de mettre à jour les films en local.
@@ -267,6 +290,60 @@ namespace MoviesAutomate.Codes
             _storage.SaveMoviesModels(_movieModelsCollection);
         }
 
+        private async Task GetMoviesOnServer()
+        {
+            IEnumerable<MovieInformation> moviesInformations = await _moviesServer.GetMoviesInformationAsync();
+
+            List<MovieInformation> tempLocalMovie = _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.Movie)
+                                                                        .Select(x => x.MovieInformation)
+                                                                        .ToList();
+            List<MovieInformation> listNewMovies = new List<MovieInformation>();
+
+            foreach (MovieInformation movieInformation in moviesInformations)
+            {
+                if (!tempLocalMovie.Contains(movieInformation))
+                {
+                    _logger.Info("Ajout du film - " + movieInformation.Titre);
+                    listNewMovies.Add(movieInformation);
+                }
+            }
+
+            // Récupérer chaque nouveau film.
+            foreach (MovieInformation newMovie in listNewMovies)
+            {
+                _moviesServer.DownloadVideo(newMovie, GetPathToSaveMovies);
+            }
+        }
+
+        private async Task GetDessinAnimesOnServer()
+        {
+            IEnumerable<MovieInformation> dessinAnimesInformation = await _moviesServer.GetDessinsAnimesInformationAsync();
+
+            List<MovieInformation> tempLocalDessinAnimes = _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.DessinAnime)
+                                                                          .Select(x => x.MovieInformation)
+                                                                          .ToList();
+            List<MovieInformation> listNewDessinAnimes = new List<MovieInformation>();
+
+            foreach (MovieInformation movieInformation in dessinAnimesInformation)
+            {
+                if (!tempLocalDessinAnimes.Contains(movieInformation))
+                {
+                    _logger.Info("Ajout du dessin animes - " + movieInformation.Titre);
+                    listNewDessinAnimes.Add(movieInformation);
+                }
+            }
+
+            // Récupérer chaque nouveau dessin animes.
+            foreach (MovieInformation newMovie in listNewDessinAnimes)
+            {
+                _moviesServer.DownloadVideo(newMovie, GetPathToSaveDessinAnimes);
+            }
+        }
+
+        #endregion
+
+        #region Timer Methods
+
         /// <summary>
         /// Ce Timer va chercher les informations sur les potentiels nouveaux
         /// films sur le serveur.
@@ -290,26 +367,9 @@ namespace MoviesAutomate.Codes
                 _logger.Debug("Pas d'URL de server - Pas de synchronisation.");
                 return;
             }
-            
-            IEnumerable<MovieInformation> moviesInformations = await _moviesServer.GetMoviesInformationAsync();
 
-            List<MovieInformation> tempLocalMovie = _movieModelsCollection.Select(x => x.MovieInformation).ToList();
-            List<MovieInformation> listNewMovies = new List<MovieInformation>();
-
-            foreach (MovieInformation movieInformation in moviesInformations)
-            {
-                if (!tempLocalMovie.Contains(movieInformation))
-                {
-                    _logger.Info("Ajout du film - " + movieInformation.Titre);
-                    listNewMovies.Add(movieInformation);
-                }
-            }
-
-            // Récupérer chaque nouveau film.
-            foreach (MovieInformation newMovie in listNewMovies)
-            {
-                _moviesServer.DownloadMovies(newMovie);
-            }
+            await GetMoviesOnServer();
+            await GetDessinAnimesOnServer();
 
             _isUpdateMovies = false;
         }
