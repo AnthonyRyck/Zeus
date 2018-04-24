@@ -13,12 +13,19 @@
 	{
 		<div class="card">
 			<div class="test">
-				<img src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @item.MovieTmDb.PosterPath)" />
-				<div class="meta" data-role="tooltip">
-					<a href="@Url.Action("Download", "Movies", new { item.Id})">
-						<span class="glyphicon glyphicon-download-alt"></span>
-					</a>
-				</div>
+				@if (string.IsNullOrEmpty(item.MovieTmDb.PosterPath))
+				{
+					<img src="images/VideoInconnu.jpg" />
+				}
+				else
+				{
+					<img src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @item.MovieTmDb.PosterPath)"/>
+					<div class="meta" data-role="tooltip">
+						<a href="@Url.Action("Download", "Movies", new {item.Id})">
+							<span class="glyphicon glyphicon-download-alt"></span>
+						</a>
+					</div>
+				}
 			</div>
 
 			<div class="info">

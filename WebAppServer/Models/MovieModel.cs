@@ -30,7 +30,7 @@ namespace WebAppServer.Models
         /// Indicateur pour savoir si le fichier est déjà DL.
         /// </summary>
         public bool IsDownloaded { get; set; }
-
+ 
         #endregion
 
         public MovieModel(Guid id)

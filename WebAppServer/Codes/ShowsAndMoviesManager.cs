@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using MoviesLib;
 using MoviesLib.Entities;
 using TMDbLib.Client;
@@ -27,6 +28,8 @@ namespace WebAppServer.Codes
         private StorageManager _storage;
         private ConfigurationApp _configurationApp;
 
+        //private readonly ILogger _logger;
+
         /// <summary>
         /// Contient des informations de TmDB.
         /// </summary>
@@ -47,6 +50,8 @@ namespace WebAppServer.Codes
 
         public ShowsAndMoviesManager()
         {
+            //_logger = logger;
+
             // TODO : Mettre en paramtère pour que ce soit configurable.
             _movieManager = new MovieManager("FRENCH", "TRUEFRENCH", "FR");
             _clientTmDb = new TMDbClient("034c4e19f68e958da378fd83c9e6f450")
@@ -223,28 +228,39 @@ namespace WebAppServer.Codes
                     movieSelected = GetTheGoodMovie(temp, movieInformation);
                 }
 
+                Movie movieDb;
+
                 if (movieSelected == null)
                 {
-                    // TODO : Mettre en log le fait qu'aucun film de trouvé.
-                    // TODO : Faire un objet Movie "factice" pour juste l'affichage.
-                    //Movie movieDb = new Movie();
+                    //_logger.LogInformation("Aucune information TmDb trouvé pour " + movieInformation.Titre);
 
+                    movieDb = new Movie
+                    {
+                        Title = movieInformation.Titre,
+                        Overview = "Aucune information de trouvé sur TmDb"
+                    };
                 }
                 else
                 {
-                    Movie movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id);
-
-                    returnMovieModels.Add(new MovieModel(Guid.NewGuid())
-                    {
-                        MovieInformation = movieInformation,
-                        MovieTmDb = movieDb,
-                    });
+                    movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id);
                 }
+
+                returnMovieModels.Add(new MovieModel(Guid.NewGuid())
+                {
+                    MovieInformation = movieInformation,
+                    MovieTmDb = movieDb
+                });
             }
 
             return returnMovieModels;
         }
 
+        /// <summary>
+        /// Permet de faire la sélection de la "meilleur" vidéo.
+        /// </summary>
+        /// <param name="allMovies">Liste de résultat de video</param>
+        /// <param name="movieInformation">Film recherché.</param>
+        /// <returns></returns>
         private SearchMovie GetTheGoodMovie(SearchContainer<SearchMovie> allMovies, MovieInformation movieInformation)
         {
             SearchMovie retourMovie = null;

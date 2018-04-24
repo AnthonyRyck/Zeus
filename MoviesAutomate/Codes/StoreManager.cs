@@ -129,8 +129,5 @@ namespace MoviesAutomate.Codes
         }
 
         #endregion
-
-
-
     }
 }
