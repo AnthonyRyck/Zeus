@@ -41,23 +41,8 @@ namespace MoviesAutomate.Codes
         /// <returns></returns>
         public async Task<IEnumerable<MovieInformation>> GetMoviesInformationAsync()
         {
-            IEnumerable<MovieInformation> movieInformations = new List<MovieInformation>();
-
-            try
-            {
-                string urlMovies = UrlServer + API_GET_MOVIES;
-
-                HttpClient client = new HttpClient();
-                string movies = await client.GetStringAsync(urlMovies);
-                movieInformations = JsonConvert.DeserializeObject<IEnumerable<MovieInformation>>(movies);
-            }
-            catch (Exception exception)
-            {
-                // TODO : Log de l'erreur pour l'acces au server.
-                _logger.Error("Erreur récupération de la liste des films présent sur le serveur", exception);
-            }
-
-            return movieInformations;
+            string url = UrlServer + API_GET_MOVIES;
+            return await GetVideosInformationAsync(url);
         }
 
         /// <summary>
@@ -66,23 +51,8 @@ namespace MoviesAutomate.Codes
         /// <returns></returns>
         public async Task<IEnumerable<MovieInformation>> GetDessinsAnimesInformationAsync()
         {
-            IEnumerable<MovieInformation> movieInformations = new List<MovieInformation>();
-
-            try
-            {
-                string urlMovies = UrlServer + API_GET_DESSINS_ANIMES;
-
-                HttpClient client = new HttpClient();
-                string movies = await client.GetStringAsync(urlMovies);
-                movieInformations = JsonConvert.DeserializeObject<IEnumerable<MovieInformation>>(movies);
-            }
-            catch (Exception exception)
-            {
-                // TODO : Log de l'erreur pour l'acces au server.
-                _logger.Error("Erreur récupération de la liste des films présent sur le serveur", exception);
-            }
-
-            return movieInformations;
+            string url = UrlServer + API_GET_DESSINS_ANIMES;
+            return await GetVideosInformationAsync(url);
         }
 
         /// <summary>
@@ -133,6 +103,32 @@ namespace MoviesAutomate.Codes
             {
                 _logger.Error("Exception lors de la récupération du film", exception);
             }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Retourne la liste des films présent sur le serveur.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<IEnumerable<MovieInformation>> GetVideosInformationAsync(string urlApi)
+        {
+            IEnumerable<MovieInformation> movieInformations = new List<MovieInformation>();
+
+            try
+            {
+                HttpClient client = new HttpClient();
+                string movies = await client.GetStringAsync(urlApi);
+                movieInformations = JsonConvert.DeserializeObject<IEnumerable<MovieInformation>>(movies);
+            }
+            catch (Exception exception)
+            {
+                _logger.Error("Erreur récupération de la liste des vidéos présent sur le serveur - " + urlApi, exception);
+            }
+
+            return movieInformations;
         }
 
         #endregion

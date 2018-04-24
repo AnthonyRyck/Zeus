@@ -25,6 +25,9 @@ namespace WebAppServer.Controllers.API
         private IShowsAndMovies _moviesManager;
         private readonly ILogger _logger;
 
+
+        #region Public Methods
+
         public MoviesController(IShowsAndMovies moviesManager, ILogger<MoviesController> logger)
         {
             _moviesManager = moviesManager;
@@ -52,13 +55,12 @@ namespace WebAppServer.Controllers.API
             _logger.LogInformation("Demande de récupération des dessins animés en local.");
             return await _moviesManager.GetListDessinAnimesLocal();
         }
-
-
+        
         /// <summary>
         /// Serves a file as ZIP.
         /// </summary>
         [HttpPost("download")]
-        public IActionResult GetMovieFile([FromBody]MovieInformation movieInformation)
+        public IActionResult GetVideoFile([FromBody]MovieInformation movieInformation)
         {
             var tempVideo = DownloadVideoCore(movieInformation);
             _moviesManager.SetMovieDownloaded(movieInformation);
@@ -78,10 +80,9 @@ namespace WebAppServer.Controllers.API
             return DownloadVideoCore(movie.MovieInformation);
         }
 
+        #endregion
 
-
-
-
+        #region Private Methods
 
         private IActionResult DownloadVideoCore(MovieInformation movieInformation)
         {
@@ -113,10 +114,12 @@ namespace WebAppServer.Controllers.API
                 _logger.LogError(exception, "Erreur sur la récupération du film " + movieInformation.Titre);
                 temp = NoContent();
             }
-            
+
 
             return temp;
         }
+
+        #endregion
 
     }
 }

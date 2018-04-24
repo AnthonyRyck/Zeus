@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MoviesLib.Entities;
 using Newtonsoft.Json;
 using WebAppServer.Models;
 
@@ -14,17 +10,7 @@ namespace MoviesAutomate.Codes
     {
         #region Properties
 
-        private string _pathSauvegarde;
-
-        /// <summary>
-        /// Nom du fichier de sauvegarde pour les informations de films en locale.
-        /// </summary>
-        private const string FILE_MOVIES_INFORMATIONS = "saveMoviesInformations.json";
-
-        /// <summary>
-        /// Nom du fichier de sauvegarde pour les informations de séries en locale.
-        /// </summary>
-        private const string FILE_SHOWS_INFORMATIONS = "saveShowsInformations.json";
+        private readonly string _pathSauvegarde;
 
         /// <summary>
         /// Nom du fichier de sauvegarde contenant toutes les informations TmDB des films
@@ -32,23 +18,17 @@ namespace MoviesAutomate.Codes
         /// </summary>
         private const string FILE_MOVIES_MODELS = "saveMoviesModels.json";
 
-        private string _pathConfiguration;
+        private readonly string _pathConfiguration;
         private const string NAME_FILE_CONFIG = "config_app.json";
-
-        /// <summary>
-        /// Func pour la récupération des films sur le local.
-        /// </summary>
-        private Func<string, TypeVideo, IEnumerable<MovieInformation>> _funcGetMovies;
 
         #endregion
 
         #region Constructeur
 
-        public StorageManager(Func<string, TypeVideo, IEnumerable<MovieInformation>> getMovies)
+        public StorageManager()
         {
             _pathConfiguration = GetConfigPath();
             _pathSauvegarde = GetSavePath();
-            _funcGetMovies = getMovies;
         }
 
         #endregion
@@ -81,25 +61,6 @@ namespace MoviesAutomate.Codes
         }
 
         /// <summary>
-        /// Retourne les informations des films, d'après le site The Movie Database.
-        /// </summary>
-        /// <returns></returns>
-        internal IEnumerable<MovieModel> GetMoviesTmDb()
-        {
-            List<MovieModel> listeMovieModels = null;
-
-            // Voir en fichier de sauvegarde s'il y a des informations.
-            string fullPathMovieModel = Path.Combine(_pathSauvegarde, FILE_MOVIES_MODELS);
-            if (File.Exists(fullPathMovieModel))
-            {
-                string contentJson = File.ReadAllText(fullPathMovieModel);
-                listeMovieModels = JsonConvert.DeserializeObject<List<MovieModel>>(contentJson);
-            }
-
-            return listeMovieModels;
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="retourMovieModels"></param>
@@ -124,9 +85,7 @@ namespace MoviesAutomate.Codes
             string localFolderConfig = AppContext.BaseDirectory + @"/config";
             if (!Directory.Exists(localFolderConfig))
             {
-                DirectoryInfo folderConfig = Directory.CreateDirectory(localFolderConfig);
-
-                // TODO : Copier le fichier de configuration par défault.
+                Directory.CreateDirectory(localFolderConfig);
             }
 
             return localFolderConfig;

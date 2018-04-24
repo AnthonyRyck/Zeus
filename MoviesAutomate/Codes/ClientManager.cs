@@ -108,7 +108,6 @@ namespace MoviesAutomate.Codes
                     // TODO : Mettre en log le fait qu'aucun film de trouvé.
                     // TODO : Faire un objet Movie "factice" pour juste l'affichage.
                     //Movie movieDb = new Movie();
-
                 }
                 else
                 {
@@ -155,24 +154,7 @@ namespace MoviesAutomate.Codes
         /// <returns></returns>
         private string GetPathToSaveMovies(MovieInformation movieInformation)
         {
-            // En fonction de la taille du fichier il faut trouver un endroit ou le stocker.
-            string emplacement = String.Empty;
-
-            foreach (string pathMovie in _configurationApp.PathMovies)
-            {
-                // Récupération de la lettre du Drive
-                string drive = pathMovie[0].ToString();
-                DriveInfo di = new DriveInfo(drive);
-
-                if (di.AvailableFreeSpace > movieInformation.Size)
-                {
-                    // TODO : Lever une exception quand pas assez de place sur aucun lecteur.
-                    emplacement = pathMovie;
-                    break;
-                }
-            }
-
-            return emplacement;
+            return GetPathCore(movieInformation, _configurationApp.PathMovies);
         }
 
         /// <summary>
@@ -182,19 +164,30 @@ namespace MoviesAutomate.Codes
         /// <returns></returns>
         private string GetPathToSaveDessinAnimes(MovieInformation movieInformation)
         {
+            return GetPathCore(movieInformation, _configurationApp.PathDessinAnimes);
+        }
+
+        /// <summary>
+        /// Méthode Core pour le choix du chemin pour sauvegarde d'une vidéo.
+        /// </summary>
+        /// <param name="movieInformation"></param>
+        /// <param name="pathPossible"></param>
+        /// <returns></returns>
+        private string GetPathCore(MovieInformation movieInformation, IEnumerable<string> pathPossible)
+        {
             // En fonction de la taille du fichier il faut trouver un endroit ou le stocker.
             string emplacement = String.Empty;
 
-            foreach (string pathMovie in _configurationApp.PathDessinAnimes)
+            foreach (string path in pathPossible)
             {
                 // Récupération de la lettre du Drive
-                string drive = pathMovie[0].ToString();
+                string drive = path[0].ToString();
                 DriveInfo di = new DriveInfo(drive);
 
                 if (di.AvailableFreeSpace > movieInformation.Size)
                 {
                     // TODO : Lever une exception quand pas assez de place sur aucun lecteur.
-                    emplacement = pathMovie;
+                    emplacement = path;
                     break;
                 }
             }
