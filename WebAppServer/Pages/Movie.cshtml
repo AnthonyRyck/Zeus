@@ -4,7 +4,66 @@
 	ViewData["Title"] = "Movie";
 }
 
+
+<script>
+	
+	function getListImgVideos(idVideo) {
+		$.ajax({
+			url: "/api/Settings/" + idVideo,
+			type: "GET",
+			success: function (datas) {
+
+				$.each(datas, function (index, value) {
+
+					$('#' + idVideo).append("<img src=" + value.urlAffiche + " class='imgRechercher' id=" + value.idVideoTmDb +" />");
+					$('#' + value.idVideoTmDb).click({ param1: value.idVideoTmDb, param2: idVideo }, setVideo);
+				});
+
+				$('#' + idVideo).attr("class", "sectionImgRechercher");
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				alert(thrownError);
+			}
+		});
+	}
+
+	function setVideo(event) {
+		
+		$('#' + event.data.param2).attr("class", "hide-imgRechercher");
+		$(".imgRechercher").remove();
+
+		$.ajax({
+			url: "/api/Settings/" + event.data.param2,
+			type: "POST",
+			data: JSON.stringify(event.data.param1),
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			success: function (data) {
+
+				var parent = $('#' + event.data.param2).parent();
+
+				parent.find("#description").text(data.description);
+				parent.find("#title").text(data.title);
+				parent.find("#imageVideo").attr("src", "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + data.poster);
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				console.log("Error." + thrownError);
+			}
+		});
+
+
+		
+	}
+
+</script>
+
+
+
 <h2>Films</h2>
+
+<div id="demo"></div>
+<div id="rechercheVideo"></div>
 
 
 <div class="flex">
@@ -16,26 +75,36 @@
 				@if (string.IsNullOrEmpty(item.MovieTmDb.PosterPath))
 				{
 					<img src="images/VideoInconnu.jpg" />
-				}
-				else
-				{
-					<img src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @item.MovieTmDb.PosterPath)"/>
 					<div class="meta" data-role="tooltip">
 						<a href="@Url.Action("Download", "Movies", new {item.Id})">
 							<span class="glyphicon glyphicon-download-alt"></span>
 						</a>
 					</div>
 				}
+				else
+				{
+					<img id="imageVideo" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @item.MovieTmDb.PosterPath)"/>
+					<div class="meta" data-role="tooltip">
+						<a href="@Url.Action("Download", "Movies", new {item.Id})">
+							<span class="glyphicon glyphicon-download-alt"></span>
+						</a>
+
+						<button class="submit-with-icon" type="submit" onclick="getListImgVideos('@item.Id')">
+							<span class="glyphicon glyphicon-refresh"></span>
+						</button>
+					</div>
+				}
 			</div>
 
 			<div class="info">
-				<p class="title">
+				<p class="title" id="title">
 					@item.MovieTmDb.Title
 				</p>
 
-				<p class="overview">@item.MovieTmDb.Overview</p>
+				<p id="description" class="overview">@item.MovieTmDb.Overview</p>
 			</div>
 
+			<div id="@item.Id" class="hide-imgRechercher"></div>
 		</div>
 	}
 

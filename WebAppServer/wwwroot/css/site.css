@@ -118,3 +118,29 @@ p.overview {
 .card .test img {
 	max-width: 100%;
 }
+
+.submit-with-icon {
+	background: transparent;
+	border: 0;
+	padding: 0;
+	outline: 0;
+}
+
+.sectionImgRechercher {
+	z-index: 1;
+	display: flow-root;
+	overflow-y: auto;
+	width: 165px;
+	height: 550px;
+	position: absolute;
+	top: 50px;
+}
+
+.imgRechercher {
+	width: 150px;
+	height: 225px;
+}
+
+.hide-imgRechercher {
+	display: none;
+}

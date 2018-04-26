@@ -62,6 +62,7 @@ namespace WebAppServer.Codes
 
             _storage = new StorageManager(_movieManager.GetMoviesInformations);
             _configurationApp = _storage.GetConfiguration();
+            _movieModelsCollection = _storage.GetMoviesTmDb().ToList();
 
             // Démarre dans 5 secondes et toutes les 15 minutes.
             _timerUpdate = new Timer(TimerUpdate, null, 5000, _configurationApp.TempsEnMillisecondPourTimerRefresh);
@@ -92,7 +93,7 @@ namespace WebAppServer.Codes
                                    && x.MovieInformation.TypeVideo == TypeVideo.DessinAnime)
                 .Select(x => x.MovieInformation).ToList();
         }
-
+        
         /// <summary>
         /// Retourne la liste des films avec toutes les informations de chaque film.
         /// </summary>
@@ -187,9 +188,58 @@ namespace WebAppServer.Codes
             }
         }
 
+        /// <summary>
+        /// Récupère la vidéo par rapport à l'ID donné.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public MovieModel GetMovie(Guid id)
         {
             return _movieModelsCollection.FirstOrDefault(x => x.Id == id);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="titre"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<SearchVideoModel>> GetListVideoOnTmDb(string titre)
+        {
+            List<SearchVideoModel> retourInfo = new List<SearchVideoModel>();
+
+            var temp = await _clientTmDb.SearchMovieAsync(titre);
+
+            foreach (SearchMovie result in temp.Results)
+            {
+                if (!string.IsNullOrEmpty(result.PosterPath))
+                {
+                    retourInfo.Add(new SearchVideoModel()
+                    {
+                        UrlAffiche = "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + result.PosterPath,
+                        IdVideoTmDb = result.Id
+                    });
+                }
+            }
+
+            return retourInfo;
+        }
+
+
+        public async Task<MovieModel> ChangeVideo(Guid id, int idVideoTmDb)
+        {
+            MovieModel videoToChange = GetMovie(id);
+            if (videoToChange == null)
+                return null;
+
+            Movie videoTmDb = await _clientTmDb.GetMovieAsync(idVideoTmDb);
+            
+            lock (_lock)
+            {
+                videoToChange.MovieTmDb = videoTmDb;
+                _storage.SaveMoviesModels(_movieModelsCollection);
+            }
+            
+            return videoToChange;
         }
 
         #endregion
@@ -374,8 +424,6 @@ namespace WebAppServer.Codes
             _storage.SaveMoviesModels(_movieModelsCollection);
             _isUpdateTime = false;
         }
-
-        
 
         #endregion
 

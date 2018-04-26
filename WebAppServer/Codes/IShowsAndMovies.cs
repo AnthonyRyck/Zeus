@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MoviesLib.Entities;
+using TMDbLib.Objects.Movies;
 using WebAppServer.Models;
 
 namespace WebAppServer.Codes
@@ -28,6 +29,13 @@ namespace WebAppServer.Codes
         Task<IEnumerable<MovieInformation>> GetListDessinAnimesLocal();
 
         /// <summary>
+        /// Récupère une liste de vidéo provenant de TmDb pour un titre donnée.
+        /// </summary>
+        /// <param name="titre"></param>
+        /// <returns></returns>
+        Task<IEnumerable<SearchVideoModel>> GetListVideoOnTmDb(string titre);
+
+        /// <summary>
         /// Retourne la liste des dessin animes avec toutes les informations.
         /// </summary>
         /// <returns></returns>
@@ -45,5 +53,14 @@ namespace WebAppServer.Codes
         /// <param name="id"></param>
         /// <returns></returns>
         MovieModel GetMovie(Guid id);
+
+        /// <summary>
+        /// Permet de faire le changement d'information pour la video donnée
+        /// en ID, par le contenu donnée par l'id de TmDb.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="idVideoTmDb"></param>
+        /// <returns></returns>
+        Task<MovieModel> ChangeVideo(Guid id, int idVideoTmDb);
     }
 }

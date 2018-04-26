@@ -63,7 +63,7 @@ namespace MoviesAutomate.Codes
                 DefaultCountry = "FR"
             };
 
-            _storage = new StorageManager(_movieManager.GetMoviesInformations);
+            _storage = new StorageManager();
             _configurationApp = _storage.GetConfiguration();
             _moviesServer = new MoviesServer(_configurationApp.UrlServer);
 
