@@ -62,7 +62,9 @@ namespace WebAppServer.Codes
 
             _storage = new StorageManager(_movieManager.GetMoviesInformations);
             _configurationApp = _storage.GetConfiguration();
-            _movieModelsCollection = _storage.GetMoviesTmDb().ToList();
+            var tempCollectionMovieModels = _storage.GetMoviesTmDb();
+            if (tempCollectionMovieModels != null)
+                _movieModelsCollection = tempCollectionMovieModels.ToList();
 
             // Démarre dans 5 secondes et toutes les 15 minutes.
             _timerUpdate = new Timer(TimerUpdate, null, 5000, _configurationApp.TempsEnMillisecondPourTimerRefresh);
