@@ -67,6 +67,10 @@ namespace MoviesAutomate.Codes
             _configurationApp = _storage.GetConfiguration();
             _moviesServer = new MoviesServer(_configurationApp.UrlServer);
 
+            var tempCollectionMovieModels = _storage.GetMoviesTmDb();
+            if (tempCollectionMovieModels != null)
+                _movieModelsCollection = tempCollectionMovieModels.ToList();
+
             _timerUpdateMovieServer = new Timer(TimerUpdateServerMovies, null, 15000, _configurationApp.TempsEnMillisecondPourTimerRefresh);
         }
 
@@ -85,6 +89,8 @@ namespace MoviesAutomate.Codes
 
             foreach (MovieInformation movieInformation in moviesInfomration)
             {
+                await Task.Delay(1000);
+
                 SearchMovie movieSelected;
 
                 if (movieInformation.Annee != "Inconnu")
@@ -103,22 +109,26 @@ namespace MoviesAutomate.Codes
                     movieSelected = GetTheGoodMovie(temp, movieInformation);
                 }
 
+                Movie movieDb;
+
                 if (movieSelected == null)
                 {
-                    // TODO : Mettre en log le fait qu'aucun film de trouvé.
-                    // TODO : Faire un objet Movie "factice" pour juste l'affichage.
-                    //Movie movieDb = new Movie();
+                    movieDb = new Movie
+                    {
+                        Title = movieInformation.Titre,
+                        Overview = "Aucune information de trouvé sur TmDb"
+                    };
                 }
                 else
                 {
-                    Movie movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id);
-
-                    returnMovieModels.Add(new MovieModel(Guid.NewGuid())
-                    {
-                        MovieInformation = movieInformation,
-                        MovieTmDb = movieDb
-                    });
+                    movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id); 
                 }
+
+                returnMovieModels.Add(new MovieModel(Guid.NewGuid())
+                {
+                    MovieInformation = movieInformation,
+                    MovieTmDb = movieDb
+                });
             }
 
             return returnMovieModels;

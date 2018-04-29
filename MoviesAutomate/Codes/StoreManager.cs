@@ -72,6 +72,25 @@ namespace MoviesAutomate.Codes
             File.WriteAllText(pathSaveMovieModel, contentJson);
         }
 
+        /// <summary>
+        /// Retourne les informations des films, d'après le site The Movie Database.
+        /// </summary>
+        /// <returns></returns>
+        internal IEnumerable<MovieModel> GetMoviesTmDb()
+        {
+            List<MovieModel> listeMovieModels = null;
+
+            // Voir en fichier de sauvegarde s'il y a des informations.
+            string fullPathMovieModel = Path.Combine(_pathSauvegarde, FILE_MOVIES_MODELS);
+            if (File.Exists(fullPathMovieModel))
+            {
+                string contentJson = File.ReadAllText(fullPathMovieModel);
+                listeMovieModels = JsonConvert.DeserializeObject<List<MovieModel>>(contentJson);
+            }
+
+            return listeMovieModels;
+        }
+
         #endregion
 
         #region Private Methods
@@ -129,5 +148,7 @@ namespace MoviesAutomate.Codes
         }
 
         #endregion
+
+        
     }
 }
