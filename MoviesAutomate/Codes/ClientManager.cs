@@ -293,6 +293,10 @@ namespace MoviesAutomate.Codes
             _storage.SaveMoviesModels(_movieModelsCollection);
         }
 
+        /// <summary>
+        /// Récupération des Films sur le Serveur.
+        /// </summary>
+        /// <returns></returns>
         private async Task GetMoviesOnServer()
         {
             IEnumerable<MovieInformation> moviesInformations = await _moviesServer.GetMoviesInformationAsync();
@@ -318,6 +322,10 @@ namespace MoviesAutomate.Codes
             }
         }
 
+        /// <summary>
+        /// Récupération des dessins animes sur le Serveur.
+        /// </summary>
+        /// <returns></returns>
         private async Task GetDessinAnimesOnServer()
         {
             IEnumerable<MovieInformation> dessinAnimesInformation = await _moviesServer.GetDessinsAnimesInformationAsync();

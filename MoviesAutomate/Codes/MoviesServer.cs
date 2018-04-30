@@ -59,13 +59,15 @@ namespace MoviesAutomate.Codes
         /// Télécharge le film voulu
         /// </summary>
         /// <param name="movieInformation"></param>
+        /// <param name="findGoodPlace">Func qui va donner le meilleur endroit pour faire la sauvegarde.</param>
         /// <returns></returns>
         public void DownloadVideo(MovieInformation movieInformation, Func<MovieInformation, string> findGoodPlace)
         {
+            string pathSave = Path.Combine(findGoodPlace.Invoke(movieInformation), movieInformation.FileName);
+
             try
             {
                 string urlMovies = UrlServer + API_DOWNLOAD_MOVIES;
-                string pathSave = Path.Combine(findGoodPlace.Invoke(movieInformation), movieInformation.FileName);
                 _logger.Debug("..Chemin de destination " + pathSave);
                 
                 HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(urlMovies);
@@ -102,6 +104,11 @@ namespace MoviesAutomate.Codes
             catch (Exception exception)
             {
                 _logger.Error("Exception lors de la récupération du film", exception);
+                if (File.Exists(pathSave))
+                {
+                    File.Delete(pathSave);
+                    _logger.Warn("Suppression du fichier - " + pathSave);
+                }
             }
         }
 
