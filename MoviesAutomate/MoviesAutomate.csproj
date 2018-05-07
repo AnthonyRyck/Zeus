@@ -105,6 +105,9 @@
     <Compile Include="..\MoviesLib\Entities\ShowInformation.cs">
       <Link>Codes\Entities\ShowInformation.cs</Link>
     </Compile>
+    <Compile Include="..\MoviesLib\Entities\VideoInformation.cs">
+      <Link>Codes\Entities\VideoInformation.cs</Link>
+    </Compile>
     <Compile Include="..\MoviesLib\MovieFileParser.cs">
       <Link>Codes\MovieFileParser.cs</Link>
     </Compile>

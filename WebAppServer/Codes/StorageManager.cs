@@ -172,7 +172,7 @@ namespace WebAppServer.Codes
                 },
                 PathMovies = new List<string> {"/app/movies"},
                 PathDessinAnimes = new List<string>{"/app/animes"},
-                PathShows = "/shows",
+                PathShows = new List<string> {"/app/shows"},
                 TempsEnMillisecondPourTimerRefresh = 60000
             };
         }

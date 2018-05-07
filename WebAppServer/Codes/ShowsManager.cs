@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MoviesLib;
 using MoviesLib.Entities;
+using WebAppServer.Models;
 
 namespace WebAppServer.Codes
 {
@@ -13,7 +14,7 @@ namespace WebAppServer.Codes
         #region Properties
 
         private ShowManager _seriesManager;
-        private ShowModel _show
+        private List<ShowModel> _showModelCollection;
 
         #endregion
 
@@ -49,6 +50,7 @@ namespace WebAppServer.Codes
                 if (tempSeries.Any())
                     seriesOnLocal.AddRange(tempSeries);
             }
+
 
 
 
