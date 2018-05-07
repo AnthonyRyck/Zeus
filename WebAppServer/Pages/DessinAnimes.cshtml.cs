@@ -12,7 +12,7 @@ namespace WebAppServer.Pages
     {
         #region Fields
 
-        private IShowsAndMovies _animeManager;
+        private IMovies _animeManager;
 
         #endregion
 
@@ -27,7 +27,7 @@ namespace WebAppServer.Pages
 
         #region Constructeur
 
-        public DessinAnimesModel(IShowsAndMovies animeManager)
+        public DessinAnimesModel(IMovies animeManager)
         {
             _animeManager = animeManager;
         }

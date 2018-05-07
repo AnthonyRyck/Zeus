@@ -7,49 +7,9 @@ namespace MoviesLib.Entities
     /// <summary>
     /// Classe contenant toutes les informations sur un film.
     /// </summary>
-    public class MovieInformation : IEquatable<MovieInformation>
+    public class MovieInformation : VideoInformation, IEquatable<MovieInformation>
     {
         #region Properties
-
-        /// <summary>
-        /// Titre du film.
-        /// </summary>
-        public string Titre { get; set; }
-
-        /// <summary>
-        /// Année de sortie du film
-        /// </summary>
-        public string Annee { get; set; }
-
-        /// <summary>
-        /// Résolution du film (ex: 1080p)
-        /// </summary>
-        public string Resolution { get; set; }
-
-        /// <summary>
-        /// Qualité du film (ex: HDTV, LD,...)
-        /// </summary>
-        public string Qualite { get; set; }
-
-        /// <summary>
-        /// Langue du film.
-        /// </summary>
-        public string Langage { get; set; }
-
-        /// <summary>
-        /// Chemin d'accès au fichier.
-        /// </summary>
-        public string PathFile { get; set; }
-
-        /// <summary>
-        /// Nom du fichier à l'origine avec l'extension.
-        /// </summary>
-        public string FileName { get; set; }
-
-        /// <summary>
-        /// Taille en octet.
-        /// </summary>
-        public long Size { get; set; }
         
         /// <summary>
         /// Détermine le type de vidéo.
@@ -88,7 +48,6 @@ namespace MoviesLib.Entities
     public enum TypeVideo
     {
         DessinAnime,
-        Movie,
-        Show
+        Movie
     }
 }

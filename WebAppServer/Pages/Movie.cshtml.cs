@@ -15,7 +15,7 @@ namespace WebAppServer.Pages
     {
         #region Fields
 
-        private IShowsAndMovies _moviesManager;
+        private IMovies _moviesManager;
         private readonly ILogger _logger;
 
 
@@ -32,7 +32,7 @@ namespace WebAppServer.Pages
 
         #region Constructeur
 
-        public MovieModel(IShowsAndMovies movieManager, ILogger<MovieModel> logger)
+        public MovieModel(IMovies movieManager, ILogger<MovieModel> logger)
         {
             _moviesManager = movieManager;
             _logger = logger;

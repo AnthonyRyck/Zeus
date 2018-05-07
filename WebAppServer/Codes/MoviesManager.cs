@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using MoviesLib;
 using MoviesLib.Entities;
-using TMDbLib.Client;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
 using TMDbLib.Objects.Search;
@@ -19,60 +16,35 @@ namespace WebAppServer.Codes
     /// Classe qui va faire la gestion des acquisitions des séries
     /// et des films.
     /// </summary>
-    public class ShowsAndMoviesManager : IShowsAndMovies
+    public class MoviesManager : AbstractManager, IMovies
     {
         #region Properties
 
-        private MovieManager _movieManager;
-        private TMDbClient _clientTmDb;
-        private StorageManager _storage;
-        private ConfigurationApp _configurationApp;
-
-        //private readonly ILogger _logger;
+        private readonly MovieManager _movieManager;
 
         /// <summary>
         /// Contient des informations de TmDB.
         /// </summary>
         private List<MovieModel> _movieModelsCollection = null;
-
-        private Timer _timerUpdate;
-
-        /// <summary>
-        /// Object utilisé pour faire les locks.
-        /// </summary>
-        private static readonly Object _lock = new object();
-
-        private static bool _isUpdateTime = false;
-
+        
         #endregion
 
         #region Constructeur
 
-        public ShowsAndMoviesManager()
+        public MoviesManager()
         {
             //_logger = logger;
-
-            // TODO : Mettre en paramtère pour que ce soit configurable.
             _movieManager = new MovieManager("FRENCH", "TRUEFRENCH", "FR");
-            _clientTmDb = new TMDbClient("034c4e19f68e958da378fd83c9e6f450")
-            {
-                DefaultLanguage = "fr-FR",
-                DefaultCountry = "FR"
-            };
+            Storage = new StorageManager(_movieManager.GetMoviesInformations);
 
-            _storage = new StorageManager(_movieManager.GetMoviesInformations);
-            _configurationApp = _storage.GetConfiguration();
-            var tempCollectionMovieModels = _storage.GetMoviesTmDb();
+            var tempCollectionMovieModels = Storage.GetMoviesTmDb();
             if (tempCollectionMovieModels != null)
                 _movieModelsCollection = tempCollectionMovieModels.ToList();
-
-            // Démarre dans 5 secondes et toutes les 15 minutes.
-            _timerUpdate = new Timer(TimerUpdate, null, 5000, _configurationApp.TempsEnMillisecondPourTimerRefresh);
         }
-
+        
         #endregion
 
-        #region Public Methods - Implements IShowsAndMovies
+        #region Public Methods - Implements IMovies
 
         /// <summary>
         /// Retourne la liste des films qui sont présent sur le local.
@@ -108,7 +80,7 @@ namespace WebAppServer.Codes
             }
 
             // Voir dans le fichier de sauvegarde.
-            IEnumerable<MovieModel> tempMovieModels = _storage.GetMoviesTmDb();
+            IEnumerable<MovieModel> tempMovieModels = Storage.GetMoviesTmDb();
             if (tempMovieModels != null)
             {
                 _movieModelsCollection = tempMovieModels.ToList();
@@ -119,7 +91,7 @@ namespace WebAppServer.Codes
             List<MovieInformation> videosOnLocal = new List<MovieInformation>();
 
             // Récupération des films.
-            foreach (var pathMovie in _configurationApp.PathMovies)
+            foreach (var pathMovie in ConfigurationApp.PathMovies)
             {
                 IEnumerable<MovieInformation> tempMovieLocal = _movieManager.GetMoviesInformations(pathMovie, TypeVideo.Movie);
 
@@ -128,7 +100,7 @@ namespace WebAppServer.Codes
             }
             
             _movieModelsCollection = await GetMovieDbInformation(videosOnLocal);
-            _storage.SaveMoviesModels(_movieModelsCollection);
+            Storage.SaveMoviesModels(_movieModelsCollection);
 
             return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.Movie).ToList();
         }
@@ -145,7 +117,7 @@ namespace WebAppServer.Codes
             }
 
             // Voir dans le fichier de sauvegarde.
-            IEnumerable<MovieModel> tempMovieModels = _storage.GetMoviesTmDb();
+            IEnumerable<MovieModel> tempMovieModels = Storage.GetMoviesTmDb();
             if (tempMovieModels != null)
             {
                 _movieModelsCollection = tempMovieModels.ToList();
@@ -156,7 +128,7 @@ namespace WebAppServer.Codes
             List<MovieInformation> videosOnLocal = new List<MovieInformation>();
 
             // Récupération des dessins animés.
-            foreach (var dessinAnimes in _configurationApp.PathDessinAnimes)
+            foreach (var dessinAnimes in ConfigurationApp.PathDessinAnimes)
             {
                 IEnumerable<MovieInformation> tempAnimes = _movieManager.GetMoviesInformations(dessinAnimes, TypeVideo.DessinAnime);
 
@@ -165,7 +137,7 @@ namespace WebAppServer.Codes
             }
 
             _movieModelsCollection = await GetMovieDbInformation(videosOnLocal);
-            _storage.SaveMoviesModels(_movieModelsCollection);
+            Storage.SaveMoviesModels(_movieModelsCollection);
 
             return _movieModelsCollection.Where(x => x.MovieInformation.TypeVideo == TypeVideo.DessinAnime).ToList();
         }
@@ -209,7 +181,7 @@ namespace WebAppServer.Codes
         {
             List<SearchVideoModel> retourInfo = new List<SearchVideoModel>();
 
-            var temp = await _clientTmDb.SearchMovieAsync(titre);
+            var temp = await ClientTmDb.SearchMovieAsync(titre);
 
             foreach (SearchMovie result in temp.Results)
             {
@@ -233,12 +205,12 @@ namespace WebAppServer.Codes
             if (videoToChange == null)
                 return null;
 
-            Movie videoTmDb = await _clientTmDb.GetMovieAsync(idVideoTmDb);
+            Movie videoTmDb = await ClientTmDb.GetMovieAsync(idVideoTmDb);
             
-            lock (_lock)
+            lock (Lock)
             {
                 videoToChange.MovieTmDb = videoTmDb;
-                _storage.SaveMoviesModels(_movieModelsCollection);
+                Storage.SaveMoviesModels(_movieModelsCollection);
             }
             
             return videoToChange;
@@ -266,7 +238,7 @@ namespace WebAppServer.Codes
 
                 if (movieInformation.Annee != "Inconnu")
                 {
-                    SearchContainer<SearchMovie> temp = await _clientTmDb.SearchMovieAsync(movieInformation.Titre,
+                    SearchContainer<SearchMovie> temp = await ClientTmDb.SearchMovieAsync(movieInformation.Titre,
                         includeAdult: true,
                         year: Convert.ToInt32(movieInformation.Annee));
 
@@ -274,7 +246,7 @@ namespace WebAppServer.Codes
                 }
                 else
                 {
-                    SearchContainer<SearchMovie> temp = await _clientTmDb.SearchMovieAsync(movieInformation.Titre,
+                    SearchContainer<SearchMovie> temp = await ClientTmDb.SearchMovieAsync(movieInformation.Titre,
                         includeAdult: true);
 
                     movieSelected = GetTheGoodMovie(temp, movieInformation);
@@ -294,7 +266,7 @@ namespace WebAppServer.Codes
                 }
                 else
                 {
-                    movieDb = await _clientTmDb.GetMovieAsync(movieSelected.Id);
+                    movieDb = await ClientTmDb.GetMovieAsync(movieSelected.Id);
                 }
 
                 returnMovieModels.Add(new MovieModel(Guid.NewGuid())
@@ -341,16 +313,16 @@ namespace WebAppServer.Codes
         /// Méthode qui appelé lorsque le Timer arrive à la fin.
         /// </summary>
         /// <param name="state"></param>
-        private async void TimerUpdate(object state)
+        protected override async void TimerUpdate(object state)
         {
-            if (_isUpdateTime)
+            if (IsUpdateTime)
                 return;
 
-            _isUpdateTime = true;
+            IsUpdateTime = true;
 
             // Récupération des films en locale.
             List<MovieInformation> videosOnLocal = new List<MovieInformation>();
-            foreach (var pathMovie in _configurationApp.PathMovies)
+            foreach (var pathMovie in ConfigurationApp.PathMovies)
             {
                 if (!Directory.Exists(pathMovie))
                 {
@@ -364,7 +336,7 @@ namespace WebAppServer.Codes
             }
 
             // Récupération des dessins animés.
-            foreach (var dessinAnimes in _configurationApp.PathDessinAnimes)
+            foreach (var dessinAnimes in ConfigurationApp.PathDessinAnimes)
             {
                 if (!Directory.Exists(dessinAnimes))
                 {
@@ -391,7 +363,7 @@ namespace WebAppServer.Codes
                     }
                 }
 
-                lock (_lock)
+                lock (Lock)
                 {
                     // Suppression des films n'existant plus
                     foreach (var toDelete in listeToDelete)
@@ -417,14 +389,14 @@ namespace WebAppServer.Codes
             }
             
             var tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
-            lock (_lock)
+            lock (Lock)
             {
                 _movieModelsCollection.AddRange(tempAddMovieModels);
             }
 
             // Sauvegarde
-            _storage.SaveMoviesModels(_movieModelsCollection);
-            _isUpdateTime = false;
+            Storage.SaveMoviesModels(_movieModelsCollection);
+            IsUpdateTime = false;
         }
 
         #endregion

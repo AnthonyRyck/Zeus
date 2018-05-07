@@ -14,10 +14,10 @@ namespace WebAppServer.Controllers.API
     [Route("api/Settings")]
     public class SettingsController : Controller
     {
-        private IShowsAndMovies _moviesManager;
+        private IMovies _moviesManager;
         //private readonly ILogger _logger;
 
-        public SettingsController(IShowsAndMovies manager)
+        public SettingsController(IMovies manager)
         {
             _moviesManager = manager;
         }

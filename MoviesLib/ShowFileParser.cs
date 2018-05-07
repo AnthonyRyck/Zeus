@@ -43,13 +43,20 @@ namespace MoviesLib
 		/// Méthode permettant de récupérer les informations d'un fichier pour une série.
 		/// </summary>
 		/// <param name="title"></param>
+		/// <param name="fileName"></param>
+		/// <param name="sizeByte"></param>
 		/// <returns></returns>
-		public ShowInformation GetShow(string title)
+		public ShowInformation GetShow(string title, string fileName, long sizeByte)
 	    {
 		    ShowInformation result = new ShowInformation();
-			
-			// Ajout de "." à la place des espaces.
-		    title = title.Replace(' ', '.');
+	        result.FileName = fileName;
+	        result.Size = sizeByte;
+
+            // Ajout de "." à la place des espaces.
+	        title = title.Replace(' ', '.')
+	                     .Replace('-', '.')
+	                     .Replace('(', '.')
+	                     .Replace(')', '.');
 
 			if(Regex.IsMatch(title, SAISON_PATTERN))
 				result.Saison = GetSeasonOrEpisode(ref title, SAISON_PATTERN);

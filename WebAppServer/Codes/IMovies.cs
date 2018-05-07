@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MoviesLib.Entities;
-using TMDbLib.Objects.Movies;
 using WebAppServer.Models;
 
 namespace WebAppServer.Codes
 {
-    public interface IShowsAndMovies
+    public interface IMovies
     {
         /// <summary>
         /// Retourne la liste des films qui sont présent sur le local.

@@ -9,6 +9,7 @@
     <Compile Include="..\MoviesLib\Entities\ChiffreRomain.cs" Link="Codes\Entities\ChiffreRomain.cs" />
     <Compile Include="..\MoviesLib\Entities\MovieInformation.cs" Link="Codes\Entities\MovieInformation.cs" />
     <Compile Include="..\MoviesLib\Entities\ShowInformation.cs" Link="Codes\Entities\ShowInformation.cs" />
+    <Compile Include="..\MoviesLib\Entities\VideoInformation.cs" Link="Codes\Entities\VideoInformation.cs" />
     <Compile Include="..\MoviesLib\MovieFileParser.cs" Link="Codes\MovieFileParser.cs" />
     <Compile Include="..\MoviesLib\MovieManager.cs" Link="Codes\MovieManager.cs" />
     <Compile Include="..\MoviesLib\ShowFileParser.cs" Link="Codes\ShowFileParser.cs" />
@@ -42,7 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Codes\Entities\" />
     <Folder Include="Models\" />
   </ItemGroup>
 

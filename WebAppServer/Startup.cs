@@ -29,8 +29,8 @@ namespace WebAppServer
         {
             services.AddMvc();
 
-            ShowsAndMoviesManager show = new ShowsAndMoviesManager();
-            services.AddSingleton<IShowsAndMovies>(show);
+            MoviesManager show = new MoviesManager();
+            services.AddSingleton<IMovies>(show);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

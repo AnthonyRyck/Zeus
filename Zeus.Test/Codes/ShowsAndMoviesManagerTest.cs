@@ -51,7 +51,7 @@ namespace Zeus.Test.Codes
         {
             #region Act
 
-            ShowsAndMoviesManager manager = new ShowsAndMoviesManager();
+            MoviesManager manager = new MoviesManager();
             var result = await manager.GetListMoviesLocal();
 
             #endregion
@@ -93,7 +93,7 @@ namespace Zeus.Test.Codes
 
             #region Act
 
-            ShowsAndMoviesManager manager = new ShowsAndMoviesManager();
+            MoviesManager manager = new MoviesManager();
             var result = await manager.GetListMoviesLocal();
 
             #endregion
@@ -138,7 +138,7 @@ namespace Zeus.Test.Codes
 
             #region Act
 
-            ShowsAndMoviesManager manager = new ShowsAndMoviesManager();
+            MoviesManager manager = new MoviesManager();
             var result = manager.GetMovies().Result;
 
             #endregion

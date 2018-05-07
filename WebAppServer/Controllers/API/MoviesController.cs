@@ -22,13 +22,13 @@ namespace WebAppServer.Controllers.API
     [Route("api/Movies")]
     public class MoviesController : Controller
     {
-        private IShowsAndMovies _moviesManager;
+        private IMovies _moviesManager;
         private readonly ILogger _logger;
 
 
         #region Public Methods
 
-        public MoviesController(IShowsAndMovies moviesManager, ILogger<MoviesController> logger)
+        public MoviesController(IMovies moviesManager, ILogger<MoviesController> logger)
         {
             _moviesManager = moviesManager;
             _logger = logger;
