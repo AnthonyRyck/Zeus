@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using MoviesLib;
 using MoviesLib.Entities;
+using TMDbLib.Objects.TvShows;
 using WebAppServer.Models;
 
 namespace WebAppServer.Codes
 {
-    public class ShowsManager : AbstractManager
+    public class ShowsManager : AbstractManager, IShows
     {
         #region Properties
 
         private ShowManager _seriesManager;
-        private List<ShowModel> _showModelCollection;
+        private SerieCollection _serieCollection;
 
         #endregion
 
@@ -23,13 +25,48 @@ namespace WebAppServer.Codes
         {
             _seriesManager = new ShowManager();
 
-            // TODO : Mettre le chargement de _showModelCollection.
-            //var tempCollectionShowModels = Storage.GetShowsTmDb();
-            //if (tempCollectionShowModels != null)
-            //    _showModelCollection = tempCollectionShowModels.ToList();
-        }
+			var tempCollectionShowModels = Storage.GetShowModel();
+			if (tempCollectionShowModels != null)
+				_serieCollection.Set(tempCollectionShowModels);
+		}
 
         #endregion
+
+	    #region Private Methods
+
+		/// <summary>
+		/// Permet de créer un nouveau ShowModel.
+		/// </summary>
+		/// <param name="serie"></param>
+		/// <returns></returns>
+	    private async Task<ShowModel> CreateNewShowModel(ShowInformation serie)
+	    {
+			ShowModel showModel = new ShowModel();
+			
+		    var temp = await ClientTmDb.SearchTvShowAsync(serie.Titre);
+		    await Task.Delay(500);
+
+			if (temp.Results.Count > 0)
+			{
+				var tempSerieTrouve = temp.Results[0];
+
+				// Récupération des informations de TmDb.
+				TvShow tvShow = await ClientTmDb.GetTvShowAsync(tempSerieTrouve.Id);
+				await Task.Delay(500);
+				TvSeason saison = await ClientTmDb.GetTvSeasonAsync(tempSerieTrouve.Id, serie.Saison);
+				await Task.Delay(500);
+				TvEpisode episode = await ClientTmDb.GetTvEpisodeAsync(tempSerieTrouve.Id, serie.Saison, serie.Episode);
+
+				showModel.TvShow = tvShow;
+				showModel.TvSeasons.Add(saison);
+				showModel.TvEpisodes.Add(episode);
+				showModel.ShowInformation.Add(serie);
+			}
+
+			return showModel;
+	    }
+
+	    #endregion
 
         #region Timer Method
 
@@ -55,54 +92,52 @@ namespace WebAppServer.Codes
                     seriesOnLocal.AddRange(tempSeries);
             }
 
-            List<ShowModel> listeToDelete = new List<ShowModel>();
+	        // Suppression des items en mémoire qui ne sont plus en local.
+	        _serieCollection?.UpdateShowInformations(seriesOnLocal);
 
-            if (_showModelCollection != null)
+	        if (_serieCollection == null)
+	            _serieCollection = new SerieCollection();
+
+            foreach (ShowInformation serieLocal in seriesOnLocal)
             {
-                // Détermination des différences entre ce qui est présent sur le disque
-                // et ce qui est connu en mémoire.
-                foreach (ShowModel local in _showModelCollection)
-                {
-                    //if (!videosOnLocal.Contains(local.MovieInformation))
-                    //{
-                        listeToDelete.Add(local);
-                    //}
-                }
+	            await Task.Delay(1000);
 
-                lock (Lock)
-                {
-                    // Suppression des séries qui n'existant plus
-                    foreach (var toDelete in listeToDelete)
-                    {
-                        _showModelCollection.Remove(toDelete);
-                    }
-                }
+	            Guid idShow = _serieCollection.GetIdShow(serieLocal.Titre);
+
+	            if (idShow == Guid.Empty)
+	            {
+					ShowModel showModel = await CreateNewShowModel(serieLocal);
+		            _serieCollection.Add(showModel);
+				}
+	            else
+	            {
+					// Si la saison est connu.
+		            if (_serieCollection.HaveSeason(idShow, serieLocal.Saison))
+		            {
+						// Si Episode est non connu.
+			            if (!_serieCollection.HaveEpisode(idShow, serieLocal.Saison, serieLocal.Episode))
+			            {
+				            int idSerie = _serieCollection.GetIdSerieTmDb(idShow);
+				            TvEpisode episode = await ClientTmDb.GetTvEpisodeAsync(idSerie, serieLocal.Saison, serieLocal.Episode);
+				            
+							_serieCollection.AddEpisode(idShow, episode, serieLocal);
+			            }
+					}
+		            else
+		            {
+			            // Cas ou il ne connait pas la saison.
+			            int idSerie = _serieCollection.GetIdSerieTmDb(idShow);
+			            TvSeason saison = await ClientTmDb.GetTvSeasonAsync(idSerie, serieLocal.Saison);
+			            await Task.Delay(500);
+			            TvEpisode episode = await ClientTmDb.GetTvEpisodeAsync(idSerie, serieLocal.Saison, serieLocal.Episode);
+
+						_serieCollection.AddSaison(idShow, saison, episode, serieLocal);
+		            }
+	            }
             }
-
-            if (_showModelCollection == null)
-                _showModelCollection = new List<ShowModel>();
-
-            // Voir s'il y a des rajouts.
-            List<ShowInformation> tempInformations = _showModelCollection.SelectMany(x => x.ShowInformation).ToList();
-            List<ShowInformation> listeToAdd = new List<ShowInformation>();
-
-            foreach (ShowInformation local in seriesOnLocal)
-            {
-                if (!tempInformations.Contains(local))
-                {
-                    listeToAdd.Add(local);
-                }
-            }
-
-            //var tempAddMovieModels = await GetSerieDbInformation(listeToAdd);
-            //lock (Lock)
-            //{
-            //    _showModelCollection.AddRange(tempAddMovieModels);
-            //}
             
             // Sauvegarde
-            //TODO : Faire la sauvegarde.
-            //Storage.SaveSeriesModels(_showModelCollection);
+            //Storage.SaveSeriesModels(_serieCollection);
             IsUpdateTime = false;
         }
 

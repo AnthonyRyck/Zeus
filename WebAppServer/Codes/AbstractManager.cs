@@ -14,7 +14,7 @@ namespace WebAppServer.Codes
 
         
         protected readonly TMDbClient ClientTmDb;
-        protected StorageManager Storage;
+        protected readonly StorageManager Storage;
         protected readonly ConfigurationApp ConfigurationApp;
 
         private Timer _timerUpdate;
@@ -39,11 +39,12 @@ namespace WebAppServer.Codes
                 DefaultLanguage = "fr-FR",
                 DefaultCountry = "FR"
             };
-            
-            ConfigurationApp = Storage.GetConfiguration();
-            
-            // Démarre dans 5 secondes et toutes les 15 minutes.
-            _timerUpdate = new Timer(TimerUpdate, null, 5000, ConfigurationApp.TempsEnMillisecondPourTimerRefresh);
+
+	        Storage = new StorageManager();
+			ConfigurationApp = Storage.GetConfiguration();
+
+			// Démarre dans 5 secondes et toutes les 15 minutes.
+			_timerUpdate = new Timer(TimerUpdate, null, 5000, ConfigurationApp.TempsEnMillisecondPourTimerRefresh);
         }
 
         #endregion

@@ -35,9 +35,9 @@ namespace WebAppServer.Codes
         {
             //_logger = logger;
             _movieManager = new MovieManager("FRENCH", "TRUEFRENCH", "FR");
-            Storage = new StorageManager(_movieManager.GetMoviesInformations);
+			Storage.SetFunc(_movieManager.GetMoviesInformations);
 
-            var tempCollectionMovieModels = Storage.GetMoviesTmDb();
+			var tempCollectionMovieModels = Storage.GetMoviesTmDb();
             if (tempCollectionMovieModels != null)
                 _movieModelsCollection = tempCollectionMovieModels.ToList();
         }

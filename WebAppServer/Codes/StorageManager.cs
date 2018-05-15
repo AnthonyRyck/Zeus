@@ -18,14 +18,9 @@ namespace WebAppServer.Codes
         private string _pathSauvegarde;
 
         /// <summary>
-        /// Nom du fichier de sauvegarde pour les informations de films en locale.
-        /// </summary>
-        private const string FILE_MOVIES_INFORMATIONS = "saveMoviesInformations.json";
-
-        /// <summary>
         /// Nom du fichier de sauvegarde pour les informations de séries en locale.
         /// </summary>
-        private const string FILE_SHOWS_INFORMATIONS = "saveShowsInformations.json";
+        private const string FILE_SHOWS = "saveShowsInformations.json";
 
         /// <summary>
         /// Nom du fichier de sauvegarde contenant toutes les informations TmDB des films
@@ -45,14 +40,18 @@ namespace WebAppServer.Codes
 
         #region Constructeur
 
-        public StorageManager(Func<string, TypeVideo, IEnumerable<MovieInformation>> getMovies)
-        {
-            _pathConfiguration = GetConfigPath();
-            _pathSauvegarde = GetSavePath();
-            _funcGetMovies = getMovies;
-        }
+	    public StorageManager()
+	    {
+			_pathConfiguration = GetConfigPath();
+		    _pathSauvegarde = GetSavePath();
+		}
 
         #endregion
+
+	    public void SetFunc(Func<string, TypeVideo, IEnumerable<MovieInformation>> getMovies)
+	    {
+			_funcGetMovies = getMovies;
+		}
 
         #region Internal Methods
 
@@ -123,15 +122,46 @@ namespace WebAppServer.Codes
             File.WriteAllText(pathSaveMovieModel, contentJson);
         }
 
-        #endregion
+		/// <summary>
+		/// Sauvegarde la collection de série.
+		/// </summary>
+		/// <param name="serieCollection"></param>
+	    internal void SaveSeriesModels(SerieCollection serieCollection)
+	    {
+			string contentJson = JsonConvert.SerializeObject(serieCollection.Get());
 
-        #region Private Methods
+		    string pathSaveMovieModel = Path.Combine(_pathSauvegarde, FILE_SHOWS);
+		    File.WriteAllText(pathSaveMovieModel, contentJson);
+		}
 
-        /// <summary>
-        /// Retourne le chemin d'acces pour les fichiers de configuration.
-        /// </summary>
-        /// <returns></returns>
-        private string GetConfigPath()
+	    /// <summary>
+	    /// Retourne la sauvegarde des séries.
+	    /// </summary>
+	    /// <returns></returns>
+	    internal IEnumerable<ShowModel> GetShowModel()
+	    {
+		    List<ShowModel> tempShows = null;
+
+		    // Voir en fichier de sauvegarde s'il y a des informations.
+		    string path = Path.Combine(_pathSauvegarde, FILE_SHOWS);
+		    if (File.Exists(path))
+		    {
+			    string contentJson = File.ReadAllText(path);
+			    tempShows = JsonConvert.DeserializeObject<List<ShowModel>>(contentJson);
+		    }
+
+		    return tempShows;
+	    }
+
+		#endregion
+
+		#region Private Methods
+
+		/// <summary>
+		/// Retourne le chemin d'acces pour les fichiers de configuration.
+		/// </summary>
+		/// <returns></returns>
+		private string GetConfigPath()
         {
             return GetFolder(@"/config");
         }
@@ -179,5 +209,6 @@ namespace WebAppServer.Codes
 
         #endregion
 
+	   
     }
 }

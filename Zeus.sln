@@ -24,6 +24,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppClient", "WebAppClien
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoviesAutomate", "MoviesAutomate\MoviesAutomate.csproj", "{BBD832E2-8135-4249-8DE5-2A45CAA932E6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TMDbLib", "TMDbLib\TMDbLib.csproj", "{EABFF96E-9FDC-4957-B448-4459FA164D48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,14 @@ Global
 		{BBD832E2-8135-4249-8DE5-2A45CAA932E6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BBD832E2-8135-4249-8DE5-2A45CAA932E6}.Release|x64.ActiveCfg = Release|x64
 		{BBD832E2-8135-4249-8DE5-2A45CAA932E6}.Release|x64.Build.0 = Release|x64
+		{EABFF96E-9FDC-4957-B448-4459FA164D48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EABFF96E-9FDC-4957-B448-4459FA164D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EABFF96E-9FDC-4957-B448-4459FA164D48}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EABFF96E-9FDC-4957-B448-4459FA164D48}.Debug|x64.Build.0 = Debug|Any CPU
+		{EABFF96E-9FDC-4957-B448-4459FA164D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EABFF96E-9FDC-4957-B448-4459FA164D48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EABFF96E-9FDC-4957-B448-4459FA164D48}.Release|x64.ActiveCfg = Release|Any CPU
+		{EABFF96E-9FDC-4957-B448-4459FA164D48}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
