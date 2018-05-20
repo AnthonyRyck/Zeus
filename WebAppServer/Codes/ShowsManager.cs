@@ -26,8 +26,11 @@ namespace WebAppServer.Codes
             _seriesManager = new ShowManager();
 
 			var tempCollectionShowModels = Storage.GetShowModel();
-			if (tempCollectionShowModels != null)
-				_serieCollection.Set(tempCollectionShowModels);
+	        if (tempCollectionShowModels != null)
+	        {
+				_serieCollection = new SerieCollection();
+		        _serieCollection.Set(tempCollectionShowModels);
+	        }
 		}
 
         #endregion
@@ -137,11 +140,34 @@ namespace WebAppServer.Codes
             }
             
             // Sauvegarde
-            //Storage.SaveSeriesModels(_serieCollection);
+            Storage.SaveSeriesModels(_serieCollection);
             IsUpdateTime = false;
         }
 
-        #endregion
+		#endregion
 
-    }
+		#region Implement IShows
+
+		/// <summary>
+		/// Récupère la liste des séries.
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<ShowModel> GetShows()
+		{
+			return _serieCollection.Get();
+		}
+
+		/// <summary>
+		/// Récupère le ShowModel par rapport à l'ID donnée.
+		/// </summary>
+		/// <param name="idshowmodel"></param>
+		/// <returns></returns>
+	    public ShowModel GetShow(Guid idshowmodel)
+		{
+			return _serieCollection.GetShowModel(idshowmodel);
+		}
+
+	    #endregion
+
+	}
 }

@@ -1,8 +1,52 @@
 ﻿@page
 @model WebAppServer.Pages.SeriesModel
 @{
-    ViewData["Title"] = "Series";
+    ViewData["Title"] = "Séries";
 }
 
 <h2>Series</h2>
 
+<div class="flex">
+
+	@foreach (var item in Model.Series)
+	{
+		<div class="card">
+			<div class="test">
+				@if (string.IsNullOrEmpty(item.TvShow.PosterPath))
+				{
+					<img src="images/VideoInconnu.jpg" />
+				}
+				else
+				{
+					<a asp-page="/DetailSerie"
+					   asp-page-handler="Saison"
+					   asp-route-idshowmodel="@item.IdShowModel">
+						<img id="imageVideo" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @item.TvShow.PosterPath)" />
+					</a>
+					@*<div class="meta" data-role="tooltip">*@
+						
+
+						@*<a href="@Url.Action("Download", "Movies", new {item.Id})">
+							<span class="glyphicon glyphicon-download-alt"></span>
+						</a>*@
+
+						@*<button class="submit-with-icon" type="submit" onclick="getListImgVideos('@item.Id')">
+							<span class="glyphicon glyphicon-refresh"></span>
+						</button>*@
+					@*</div>*@
+				}
+			</div>
+
+			<div class="info">
+				<p class="title" id="title">
+					@item.TvShow.Name
+				</p>
+
+				<p id="description" class="overview">@item.TvShow.Overview</p>
+			</div>
+
+			<div id="@item.IdShowModel" class="hide-imgRechercher"></div>
+		</div>
+	}
+
+</div>

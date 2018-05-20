@@ -235,25 +235,27 @@ namespace WebAppServer.Codes
 		    UpdateShowModel();
 	    }
 
-		#endregion
-
-		#region Private Methods
-
 		/// <summary>
 		/// Récupère le ShowModel par rapport à l'ID.
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		private ShowModel GetShowModel(Guid id)
-	    {
-		    return _list.FirstOrDefault(x => x.IdShowModel == id);
-	    }
+		public ShowModel GetShowModel(Guid id)
+		{
+			return _list.FirstOrDefault(x => x.IdShowModel == id);
+		}
+
+		#endregion
+
+		#region Private Methods
+
+
 
 		/// <summary>
 		/// Met à jour le ShowModel. Si plus d'épisode, plus de saison.
 		/// Le ShowModel doit être supprimé.
 		/// </summary>
-	    private void UpdateShowModel()
+		private void UpdateShowModel()
 		{
 			var hsowToDelete = _list.Where(x => x.ShowInformation.Count == 0
 			                                    && x.TvEpisodes.Count == 0
@@ -267,7 +269,7 @@ namespace WebAppServer.Codes
 
 		#endregion
 
-
-	}
+		
+    }
 }
 

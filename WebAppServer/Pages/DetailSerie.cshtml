@@ -1,0 +1,25 @@
+﻿@page
+@model WebAppServer.Pages.DetailSerieModel
+@{
+    ViewData["Title"] = "DetailSerie";
+}
+
+<h2>@Model.Serie.TvShow.Name</h2>
+
+<div>
+	<div>
+		@if (string.IsNullOrEmpty(Model.Serie.TvShow.PosterPath))
+		{
+			<img src="images/VideoInconnu.jpg" />
+		}
+		else
+		{
+			<img id="imageVideo" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + Model.Serie.TvShow.PosterPath)" />
+		}
+	</div>
+	<div>
+		<p id="description" class="overview">@Model.Serie.TvShow.Overview</p>
+	</div>
+
+</div>
+
