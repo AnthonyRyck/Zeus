@@ -1,6 +1,28 @@
 ﻿.top-right {
 	position: absolute;
-	top: 8px;
-	right: 16px;
+	top: 0;
+	right: 0;
 	background-color: #cc7b19;
+	box-shadow: 0 0 4px rgba(0,0,0,.6);
+	opacity: 1;
+	padding: 0 8px;
+	line-height: 24px;
+	transition: all .2s;
+}
+
+.width-200 {
+	width: 200px;
+}
+
+.imageSerie {
+	visibility: visible;
+	width: 200px;
+	height: 300px;
+	display: block;
+}
+
+.containerSerie {
+	position: relative;
+	text-align: center;
+	color: white;
 }
