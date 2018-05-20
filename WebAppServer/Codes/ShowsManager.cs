@@ -77,7 +77,7 @@ namespace WebAppServer.Codes
         {
             if (IsUpdateTime)
                 return;
-
+			
             IsUpdateTime = true;
 
             // Récupération des séries en locale.

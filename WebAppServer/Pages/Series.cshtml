@@ -12,29 +12,20 @@
 	{
 		<div class="card">
 			<div class="test">
-				@if (string.IsNullOrEmpty(item.TvShow.PosterPath))
-				{
-					<img src="images/VideoInconnu.jpg" />
-				}
-				else
-				{
-					<a asp-page="/DetailSerie"
-					   asp-page-handler="Saison"
-					   asp-route-idshowmodel="@item.IdShowModel">
+				<a asp-page="/DetailSerie"
+					asp-page-handler="Saison"
+					asp-route-idshowmodel="@item.IdShowModel">
+					<div class="top-right">@item.ShowInformation.Count</div>
+
+					@if (string.IsNullOrEmpty(item.TvShow.PosterPath))
+					{
+						<img src="images/VideoInconnu.jpg"/>
+					}
+					else
+					{
 						<img id="imageVideo" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @item.TvShow.PosterPath)" />
-					</a>
-					@*<div class="meta" data-role="tooltip">*@
-						
-
-						@*<a href="@Url.Action("Download", "Movies", new {item.Id})">
-							<span class="glyphicon glyphicon-download-alt"></span>
-						</a>*@
-
-						@*<button class="submit-with-icon" type="submit" onclick="getListImgVideos('@item.Id')">
-							<span class="glyphicon glyphicon-refresh"></span>
-						</button>*@
-					@*</div>*@
-				}
+					}
+				</a>
 			</div>
 
 			<div class="info">
