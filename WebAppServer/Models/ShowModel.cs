@@ -48,7 +48,15 @@ namespace WebAppServer.Models
 
 		#region Public Methods
 
-
+		/// <summary>
+		/// Retourne le nombre d'épisode pour cette saison.
+		/// </summary>
+		/// <param name="saisonNumber"></param>
+		/// <returns></returns>
+	    public int GetNombreEpisodes(int saisonNumber)
+		{
+			return ShowInformation.Count(x => x.Saison == saisonNumber);
+		}
 
 		#endregion
 

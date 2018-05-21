@@ -4,46 +4,49 @@
     ViewData["Title"] = "Séries";
 }
 
-<h2>Séries</h2>
+<div class="margin-10percent">
 
-<div class="flex">
+	<h2>Séries</h2>
 
-	@foreach (var item in Model.Series)
-	{
-		if (item.TvShow != null)
+	<div class="flex">
+
+		@foreach (var item in Model.Series)
 		{
-			 <div class="card">
-				<div class="imageSerie containerSerie">
-				
-					<div class="top-right">@item.ShowInformation.Count</div>
+			if (item.TvShow != null)
+			{
+				<div class="card">
+					<div class="imageSerie containerSerie">
 
-					<a asp-page="/DetailSerie"
-						asp-page-handler="Saison"
-						asp-route-idshowmodel="@item.IdShowModel">
+						<div class="top-right">@item.ShowInformation.Count</div>
+
+						<a asp-page="/DetailSerie"
+						   asp-page-handler="Saison"
+						   asp-route-idshowmodel="@item.IdShowModel">
 
 
-						@if (string.IsNullOrEmpty(item.TvShow.PosterPath))
-						{
-							<img src="images/VideoInconnu.jpg" class="width-200"/>
-						}
-						else
-						{
-							<img id="imageVideo" class="width-200" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @item.TvShow.PosterPath)"/>
-						}
-					</a>
+							@if (string.IsNullOrEmpty(item.TvShow.PosterPath))
+							{
+								<img src="images/VideoInconnu.jpg" class="width-200" />
+							}
+							else
+							{
+								<img id="imageVideo" class="width-200" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @item.TvShow.PosterPath)" />
+							}
+						</a>
+					</div>
+
+					<div class="info">
+						<p class="title" id="title">
+							@item.TvShow.Name
+						</p>
+
+						<p id="description" class="overview">@item.TvShow.Overview</p>
+					</div>
+
+					<div id="@item.IdShowModel" class="hide-imgRechercher"></div>
 				</div>
-
-				<div class="info">
-					<p class="title" id="title">
-						@item.TvShow.Name
-					</p>
-
-					<p id="description" class="overview">@item.TvShow.Overview</p>
-				</div>
-
-				<div id="@item.IdShowModel" class="hide-imgRechercher"></div>
-			</div>
+			}
 		}
-	}
 
+	</div>
 </div>

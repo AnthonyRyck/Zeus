@@ -4,51 +4,58 @@
     ViewData["Title"] = "DetailSerie";
 }
 
-<h2>@Model.Serie.TvShow.Name</h2>
+<div class="container">
 
-<div class="flex-no-wrap">
-	<div>
-		@if (string.IsNullOrEmpty(Model.Serie.TvShow.PosterPath))
-		{
-			<img src="images/VideoInconnu.jpg" />
-		}
-		else
-		{
-			<img id="imageVideo" class="width-200" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + Model.Serie.TvShow.PosterPath)" />
-		}
-		
-	</div>
-	<div>
-		<p id="description" class="overview-serie">@Model.Serie.TvShow.Overview</p>
-	</div>
-</div>
+	<h2>@Model.Serie.TvShow.Name</h2>
 
-<hr class="separator-black"/>
+	<div class="flex-no-wrap">
+		<div>
+			@if (string.IsNullOrEmpty(Model.Serie.TvShow.PosterPath))
+			{
+				<img src="images/VideoInconnu.jpg" />
+			}
+			else
+			{
+				<img id="imageVideo" class="width-200" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + Model.Serie.TvShow.PosterPath)" />
+			}
 
-<h3>Saisons</h3>
-
-<div class="flex">
-	@foreach (var saison in Model.Serie.TvSeasons)
-	{
-		<div class="containerSerie imageEpisodeSerie">
-				
-			<div class="top-right">12</div>
-
-			<a>
-				@*asp-page="/DetailEpisodeSerie"
-				asp-page-handler="Episode"
-				asp-route-idshowmodel="@saison.SeasonNumber"*@
-
-
-				@if (string.IsNullOrEmpty(saison.PosterPath))
-				{
-					<img src="images/VideoInconnu.jpg" class="width-150" />
-				}
-				else
-				{
-					<img id="imageVideo" class="width-150" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @saison.PosterPath)" />
-				}
-			</a>
 		</div>
-	}
+		<div>
+			<p id="description" class="overview-serie">@Model.Serie.TvShow.Overview</p>
+		</div>
+	</div>
+
+	<hr class="separator-black" />
+
+	<h3>Saisons</h3>
+
+	<div class="flex">
+		@foreach (var saison in Model.Serie.TvSeasons)
+		{
+			<div class="containerSerie imageEpisodeSerie">
+
+				<div class="top-right">@Model.Serie.GetNombreEpisodes(saison.SeasonNumber)</div>
+
+				<a>
+					@*asp-page="/DetailEpisodeSerie"
+						asp-page-handler="Episode"
+						asp-route-idshowmodel="@saison.SeasonNumber"*@
+
+
+					@if (string.IsNullOrEmpty(saison.PosterPath))
+					{
+						<img src="images/VideoInconnu.jpg" class="width-150" />
+					}
+					else
+					{
+						<img id="imageVideo" class="width-150" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @saison.PosterPath)" />
+					}
+				</a>
+
+				<div class="text-color-black">Saison @saison.SeasonNumber</div>
+				<div class="text-color-black">@Model.Serie.GetNombreEpisodes(saison.SeasonNumber) épisodes</div>
+			</div>
+		}
+	</div>
+
 </div>

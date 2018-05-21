@@ -57,3 +57,14 @@
 .imageEpisodeSerie {
 	margin: 5px;
 }
+
+.text-color-black {
+	color: black;
+	text-align: left;
+	font-weight: bold;
+}
+
+.margin-10percent {
+	margin-left: 10%;
+	margin-right: 10%;
+}
