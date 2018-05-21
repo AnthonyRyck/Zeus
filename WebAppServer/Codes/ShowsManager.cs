@@ -16,6 +16,7 @@ namespace WebAppServer.Codes
 
         private ShowManager _seriesManager;
         private SerieCollection _serieCollection;
+		private static readonly object _objetToLock = new object();
 
         #endregion
 
@@ -110,7 +111,11 @@ namespace WebAppServer.Codes
 	            if (idShow == Guid.Empty)
 	            {
 					ShowModel showModel = await CreateNewShowModel(serieLocal);
-		            _serieCollection.Add(showModel);
+
+		            lock (_objetToLock)
+		            {
+						_serieCollection.Add(showModel);
+					}
 				}
 	            else
 	            {
@@ -122,8 +127,11 @@ namespace WebAppServer.Codes
 			            {
 				            int idSerie = _serieCollection.GetIdSerieTmDb(idShow);
 				            TvEpisode episode = await ClientTmDb.GetTvEpisodeAsync(idSerie, serieLocal.Saison, serieLocal.Episode);
-				            
-							_serieCollection.AddEpisode(idShow, episode, serieLocal);
+
+				            lock (_objetToLock)
+				            {
+					            _serieCollection.AddEpisode(idShow, episode, serieLocal);
+				            }
 			            }
 					}
 		            else
@@ -134,7 +142,10 @@ namespace WebAppServer.Codes
 			            await Task.Delay(500);
 			            TvEpisode episode = await ClientTmDb.GetTvEpisodeAsync(idSerie, serieLocal.Saison, serieLocal.Episode);
 
-						_serieCollection.AddSaison(idShow, saison, episode, serieLocal);
+			            lock (_objetToLock)
+			            {
+				            _serieCollection.AddSaison(idShow, saison, episode, serieLocal);
+			            }
 		            }
 	            }
             }

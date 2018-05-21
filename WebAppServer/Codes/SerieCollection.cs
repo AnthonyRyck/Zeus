@@ -12,10 +12,11 @@ namespace WebAppServer.Codes
     public class SerieCollection : IList<ShowModel>
     {
         private readonly IList<ShowModel> _list = new List<ShowModel>();
+		private static readonly Object _objectToLock = new object();
 
-        #region Implementation of IEnumerable
+		#region Implementation of IEnumerable
 
-        public IEnumerator<ShowModel> GetEnumerator()
+		public IEnumerator<ShowModel> GetEnumerator()
         {
             return _list.GetEnumerator();
         }
@@ -124,7 +125,7 @@ namespace WebAppServer.Codes
 	    {
 			foreach (ShowModel model in _list)
 		    {
-			    if (model.TvShow.Name.ToUpper() == title.ToUpper())
+			    if (IsSameShow(model.TvShow.Name, title))
 			    {
 				    return model.IdShowModel;
 			    }
@@ -249,8 +250,6 @@ namespace WebAppServer.Codes
 
 		#region Private Methods
 
-
-
 		/// <summary>
 		/// Met à jour le ShowModel. Si plus d'épisode, plus de saison.
 		/// Le ShowModel doit être supprimé.
@@ -261,11 +260,20 @@ namespace WebAppServer.Codes
 			                                    && x.TvEpisodes.Count == 0
 			                                    && x.TvSeasons.Count == 0).ToList();
 
-			foreach (ShowModel showModel in hsowToDelete)
+			lock (_objectToLock)
 			{
-				_list.Remove(showModel);
+				foreach (ShowModel showModel in hsowToDelete)
+				{
+					_list.Remove(showModel);
+				}
 			}
 		}
+
+	    private bool IsSameShow(string titleTmDb, string titleInformationShow)
+	    {
+		    string tempTmDb = titleTmDb.Replace("'", string.Empty);
+		    return tempTmDb.ToUpper() == titleInformationShow.ToUpper();
+	    }
 
 		#endregion
 
