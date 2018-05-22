@@ -49,6 +49,11 @@
 	margin-left: 20px;
 }
 
+.no-overview-serie {
+	margin-left: 20px;
+	font-style: oblique;
+}
+
 .separator-black {
 	background: gray;
 	height: 2px;

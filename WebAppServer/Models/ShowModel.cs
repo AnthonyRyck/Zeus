@@ -58,6 +58,25 @@ namespace WebAppServer.Models
 			return ShowInformation.Count(x => x.Saison == saisonNumber);
 		}
 
+		/// <summary>
+		/// Retourne les épisodes par rapport à une saison.
+		/// </summary>
+		/// <param name="saison"></param>
+	    public IEnumerable<TvEpisode> GetEpisodes(int saison)
+		{
+			return TvEpisodes.Where(x => x.SeasonNumber == saison).ToList();
+		}
+
+		/// <summary>
+		/// Retourne la saison demandé par le parametre.
+		/// </summary>
+		/// <param name="saison"></param>
+		/// <returns></returns>
+	    public TvSeason GetSeason(int saison)
+	    {
+		    return TvSeasons.FirstOrDefault(x => x.SeasonNumber == saison);
+	    }
+
 		#endregion
 
 		#region Internal Methods
@@ -114,5 +133,6 @@ namespace WebAppServer.Models
 		#endregion
 
 
-	}
+	    
+    }
 }

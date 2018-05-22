@@ -36,10 +36,10 @@
 
 				<div class="top-right">@Model.Serie.GetNombreEpisodes(saison.SeasonNumber)</div>
 
-				<a>
-					@*asp-page="/DetailEpisodeSerie"
-						asp-page-handler="Episode"
-						asp-route-idshowmodel="@saison.SeasonNumber"*@
+				<a asp-page="/DetailEpisodeSerie"
+				   asp-page-handler="Episode"
+				   asp-route-idserie="@Model.Serie.IdShowModel"
+				   asp-route-saison="@saison.SeasonNumber">
 
 
 					@if (string.IsNullOrEmpty(saison.PosterPath))
