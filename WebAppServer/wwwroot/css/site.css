@@ -144,3 +144,80 @@ p.overview {
 .hide-imgRechercher {
 	display: none;
 }
+
+
+.top-right {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: #cc7b19;
+	box-shadow: 0 0 4px rgba(0,0,0,.6);
+	opacity: 1;
+	padding: 0 8px;
+	line-height: 24px;
+	transition: all .2s;
+}
+
+.width-200 {
+	width: 200px;
+}
+
+.width-100 {
+	width: 100px;
+}
+
+.width-150 {
+	width: 150px;
+}
+
+.imageSerie {
+	visibility: visible;
+	width: 200px;
+	height: 300px;
+	display: block;
+}
+
+.containerSerie {
+	position: relative;
+	text-align: center;
+	color: white;
+}
+
+.size-image {
+	height: 300px;
+	width: 200px;
+}
+
+.flex-no-wrap {
+	display: flex;
+}
+
+.overview-serie {
+	font-size: 20px;
+	margin-left: 20px;
+}
+
+.no-overview-serie {
+	margin-left: 20px;
+	font-style: oblique;
+}
+
+.separator-black {
+	background: gray;
+	height: 2px;
+}
+
+.imageEpisodeSerie {
+	margin: 5px;
+}
+
+.text-color-black {
+	color: black;
+	text-align: left;
+	font-weight: bold;
+}
+
+.margin-10percent {
+	margin-left: 10%;
+	margin-right: 10%;
+}
