@@ -125,7 +125,8 @@ namespace WebAppServer.Codes
 	    {
 			foreach (ShowModel model in _list)
 		    {
-			    if (IsSameShow(model.TvShow.Name, title))
+			    if (model.TvShow != null 
+					&& IsSameShow(model.TvShow.Name, title))
 			    {
 				    return model.IdShowModel;
 			    }

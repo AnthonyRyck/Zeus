@@ -151,8 +151,11 @@ namespace MoviesLib
 		{
 			int indexDoublePoint = title.IndexOf("..");
 
-			string tempTitle = title.Substring(0, indexDoublePoint);
-			string retourTitle = tempTitle.Replace('.', ' ');
+			if (indexDoublePoint > 0)
+			{
+				title = title.Substring(0, indexDoublePoint);
+			}
+			string retourTitle = title.Replace('.', ' ');
 
 			// J'enlève tous caractères qui n'est pas alphabétique.
 			// \W tous les caractères qui ne sont pas alphanumérique
