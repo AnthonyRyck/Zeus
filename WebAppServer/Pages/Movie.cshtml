@@ -57,7 +57,7 @@
 
 	function getVideo(idVideo) {
 
-		$('.imgRechercher').remove();
+		$('.result-search-video').remove();
 
 		$.ajax({
 			url: "/api/Settings/" + idVideo,
@@ -77,7 +77,7 @@
 
 	function getSearchVideos() {
 
-		$('.imgRechercher').remove();
+		$('.result-search-video').remove();
 		
 		$.ajax({
 			url: "/api/Settings/search",
