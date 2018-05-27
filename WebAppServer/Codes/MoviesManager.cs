@@ -173,7 +173,7 @@ namespace WebAppServer.Codes
         }
 
         /// <summary>
-        /// 
+        /// Récupère du site TmDb les informations par rapport à un titre.
         /// </summary>
         /// <param name="titre"></param>
         /// <returns></returns>
@@ -190,7 +190,8 @@ namespace WebAppServer.Codes
                     retourInfo.Add(new SearchVideoModel()
                     {
                         UrlAffiche = "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + result.PosterPath,
-                        IdVideoTmDb = result.Id
+                        IdVideoTmDb = result.Id,
+						Titre = result.Title
                     });
                 }
             }

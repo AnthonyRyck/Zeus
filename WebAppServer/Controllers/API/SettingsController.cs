@@ -30,12 +30,12 @@ namespace WebAppServer.Controllers.API
         /// </summary>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<IEnumerable<SearchVideoModel>> Get(Guid id)
+        public MovieModel Get(Guid id)
         {
             //_logger.LogInformation("Demande liste d'affiche pour un ID.");
-            MovieModel video = _moviesManager.GetMovie(id);
+            return _moviesManager.GetMovie(id);
 
-            return await _moviesManager.GetListVideoOnTmDb(video.MovieInformation.Titre);
+            //return await _moviesManager.GetListVideoOnTmDb(video.MovieInformation.Titre);
         }
 
         /// <summary>
@@ -50,6 +50,18 @@ namespace WebAppServer.Controllers.API
             MovieModel video = await _moviesManager.ChangeVideo(id, idVideoTmDb);
             return Json(new { poster = video.MovieTmDb.PosterPath, title = video.MovieTmDb.Title, description = video.MovieTmDb.Overview });
         }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="titreRecherche"></param>
+		/// <returns></returns>
+		[HttpPost("search")]
+	    public async Task<JsonResult> GetSearchVideo([FromBody]string titreRecherche)
+		{
+			var videos = await _moviesManager.GetListVideoOnTmDb(titreRecherche);
+			return Json(videos);
+		}
 
         #endregion
     }

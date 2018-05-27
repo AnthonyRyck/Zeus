@@ -6,7 +6,7 @@
 
 
 <script>
-	
+
 	function getListImgVideos(idVideo) {
 		$.ajax({
 			url: "/api/Settings/" + idVideo,
@@ -15,7 +15,7 @@
 
 				$.each(datas, function (index, value) {
 
-					$('#' + idVideo).append("<img src=" + value.urlAffiche + " class='imgRechercher' id=" + value.idVideoTmDb +" />");
+					$('#' + idVideo).append("<img src=" + value.urlAffiche + " class='imgRechercher' id=" + value.idVideoTmDb + " />");
 					$('#' + value.idVideoTmDb).click({ param1: value.idVideoTmDb, param2: idVideo }, setVideo);
 				});
 
@@ -29,7 +29,7 @@
 	}
 
 	function setVideo(event) {
-		
+
 		$('#' + event.data.param2).attr("class", "hide-imgRechercher");
 		$(".imgRechercher").remove();
 
@@ -46,25 +46,82 @@
 				parent.find("#description").text(data.description);
 				parent.find("#title").text(data.title);
 				parent.find("#imageVideo").attr("src", "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + data.poster);
+
+				$('#myModal').modal('toggle');
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
 				console.log("Error." + thrownError);
 			}
 		});
-
-
-		
 	}
+
+	function getVideo(idVideo) {
+
+		$('.imgRechercher').remove();
+
+		$.ajax({
+			url: "/api/Settings/" + idVideo,
+			type: "GET",
+			success: function (data) {
+
+				$("#fileName span").text(data.movieInformation.fileName);
+				$("#titrevideo").val(data.movieInformation.titre);
+				$("#idBtnSearchVideo").attr("value", idVideo);
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				alert(thrownError);
+			}
+		});
+	}
+
+	function getSearchVideos() {
+
+		$('.imgRechercher').remove();
+		
+		$.ajax({
+			url: "/api/Settings/search",
+			type: "POST",
+			data: JSON.stringify($("#titrevideo").val()),
+			contentType: "application/json",
+			dataType: "json",
+			success: function (datas) {
+
+				$.each(datas, function (index, value) {
+
+					var image = document.createElement("img");
+					image.setAttribute("src", value.urlAffiche);
+					image.setAttribute("class", "imgRechercher");
+					image.setAttribute("id", value.idVideoTmDb);
+
+					var divTitre = document.createElement("div");
+					divTitre.textContent = value.titre;
+					divTitre.setAttribute("class", "text-center text-bold");
+
+					var div = document.createElement("div");
+					div.setAttribute("class", "result-search-video");
+
+					div.appendChild(image);
+					div.appendChild(divTitre);
+
+					$('#resultSearchVideo').append(div);
+					$('#' + value.idVideoTmDb).click({ param1: value.idVideoTmDb, param2: $("#idBtnSearchVideo").attr("value")}, setVideo);
+				});
+				
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				console.log("Error." + thrownError);
+			}
+		});
+	}
+
+	
 
 </script>
 
-
-
 <h2>Films</h2>
 
-<div id="demo"></div>
 <div id="rechercheVideo"></div>
-
 
 <div class="flex">
 
@@ -75,25 +132,25 @@
 				@if (string.IsNullOrEmpty(item.MovieTmDb.PosterPath))
 				{
 					<img src="images/VideoInconnu.jpg" />
-					<div class="meta" data-role="tooltip">
-						<a href="@Url.Action("Download", "Movies", new {item.Id})">
-							<span class="glyphicon glyphicon-download-alt"></span>
-						</a>
-					</div>
 				}
 				else
 				{
-					<img id="imageVideo" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @item.MovieTmDb.PosterPath)"/>
-					<div class="meta" data-role="tooltip">
-						<a href="@Url.Action("Download", "Movies", new {item.Id})">
-							<span class="glyphicon glyphicon-download-alt"></span>
-						</a>
-
-						<button class="submit-with-icon" type="submit" onclick="getListImgVideos('@item.Id')">
-							<span class="glyphicon glyphicon-refresh"></span>
-						</button>
-					</div>
+					<img id="imageVideo" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @item.MovieTmDb.PosterPath)" />
 				}
+
+				<div class="meta" data-role="tooltip">
+					<a href="@Url.Action("Download", "Movies", new {item.Id})">
+						<span class="glyphicon glyphicon-download-alt"></span>
+					</a>
+
+					@*<button class="submit-with-icon" type="submit" onclick="getListImgVideos('@item.Id')">
+								<span class="glyphicon glyphicon-refresh"></span>
+							</button>*@
+
+					<button type="button" class="submit-with-icon" data-toggle="modal" data-target="#myModal" data-id="@item.Id" onclick="getVideo('@item.Id')">
+						<span class="glyphicon glyphicon-refresh"></span>
+					</button>
+				</div>
 			</div>
 
 			<div class="info">
@@ -108,4 +165,47 @@
 		</div>
 	}
 
+</div>
+
+
+
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog">
+		
+		<div class="modal-content">
+			<form id="fix-incorrect-match-form">
+
+				<div class="modal-header" style="padding:35px 50px;">
+					<button type="button" class="close" data-dismiss="modal">
+						<i class="glyphicon-remove"></i>
+					</button>
+
+					<div id="fileName">
+						<div>Nom du fichier :</div>
+						<span></span>
+					</div>
+				</div>
+
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-8">
+							<label for="titrevideo"><span class="glyphicon .glyphicon-film"></span> Titre</label>
+							<input type="text" class="form-control" id="titrevideo" placeholder="Titre de la vidéo">
+						</div>
+					</div>
+					
+					<div id="resultSearchVideo" class="flex"></div>
+				</div>
+
+				<div class="modal-footer">
+					<div>
+						<button type="button" class="btn btn-default">Annuler</button>
+						<button type="button" class="btn btn-primary" id="idBtnSearchVideo" onclick="getSearchVideos()">
+							<span >Rechercher</span>
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>

@@ -26,12 +26,12 @@ namespace WebAppServer.Codes
         /// <returns></returns>
         Task<IEnumerable<MovieInformation>> GetListDessinAnimesLocal();
 
-        /// <summary>
-        /// Récupère une liste de vidéo provenant de TmDb pour un titre donnée.
-        /// </summary>
-        /// <param name="titre"></param>
-        /// <returns></returns>
-        Task<IEnumerable<SearchVideoModel>> GetListVideoOnTmDb(string titre);
+		/// <summary>
+		/// Récupère une liste de vidéo provenant de TmDb pour un titre donnée.
+		/// </summary>
+		/// <param name="titre"></param>
+		/// <returns></returns>
+		Task<IEnumerable<SearchVideoModel>> GetListVideoOnTmDb(string titre);
 
         /// <summary>
         /// Retourne la liste des dessin animes avec toutes les informations.

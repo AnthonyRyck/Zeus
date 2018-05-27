@@ -145,7 +145,6 @@ p.overview {
 	display: none;
 }
 
-
 .top-right {
 	position: absolute;
 	top: 0;
@@ -220,4 +219,14 @@ p.overview {
 .margin-10percent {
 	margin-left: 10%;
 	margin-right: 10%;
+}
+
+.text-bold {
+	font-weight: bold;
+}
+
+.result-search-video {
+	margin: 5px;
+	width: 150px;
+	word-wrap: break-word;
 }

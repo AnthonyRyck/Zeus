@@ -9,5 +9,6 @@ namespace WebAppServer.Models
     {
         public string UrlAffiche { get; set; }
         public int IdVideoTmDb { get; set; }
+	    public string Titre { get; set; }
     }
 }
