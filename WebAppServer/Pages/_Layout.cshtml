@@ -29,12 +29,14 @@
                 <a asp-page="/Index" class="navbar-brand">Zeus</a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-page="/Index">Home</a></li>
-	                <li><a asp-page="/Movie">Films</a></li>
-	                <li><a asp-page="/DessinAnimes">Dessin Animés</a></li>
-	                <li><a asp-page="/Series">Séries</a></li>
-                </ul>
+	            <ul class="nav navbar-nav">
+		            <li><a asp-page="/Index">Home</a></li>
+		            <li><a asp-page="/Movie">Films</a></li>
+		            <li><a asp-page="/DessinAnimes">Dessin Animés</a></li>
+		            <li><a asp-page="/Series">Séries</a></li>
+	            </ul>
+				
+	            @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
     </nav>
