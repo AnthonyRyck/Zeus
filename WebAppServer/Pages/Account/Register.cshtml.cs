@@ -38,7 +38,12 @@ namespace WepAppServer.Pages.Account
 
         public class InputModel
         {
-            [Required]
+	        [Required]
+	        [StringLength(20, ErrorMessage = "Le login ne doit pas faire plus de 20 caractères")]
+	        [Display(Name = "Login")]
+	        public string UserLogin { get; set; }
+			
+			[Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -51,7 +56,7 @@ namespace WepAppServer.Pages.Account
 
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Compare("Password", ErrorMessage = "Le mot de passe et la confirmation ne sont pas identique.")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -65,19 +70,21 @@ namespace WepAppServer.Pages.Account
             ReturnUrl = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                ApplicationUser user = new ApplicationUser { UserName = Input.UserLogin, Email = Input.Email };
+                IdentityResult result = await _userManager.CreateAsync(user, Input.Password);
+
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    _logger.LogInformation("Utilisateur créé avec un mot de passe.");
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                    string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    string callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(Input.Email, callbackUrl);
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(Url.GetLocalUrl(returnUrl));
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
