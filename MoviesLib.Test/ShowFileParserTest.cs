@@ -22,7 +22,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -49,7 +49,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -74,7 +74,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -103,7 +103,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+	        var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -129,7 +129,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -159,7 +159,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -186,7 +186,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -213,7 +213,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -244,7 +244,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -272,7 +272,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -300,7 +300,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -328,7 +328,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -356,7 +356,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -384,7 +384,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -413,7 +413,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -445,7 +445,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -474,7 +474,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser();
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -507,7 +507,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser("FRENCH");
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -537,7 +537,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser("VOSTFR");
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -569,7 +569,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser("VOSTFR", "FRENCH");
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 
@@ -600,7 +600,7 @@ namespace MoviesLib.Test
             #region ACT
 
             ShowFileParser parser = new ShowFileParser("VOSTFR", "french");
-            var resultParser = parser.GetShow(titreSeries);
+            var resultParser = parser.GetShow(titreSeries, "fakeName", 0);
 
             #endregion
 

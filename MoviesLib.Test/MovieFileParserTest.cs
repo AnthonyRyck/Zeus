@@ -262,5 +262,34 @@ namespace MoviesLib.Test
 
             #endregion
         }
-    }
+
+	    [TestMethod]
+	    [TestProperty("MoviesLib", "MovieFileParser")]
+	    [Description("")]
+	    public void ExtraireDeToutesLesInfosDuTitre_When_ContientUneAnneeDansLeTitre()
+	    {
+		    #region ARRANGE
+
+		    string titreSeries = "Blade.Runner.2049.2017.Multi.1080p.Bluray.Remux.AVC-Santec29.mkv";
+
+		    #endregion
+
+		    #region ACT
+
+		    MovieFileParser parser = new MovieFileParser("VOSTFR", "FRENCH", "TRUEFRENCH");
+		    var resultParser = parser.GetInformation(titreSeries, String.Empty, 0, TypeVideo.Movie);
+
+		    #endregion
+
+		    #region ASSERT
+
+		    Assert.AreEqual("1080p", resultParser.Resolution);
+		    Assert.AreEqual("Bluray", resultParser.Qualite);
+		    Assert.AreEqual("2017", resultParser.Annee);
+		    Assert.AreEqual("BLADE RUNNER 2049", resultParser.Titre);
+
+		    #endregion
+	    }
+
+	}
 }
