@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using MoviesLib.Entities;
@@ -189,30 +190,30 @@ namespace MoviesLib
             return result;
         }
 
-        /// <summary>
-        /// Extrait l'année de production d'un film.
-        /// DOIT PASSER APRES l'extraction de la résolution.
-        /// </summary>
-        /// <param name="title"></param>
-        /// <returns></returns>
-        private string GetAnneeProduction(ref string title)
-        {
-            const string patternAnnee = "[0-9]{4}";
+		/// <summary>
+		/// Extrait l'année de production d'un film.
+		/// DOIT PASSER APRES l'extraction de la résolution.
+		/// </summary>
+		/// <param name="title"></param>
+		/// <returns></returns>
+		private string GetAnneeProduction(ref string title)
+		{
+			const string patternAnnee = "[0-9]{4}";
+			Match matchResult = Regex.Match(title, patternAnnee, RegexOptions.RightToLeft);
 
-            Match matchResult = Regex.Match(title, patternAnnee);
-            title = RemoveResultRegex(matchResult.Value, title);
+			title = RemoveResultRegex(matchResult.Value, title);
 
-            return string.IsNullOrEmpty(matchResult.Value)
-                ? INCONNU
-                : matchResult.Value;
-        }
+			return string.IsNullOrEmpty(matchResult.Value)
+				? INCONNU
+				: matchResult.Value;
+		}
 
-        /// <summary>
-        /// Récupère le language de la vidéo. La langue cherché est donnée en 
-        /// paramètre dans le constructeur.
-        /// </summary>
-        /// <returns></returns>
-        private string GetLanguage(ref string title)
+		/// <summary>
+		/// Récupère le language de la vidéo. La langue cherché est donnée en 
+		/// paramètre dans le constructeur.
+		/// </summary>
+		/// <returns></returns>
+		private string GetLanguage(ref string title)
         {
             string titleTempMajuscule = title.ToUpper();
             Match matchResult = Regex.Match(titleTempMajuscule, _languesPattern);
