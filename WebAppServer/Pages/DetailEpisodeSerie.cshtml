@@ -35,9 +35,9 @@
 	<hr class="separator-black" />
 	
 	<div class="flex">
-		@foreach (var episode in Model.Episodes)
+		@foreach (var episode in Model.Episodes.OrderBy(x => x.EpisodeNumber))
 		{
-		<div class="containerSerie imageEpisodeSerie">
+		<div class="containerSerie result-search-video">
 
 			<a>
 				@if (string.IsNullOrEmpty(episode.StillPath))

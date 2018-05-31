@@ -30,7 +30,7 @@
 	<h3>Saisons</h3>
 
 	<div class="flex">
-		@foreach (var saison in Model.Serie.TvSeasons)
+		@foreach (var saison in Model.Serie.TvSeasons.OrderBy(x => x.SeasonNumber))
 		{
 			<div class="containerSerie imageEpisodeSerie">
 
