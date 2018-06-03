@@ -77,9 +77,9 @@ namespace WepAppServer.Pages.Account
                 {
                     _logger.LogInformation("Utilisateur créé avec un mot de passe.");
 
-                    string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    string callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(Input.Email, callbackUrl);
+                    //string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //string callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                    //await _emailSender.SendEmailConfirmationAsync(Input.Email, callbackUrl);
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(Url.GetLocalUrl(returnUrl));
@@ -91,7 +91,6 @@ namespace WepAppServer.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
     }

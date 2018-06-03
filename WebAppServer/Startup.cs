@@ -57,7 +57,7 @@ namespace WebAppServer
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -80,11 +80,51 @@ namespace WebAppServer
 
             app.UseStaticFiles();
 
-	        app.UseAuthentication();
+			await CreateRoles(serviceProvider);
+			
+			app.UseAuthentication();
 
 			app.UseMvc();
         }
 
-       
-    }
+		#region Private methods
+
+		private async Task CreateRoles(IServiceProvider serviceProvider)
+		{
+			var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+			
+			string[] roleNames = { "Admin", "Manager", "Member" };
+
+			foreach (var roleName in roleNames)
+			{
+				if (!await roleManager.RoleExistsAsync(roleName))
+				{
+					await roleManager.CreateAsync(new IdentityRole(roleName));
+				}
+			}
+
+			// Création de l'utilisateur Root.
+			var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+			var user = await userManager.FindByEmailAsync("change@email.com");
+
+			if (user == null)
+			{
+				var poweruser = new ApplicationUser
+				{
+					UserName = "root",
+					Email = "change@email.com",
+				};
+				string userPwd = "Azerty123!";
+
+				var createPowerUser = await userManager.CreateAsync(poweruser, userPwd);
+				if (createPowerUser.Succeeded)
+				{
+					await userManager.AddToRoleAsync(poweruser, "Admin");
+				}
+			}
+		}
+
+		#endregion
+
+	}
 }
