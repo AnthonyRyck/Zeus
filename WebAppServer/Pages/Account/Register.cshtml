@@ -10,7 +10,7 @@
 
 	<div class="col-md-4">
 		<form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-			<h4>Créer un nouveau compte.</h4>
+			<h4>Creer un nouveau compte.</h4>
 			<hr />
 			<div asp-validation-summary="All" class="text-danger"></div>
 
@@ -38,13 +38,12 @@
 				<span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
 			</div>
 
-			@*<div class="form-group">
+			<div class="form-group">
 				<label asp-for="Input.AccountType"></label>
-				<input asp-for="Input.AccountType" class="form-control" />
-				<span asp-validation-for="Input.AccountType" class="text-danger"></span>
-			</div>*@
+				<select asp-for="Input.AccountType" asp-items="@Model.SelectListCustom" class="form-control"></select>
+			</div>
 
-			<button type="submit" class="btn btn-default">Créer</button>
+			<button type="submit" class="btn btn-default">Creer</button>
 		</form>
 	</div>
 </div>

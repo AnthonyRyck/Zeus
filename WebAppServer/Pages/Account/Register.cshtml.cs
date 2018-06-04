@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using WepAppServer.Data;
 using WepAppServer.Services;
@@ -66,14 +67,18 @@ namespace WepAppServer.Pages.Account
 
 		public enum TypeAccount
 		{
-			Guest,
+			Member,
 			Manager
 		}
 
+		public IEnumerable<TypeAccount> TypeAccounts { get; set; } = new List<TypeAccount>() { TypeAccount.Manager, TypeAccount.Member };
 
-        public void OnGet(string returnUrl = null)
+		public SelectList SelectListCustom { get; set; }
+
+		public void OnGet(string returnUrl = null)
         {
-            ReturnUrl = returnUrl;
+			SelectListCustom = new SelectList(TypeAccounts);
+			ReturnUrl = returnUrl;
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -83,8 +88,9 @@ namespace WepAppServer.Pages.Account
             {
                 ApplicationUser user = new ApplicationUser { UserName = Input.UserLogin, Email = Input.Email };
                 IdentityResult result = await _userManager.CreateAsync(user, Input.Password);
-
-                if (result.Succeeded)
+				IdentityResult resultRole = await _userManager.AddToRoleAsync(user, Input.AccountType.ToString());
+				
+				if (result.Succeeded && resultRole.Succeeded)
                 {
                     _logger.LogInformation("Utilisateur créé avec un mot de passe.");
 
@@ -105,4 +111,5 @@ namespace WepAppServer.Pages.Account
             return Page();
         }
     }
+
 }
