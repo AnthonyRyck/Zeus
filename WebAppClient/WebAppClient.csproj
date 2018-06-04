@@ -6,13 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\MoviesLib\Entities\ChiffreRomain.cs" Link="Codes\Entities\ChiffreRomain.cs" />
-    <Compile Include="..\MoviesLib\Entities\MovieInformation.cs" Link="Codes\Entities\MovieInformation.cs" />
-    <Compile Include="..\MoviesLib\Entities\ShowInformation.cs" Link="Codes\Entities\ShowInformation.cs" />
-    <Compile Include="..\MoviesLib\Entities\VideoInformation.cs" Link="Codes\Entities\VideoInformation.cs" />
-    <Compile Include="..\MoviesLib\MovieFileParser.cs" Link="Codes\MovieFileParser.cs" />
-    <Compile Include="..\MoviesLib\MovieManager.cs" Link="Codes\MovieManager.cs" />
-    <Compile Include="..\MoviesLib\ShowFileParser.cs" Link="Codes\ShowFileParser.cs" />
     <Compile Include="..\WebAppServer\Models\MovieModel.cs" Link="Models\MovieModel.cs" />
   </ItemGroup>
 
@@ -28,6 +21,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.0-preview1-final" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.1.0-preview1-final" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0-preview1-final" />
+    <PackageReference Include="Ryck.MoviesLib" Version="1.0.3" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="1.1.0" />
     <PackageReference Include="TMDbLib" Version="1.2.0-alpha" />
   </ItemGroup>
