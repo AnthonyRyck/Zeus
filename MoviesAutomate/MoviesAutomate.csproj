@@ -96,27 +96,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\MoviesLib\Entities\ChiffreRomain.cs">
-      <Link>Codes\Entities\ChiffreRomain.cs</Link>
-    </Compile>
-    <Compile Include="..\MoviesLib\Entities\MovieInformation.cs">
-      <Link>Codes\Entities\MovieInformation.cs</Link>
-    </Compile>
-    <Compile Include="..\MoviesLib\Entities\ShowInformation.cs">
-      <Link>Codes\Entities\ShowInformation.cs</Link>
-    </Compile>
-    <Compile Include="..\MoviesLib\Entities\VideoInformation.cs">
-      <Link>Codes\Entities\VideoInformation.cs</Link>
-    </Compile>
-    <Compile Include="..\MoviesLib\MovieFileParser.cs">
-      <Link>Codes\MovieFileParser.cs</Link>
-    </Compile>
-    <Compile Include="..\MoviesLib\MovieManager.cs">
-      <Link>Codes\MovieManager.cs</Link>
-    </Compile>
-    <Compile Include="..\MoviesLib\ShowFileParser.cs">
-      <Link>Codes\ShowFileParser.cs</Link>
-    </Compile>
     <Compile Include="..\WebAppServer\Models\MovieModel.cs">
       <Link>Models\MovieModel.cs</Link>
     </Compile>
