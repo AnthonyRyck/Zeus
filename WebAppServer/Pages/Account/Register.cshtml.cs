@@ -51,14 +51,25 @@ namespace WepAppServer.Pages.Account
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Mot de passe")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
+            [Display(Name = "Confirmer le mot de passe")]
             [Compare("Password", ErrorMessage = "Le mot de passe et la confirmation ne sont pas identique.")]
             public string ConfirmPassword { get; set; }
-        }
+
+			[Required]
+			[Display(Name = "Type de compte")]
+			public TypeAccount AccountType { get; set; }
+		}
+
+		public enum TypeAccount
+		{
+			Guest,
+			Manager
+		}
+
 
         public void OnGet(string returnUrl = null)
         {
