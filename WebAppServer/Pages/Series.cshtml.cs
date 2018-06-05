@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using WebAppServer.Codes;
 
 namespace WebAppServer.Pages
 {
-    public class SeriesModel : PageModel
+	[Authorize]
+	public class SeriesModel : PageModel
     {
 	    #region Fields
 

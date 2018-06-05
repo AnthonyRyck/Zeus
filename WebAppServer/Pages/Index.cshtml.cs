@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace WebAppServer.Pages
 {
-    public class IndexModel : PageModel
+	[Authorize]
+	public class IndexModel : PageModel
     {
         public void OnGet()
         {
