@@ -1,5 +1,5 @@
 ﻿@page
-@model WebAppServer.Pages.SeriesModel
+@model WebAppServer.Pages.Videos.SeriesModel
 @{
     ViewData["Title"] = "Séries";
 }
@@ -19,7 +19,7 @@
 
 						<div class="top-right">@item.ShowInformation.Count</div>
 
-						<a asp-page="/DetailSerie"
+						<a asp-page="/Videos/DetailSerie"
 						   asp-page-handler="Saison"
 						   asp-route-idshowmodel="@item.IdShowModel">
 

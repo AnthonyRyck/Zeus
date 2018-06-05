@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using MoviesLib.Entities;
 using WebAppServer.Codes;
 
-namespace WebAppServer.Pages
+namespace WebAppServer.Pages.Videos
 {
 	[Authorize]
     public class MovieModel : PageModel

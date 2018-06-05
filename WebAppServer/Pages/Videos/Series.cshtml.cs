@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using WebAppServer.Codes;
 
-namespace WebAppServer.Pages
+namespace WebAppServer.Pages.Videos
 {
 	[Authorize]
 	public class SeriesModel : PageModel

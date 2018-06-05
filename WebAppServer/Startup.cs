@@ -42,8 +42,9 @@ namespace WebAppServer
 		        .AddRazorPagesOptions(options =>
 		        {
 			        options.Conventions.AuthorizeFolder("/Account/Manage");
-			        options.Conventions.AuthorizePage("/Account/Logout");
-		        });
+					options.Conventions.AuthorizePage("/Account/Logout");
+			        options.Conventions.AuthorizeFolder("/Videos");
+				});
 
 			MoviesManager moviesManager = new MoviesManager();
             services.AddSingleton<IMovies>(moviesManager);

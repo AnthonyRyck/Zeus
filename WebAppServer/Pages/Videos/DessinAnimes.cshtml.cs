@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebAppServer.Codes;
 
-namespace WebAppServer.Pages
+namespace WebAppServer.Pages.Videos
 {
 	[Authorize]
 	public class DessinAnimesModel : PageModel

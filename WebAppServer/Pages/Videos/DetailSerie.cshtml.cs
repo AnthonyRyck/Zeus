@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebAppServer.Codes;
 using WebAppServer.Models;
 
-namespace WebAppServer.Pages
+namespace WebAppServer.Pages.Videos
 {
 	[Authorize]
 	public class DetailSerieModel : PageModel
