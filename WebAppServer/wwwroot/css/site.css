@@ -230,3 +230,8 @@ p.overview {
 	width: 150px;
 	word-wrap: break-word;
 }
+
+.center-content {
+	float: none;
+	margin: auto;
+}
