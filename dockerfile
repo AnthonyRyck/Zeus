@@ -33,5 +33,6 @@ RUN mkdir -p config
 RUN mkdir -p animes
 
 COPY --from=build-env /src/WebAppServer/out .
+COPY WebAppServer/app.db .
 EXPOSE 80
 ENTRYPOINT ["dotnet", "WebAppServer.dll"]
