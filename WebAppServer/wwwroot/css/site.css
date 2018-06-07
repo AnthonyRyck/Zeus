@@ -104,6 +104,23 @@ p.overview {
 	justify-content: space-between;
 }
 
+.meta-episode-serie {
+	visibility: hidden;
+	background-color: rgba(255,255,255,0.9);
+	position: relative;
+	top: -40px;
+	left: 0;
+	height: 40px;
+	width: 150px;
+	z-index: 1;
+	box-sizing: border-box;
+	padding-left: 10px;
+	padding-right: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
 .test:hover div{
 	visibility: visible;
 }
@@ -167,6 +184,15 @@ p.overview {
 
 .width-150 {
 	width: 150px;
+}
+
+.image-episode {
+	height: 225px;
+	width: 150px;
+}
+
+.image-episode:hover div {
+	visibility: visible;
 }
 
 .imageSerie {

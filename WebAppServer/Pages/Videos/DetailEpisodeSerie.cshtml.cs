@@ -15,10 +15,20 @@ namespace WebAppServer.Pages.Videos
 	public class DetailEpisodeSerieModel : PageModel
     {
 	    private IShows _showManager;
+
+		/// <summary>
+		/// Toutes les informations sur la série.
+		/// </summary>
 		public ShowModel Serie { get; private set; }
 
+		/// <summary>
+		/// Liste des informations sur les épisodes.
+		/// </summary>
 	    public  IEnumerable<TvEpisode> Episodes { get; private set; }
 
+		/// <summary>
+		/// Information sur la saison de la série.
+		/// </summary>
 	    public TvSeason Season { get; private set; }
 
 		#region Constructeur

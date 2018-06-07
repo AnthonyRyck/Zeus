@@ -38,8 +38,7 @@
 		@foreach (var episode in Model.Episodes.OrderBy(x => x.EpisodeNumber))
 		{
 		<div class="containerSerie result-search-video">
-
-			<a>
+			<div class="image-episode">
 				@if (string.IsNullOrEmpty(episode.StillPath))
 				{
 					<img src="images/VideoInconnu.jpg" class="width-150" />
@@ -48,7 +47,13 @@
 				{
 					<img id="imageVideo" class="width-150" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + episode.StillPath)" />
 				}
-			</a>
+				
+				<div class="meta-episode-serie" data-role="tooltip">
+					<a href="@Url.Action("Download", "Serie", new { Model.Serie.IdShowModel, saison = Model.Season.SeasonNumber, episode = episode.EpisodeNumber})">
+						<span class="glyphicon glyphicon-download-alt"></span>
+					</a>
+				</div>
+			</div>
 
 			<div class="text-color-black">@episode.Name</div>
 			<div class="text-color-black">Episode @episode.EpisodeNumber</div>
