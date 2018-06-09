@@ -217,16 +217,30 @@ namespace WebAppServer.Codes
             return videoToChange;
         }
 
-        #endregion
+		public void RemoveVideo(Guid id)
+	    {
+		    lock (Lock)
+		    {
+			    MovieModel model = _movieModelsCollection.FirstOrDefault(x => x.Id == id);
 
-        #region Private Methods
+			    if (model != null)
+			    {
+				    _movieModelsCollection.Remove(model);
+				    Storage.SaveMoviesModels(_movieModelsCollection);
+				}
+			}
+	    }
 
-        /// <summary>
-        /// Méthode permettant d'aller chercher sur l'API de TmDb les informations sur les films.
-        /// </summary>
-        /// <param name="moviesInfomration"></param>
-        /// <returns></returns>
-        private async Task<List<MovieModel>> GetMovieDbInformation(IEnumerable<MovieInformation> moviesInfomration)
+		#endregion
+
+		#region Private Methods
+
+		/// <summary>
+		/// Méthode permettant d'aller chercher sur l'API de TmDb les informations sur les films.
+		/// </summary>
+		/// <param name="moviesInfomration"></param>
+		/// <returns></returns>
+		private async Task<List<MovieModel>> GetMovieDbInformation(IEnumerable<MovieInformation> moviesInfomration)
         {
             List<MovieModel> returnMovieModels = new List<MovieModel>();
 
@@ -400,7 +414,7 @@ namespace WebAppServer.Codes
             IsUpdateTime = false;
         }
 
-        #endregion
+		#endregion
 
-    }
+	}
 }

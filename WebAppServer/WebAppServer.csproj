@@ -15,4 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TMDbLib\TMDbLib.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pages\Setting\" />
+  </ItemGroup>
 </Project>

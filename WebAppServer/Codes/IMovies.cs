@@ -60,5 +60,11 @@ namespace WebAppServer.Codes
         /// <param name="idVideoTmDb"></param>
         /// <returns></returns>
         Task<MovieModel> ChangeVideo(Guid id, int idVideoTmDb);
-    }
+		
+		/// <summary>
+		/// Permet d'enlever une vidéo dans la collection.
+		/// </summary>
+		/// <param name="id"></param>
+	    void RemoveVideo(Guid id);
+	}
 }

@@ -77,6 +77,13 @@ namespace WebAppServer.Controllers.API
             MovieModel movie = _moviesManager.GetMovie(id);
 
             _logger.LogInformation("Récupération par Web du film : " + movie.MovieInformation.Titre);
+
+	        if (!System.IO.File.Exists(movie.MovieInformation.PathFile))
+	        {
+		        _moviesManager.RemoveVideo(id);
+		        return StatusCode(204);
+	        }
+
             return DownloadVideoCore(movie.MovieInformation);
         }
 
