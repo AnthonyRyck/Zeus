@@ -16,6 +16,8 @@
     <ProjectReference Include="..\TMDbLib\TMDbLib.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Pages\Setting\" />
+    <Content Update="Pages\Setting\SettingNav.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 </Project>

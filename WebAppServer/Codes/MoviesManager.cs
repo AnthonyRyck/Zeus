@@ -31,10 +31,12 @@ namespace WebAppServer.Codes
 
         #region Constructeur
 
-        public MoviesManager()
+        public MoviesManager(ISettings settings)
+		 : base(settings)
         {
             //_logger = logger;
-            _movieManager = new MovieManager("FRENCH", "TRUEFRENCH", "FR");
+	        IEnumerable<string> langues = settings.GetLanguesVideos();
+            _movieManager = new MovieManager(langues.ToArray());
 			Storage.SetFunc(_movieManager.GetMoviesInformations);
 
 			var tempCollectionMovieModels = Storage.GetMoviesTmDb();
@@ -91,7 +93,7 @@ namespace WebAppServer.Codes
             List<MovieInformation> videosOnLocal = new List<MovieInformation>();
 
             // Récupération des films.
-            foreach (var pathMovie in ConfigurationApp.PathMovies)
+            foreach (var pathMovie in Settings.GetPathMovies())
             {
                 IEnumerable<MovieInformation> tempMovieLocal = _movieManager.GetMoviesInformations(pathMovie, TypeVideo.Movie);
 
@@ -128,7 +130,7 @@ namespace WebAppServer.Codes
             List<MovieInformation> videosOnLocal = new List<MovieInformation>();
 
             // Récupération des dessins animés.
-            foreach (var dessinAnimes in ConfigurationApp.PathDessinAnimes)
+            foreach (var dessinAnimes in Settings.GetPathDessinAnimes())
             {
                 IEnumerable<MovieInformation> tempAnimes = _movieManager.GetMoviesInformations(dessinAnimes, TypeVideo.DessinAnime);
 
@@ -337,7 +339,7 @@ namespace WebAppServer.Codes
 
             // Récupération des films en locale.
             List<MovieInformation> videosOnLocal = new List<MovieInformation>();
-            foreach (var pathMovie in ConfigurationApp.PathMovies)
+            foreach (var pathMovie in Settings.GetPathMovies())
             {
                 if (!Directory.Exists(pathMovie))
                 {
@@ -351,7 +353,7 @@ namespace WebAppServer.Codes
             }
 
             // Récupération des dessins animés.
-            foreach (var dessinAnimes in ConfigurationApp.PathDessinAnimes)
+            foreach (var dessinAnimes in Settings.GetPathDessinAnimes())
             {
                 if (!Directory.Exists(dessinAnimes))
                 {

@@ -16,7 +16,8 @@
 			
 	        @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
 	        {
-				<li><a asp-page="/Account/Register">Register</a></li>
+		        <li><a asp-page="/Account/Register">Register</a></li>
+		        <li><a asp-page="/Setting/Configuration">Parametres</a></li>
 	        }
 	        
         </ul>

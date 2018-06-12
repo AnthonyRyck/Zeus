@@ -22,7 +22,8 @@ namespace WebAppServer.Codes
 
         #region Constructeur
 
-        public ShowsManager()
+        public ShowsManager(ISettings settings)
+			: base(settings)
         {
             _seriesManager = new ShowManager();
 
@@ -83,7 +84,7 @@ namespace WebAppServer.Codes
 
             // Récupération des séries en locale.
             List<ShowInformation> seriesOnLocal = new List<ShowInformation>();
-            foreach (var path in ConfigurationApp.PathShows)
+            foreach (var path in Settings.GetPathShows())
             {
                 if (!Directory.Exists(path))
                 {

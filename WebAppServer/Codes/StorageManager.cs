@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using MoviesLib.Entities;
 using Newtonsoft.Json;
 using WebAppServer.Models;
@@ -59,17 +60,17 @@ namespace WebAppServer.Codes
         /// Récupére les informations de configuration.
         /// </summary>
         /// <returns></returns>
-        internal ConfigurationApp GetConfiguration()
+        internal async Task<ConfigurationApp> GetConfiguration()
         {
             ConfigurationApp config;
 
             // Tester la présence du fichier de configuration.
-            string fileConfig = _pathConfiguration + @"/" + NAME_FILE_CONFIG;
+            string fileConfig = Path.Combine(_pathConfiguration, NAME_FILE_CONFIG);
             if (File.Exists(fileConfig))
             {
                 try
                 {
-                    string configJson = File.ReadAllText(fileConfig);
+                    string configJson = await File.ReadAllTextAsync(fileConfig);
                     config = JsonConvert.DeserializeObject<ConfigurationApp>(configJson);
                 }
                 catch (Exception exception)
@@ -77,16 +78,14 @@ namespace WebAppServer.Codes
                     // TODO : Mettre en log l'exception.
                     
                     config = GetDefaultConfiguration();
-                    string contentJson = JsonConvert.SerializeObject(config);
-                    File.WriteAllText(fileConfig, contentJson);
+	                await SaveConfiguration(config);
                 }
             }
             else
             {
                 config = GetDefaultConfiguration();
-                string contentJson = JsonConvert.SerializeObject(config);
-                File.WriteAllText(fileConfig, contentJson);
-            }
+				await SaveConfiguration(config);
+			}
             
             return config;
         }
@@ -153,6 +152,20 @@ namespace WebAppServer.Codes
 		    return tempShows;
 	    }
 
+		/// <summary>
+		/// Permet de sauvegarder la configuration donnée.
+		/// </summary>
+		/// <param name="config"></param>
+		/// <returns></returns>
+	    internal async Task<ConfigurationApp> SaveConfiguration(ConfigurationApp config)
+	    {
+		    string fileConfig = Path.Combine(_pathConfiguration, NAME_FILE_CONFIG);
+		    string contentJson = JsonConvert.SerializeObject(config);
+		    await File.WriteAllTextAsync(fileConfig, contentJson);
+
+			return config;
+		}
+
 		#endregion
 
 		#region Private Methods
@@ -203,12 +216,13 @@ namespace WebAppServer.Codes
                 PathMovies = new List<string> {"/app/movies"},
                 PathDessinAnimes = new List<string>{"/app/animes"},
                 PathShows = new List<string> {"/app/shows"},
-                TempsEnMillisecondPourTimerRefresh = 60000
+                TempsEnMillisecondPourTimerRefresh = 600000
             };
         }
 
         #endregion
 
-	   
+
+
     }
 }

@@ -46,10 +46,13 @@ namespace WebAppServer
 			        options.Conventions.AuthorizeFolder("/Videos");
 				});
 
-			MoviesManager moviesManager = new MoviesManager();
+	        ISettings settings = new SettingsManager();
+	        services.AddSingleton<ISettings>(settings);
+
+			MoviesManager moviesManager = new MoviesManager(settings);
             services.AddSingleton<IMovies>(moviesManager);
 
-			ShowsManager showManagers = new ShowsManager();
+			ShowsManager showManagers = new ShowsManager(settings);
 	        services.AddSingleton<IShows>(showManagers);
 
 	        // Register no-op EmailSender used by account confirmation and password reset during development

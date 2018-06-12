@@ -14,7 +14,7 @@ namespace WebAppServer.Codes
         
         protected readonly TMDbClient ClientTmDb;
         protected readonly StorageManager Storage;
-        protected readonly ConfigurationApp ConfigurationApp;
+        protected readonly ISettings Settings;
 
         private Timer _timerUpdate;
 
@@ -29,7 +29,7 @@ namespace WebAppServer.Codes
 
         #region Constructeur
 
-        protected AbstractManager()
+        protected AbstractManager(ISettings settings)
         {
             // TODO : Mettre en paramtère pour que ce soit configurable.
             
@@ -40,10 +40,10 @@ namespace WebAppServer.Codes
             };
 
 	        Storage = new StorageManager();
-			ConfigurationApp = Storage.GetConfiguration();
+	        Settings = settings;
 
 			// Démarre dans 5 secondes et toutes les 15 minutes.
-			_timerUpdate = new Timer(TimerUpdate, null, 5000, ConfigurationApp.TempsEnMillisecondPourTimerRefresh);
+			_timerUpdate = new Timer(TimerUpdate, null, 5000, settings.GetTimeToUpdateVideos());
         }
 
         #endregion
