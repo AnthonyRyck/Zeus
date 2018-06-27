@@ -4,31 +4,35 @@
     ViewData["Title"] = "Home page";
 }
 
-<h3>Films recemment ajoutes</h3>
+<div class="margin-10percent">
 
-<div class="flex">
-	
-	@foreach (var itemMovie in Model.MoviesOrdered)
-	{
-	<div class="imagePlusTitre">
-		<div class="test">
-			@if (string.IsNullOrEmpty(itemMovie.MovieTmDb.PosterPath))
-			{
-				<img src="images/VideoInconnu.jpg" />
-			}
-			else
-			{
-				<img id="imageVideo" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @itemMovie.MovieTmDb.PosterPath)" />
-			}
-		</div>
+	<h3>Films recemment ajoutes</h3>
 
-		<div class="infoDate">
-			@itemMovie.DateAdded.ToString("d")
-		</div>
+	<div class="flex">
 
-		<p class="title" id="title">
-			@itemMovie.MovieTmDb.Title
-		</p>
+		@foreach (var itemMovie in Model.MoviesOrdered)
+		{
+			<div class="imagePlusTitre">
+				<div class="test">
+					@if (string.IsNullOrEmpty(itemMovie.MovieTmDb.PosterPath))
+					{
+						<img src="images/VideoInconnu.jpg" />
+					}
+					else
+					{
+						<img id="imageVideo" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @itemMovie.MovieTmDb.PosterPath)" />
+					}
+				</div>
+
+				<div class="infoDate">
+					@itemMovie.DateAdded.ToString("d")
+				</div>
+
+				<p class="title" id="title">
+					@itemMovie.MovieTmDb.Title
+				</p>
+			</div>
+		}
 	</div>
-	}
+
 </div>
