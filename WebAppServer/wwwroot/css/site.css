@@ -261,3 +261,25 @@ p.overview {
 	float: none;
 	margin: auto;
 }
+
+.imagePlusTitre {
+	width: 200px;
+	height: 325px;
+	align-items: center;
+	margin: 10px;
+}
+
+.imagePlusTitre .test img {
+	max-width: 100%;
+}
+
+.imagePlusTitre .title p {
+	margin-top: 2px;
+	margin-bottom: 5px;
+}
+
+.infoDate {
+	font-style: italic;
+	text-align: right;
+	font-size: 10px;
+}

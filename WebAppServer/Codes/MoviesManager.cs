@@ -289,14 +289,27 @@ namespace WebAppServer.Codes
                 returnMovieModels.Add(new MovieModel(Guid.NewGuid())
                 {
                     MovieInformation = movieInformation,
-                    MovieTmDb = movieDb
+                    MovieTmDb = movieDb,
+					DateAdded = GetDateFileCreated(movieInformation.PathFile)
                 });
             }
 
             return returnMovieModels;
         }
 
-        /// <summary>
+		/// <summary>
+		/// Permet de récupérer la date de la création du fichier.
+		/// </summary>
+		/// <param name="pathFile"></param>
+		/// <returns></returns>
+	    private DateTime GetDateFileCreated(string pathFile)
+		{
+			return File.Exists(pathFile) 
+				? File.GetCreationTime(pathFile) 
+				: DateTime.MinValue;
+		}
+
+	    /// <summary>
         /// Permet de faire la sélection de la "meilleur" vidéo.
         /// </summary>
         /// <param name="allMovies">Liste de résultat de video</param>
@@ -405,7 +418,7 @@ namespace WebAppServer.Codes
                 }
             }
             
-            var tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
+            List<MovieModel> tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
             lock (Lock)
             {
                 _movieModelsCollection.AddRange(tempAddMovieModels);

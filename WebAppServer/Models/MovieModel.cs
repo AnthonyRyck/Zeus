@@ -30,6 +30,11 @@ namespace WebAppServer.Models
         /// Indicateur pour savoir si le fichier est déjà DL.
         /// </summary>
         public bool IsDownloaded { get; set; }
+
+		/// <summary>
+		/// Date d'ajout du film.
+		/// </summary>
+	    public DateTime DateAdded { get; set; } = DateTime.MinValue;
  
         #endregion
 
