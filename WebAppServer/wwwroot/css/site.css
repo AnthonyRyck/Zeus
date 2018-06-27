@@ -247,6 +247,11 @@ p.overview {
 	margin-right: 10%;
 }
 
+.margin-5percent {
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
 .text-bold {
 	font-weight: bold;
 }
@@ -267,6 +272,8 @@ p.overview {
 	height: 325px;
 	align-items: center;
 	margin: 10px;
+	margin-bottom: 20px;
+	margin-top: 20px;
 }
 
 .imagePlusTitre .test img {

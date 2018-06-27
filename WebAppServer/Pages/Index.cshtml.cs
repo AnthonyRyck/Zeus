@@ -21,6 +21,7 @@ namespace WebAppServer.Pages
 	    //private readonly IShows _showManager;
 
 	    public IEnumerable<MovieModel> MoviesOrdered { get; set; } = new List<MovieModel>();
+	    public IEnumerable<MovieModel> AnimesOrdered { get; set; } = new List<MovieModel>();
 
 		#endregion
 
@@ -48,12 +49,20 @@ namespace WebAppServer.Pages
 					: tempMovies.Take(tempMovies.Count);
 	        }
 
-	        // Récupération des dessins animés.
+			// Récupération des dessins animés.
+			var allAnimes = await _movieManager.GetDessinAnimes();
+	        if (allAnimes.Any())
+	        {
+		        var temp = allAnimes.OrderByDescending(x => x.DateAdded).ToList();
+
+		        AnimesOrdered = temp.Count >= 6
+			        ? temp.Take(6)
+			        : temp.Take(temp.Count);
+	        }
+
+			// Récupération des séries.
 
 
-	        // Récupération des séries.
-
-
-        }
+		}
     }
 }
