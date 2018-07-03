@@ -7,6 +7,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace WebAppServer
 {
@@ -14,7 +15,26 @@ namespace WebAppServer
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+	        string pathLog = AppContext.BaseDirectory + "/Logs/";
+	        if (!Directory.Exists(pathLog))
+	        {
+		        Directory.CreateDirectory(pathLog);
+	        }
+
+			var logger = new LoggerConfiguration()
+		        .MinimumLevel.Debug()
+		        .WriteTo.File(Path.Combine(pathLog, "log-system.txt"))
+		        .CreateLogger();
+
+			try
+	        {
+				logger.Information("***** Lancement de l'application *****");
+		        BuildWebHost(args).Run();
+			}
+	        catch (Exception e)
+	        {
+		        logger.Fatal(e, "Exception levé dans le Main");
+			}
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
