@@ -12,9 +12,16 @@ namespace WebAppServer.Pages.Setting
 
 	    public static string UsersManager => "UsersManager";
 
+	    public static string LogsManager => "LogsManager";
+
+
 	    public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Configuration);
 
 	    public static string UserManageNavClass(ViewContext viewContext) => PageNavClass(viewContext, UsersManager);
+
+	    public static string LogsManagerNavClass(ViewContext viewContext) => PageNavClass(viewContext, LogsManager);
+
+
 
 	    public static string PageNavClass(ViewContext viewContext, string page)
 	    {

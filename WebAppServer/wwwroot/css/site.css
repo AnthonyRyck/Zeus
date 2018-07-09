@@ -290,3 +290,8 @@ p.overview {
 	text-align: right;
 	font-size: 10px;
 }
+
+.display-log {
+	font-size: 10px;
+	font-family: monospace;
+}

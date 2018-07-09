@@ -1,0 +1,36 @@
+﻿@page
+@model WebAppServer.Pages.Setting.LogsManagerModel
+@{
+}
+
+<h2>Liste des logs</h2>
+
+<div class="row">
+	
+	
+	<div class="col-md-6">
+		<p>Log de la journée.</p>
+		<form method="post" asp-page="LogsManager">
+			<select asp-items="@Model.ListLogs"
+			        asp-for="FileLogSelected"
+			        class="form-control">
+				<option value="">-- Select file --</option>
+			</select>
+
+			<br />
+			@*<button type="submit">Charger</button>*@
+			@*<button type="submit" asp-page-handler="load" asp-route-id="FileLogSelected">Charger</button>*@
+
+			<input id="Submit1" type="submit" value="Charger" asp-page-handler="load"/>
+
+		</form>
+	</div>
+
+	<div class="col-md-12 display-log">
+		@foreach (string log in Model.Logs)
+		{
+			<div>@log</div>
+		}
+	</div>
+
+</div>
