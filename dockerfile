@@ -1,4 +1,4 @@
-FROM microsoft/aspnetcore-build:2.0 AS build-env
+FROM microsoft/dotnet:2.1-sdk AS build-env
 WORKDIR /src
 
 # copy csproj and restore as distinct layers
@@ -22,7 +22,7 @@ COPY WebAppServer/. ./WebAppServer/
 WORKDIR /src/WebAppServer
 RUN dotnet publish -c Release -o out
 
-FROM microsoft/aspnetcore:2.0
+FROM microsoft/dotnet:2.1-aspnetcore-runtime
 
 WORKDIR /app
 
