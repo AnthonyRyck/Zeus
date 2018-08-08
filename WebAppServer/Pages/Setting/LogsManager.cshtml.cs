@@ -37,7 +37,11 @@ namespace WebAppServer.Pages.Setting
 
 	        foreach (string filePath in tempFiles)
 	        {
-				_allLogFiles.Add(new LogFile(filePath));
+				// Pour éviter de prendre le log de "System".
+				if (!filePath.Contains("system"))
+				{
+					_allLogFiles.Add(new LogFile(filePath));
+				}
 			}
 
 			ListLogs = new SelectList(_allLogFiles, "FullPath", "DateEnLettre");
