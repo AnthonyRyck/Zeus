@@ -273,7 +273,7 @@ namespace WebAppServer.Codes
 
                 if (movieSelected == null)
                 {
-                    //_logger.LogInformation("Aucune information TmDb trouvé pour " + movieInformation.Titre);
+                    //Log.Information("Aucune information TmDb trouvé pour " + movieInformation.Titre);
 
                     movieDb = new Movie
                     {

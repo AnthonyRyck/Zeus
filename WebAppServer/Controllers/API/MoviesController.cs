@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
-using Microsoft.Net.Http.Headers;
 using MoviesLib.Entities;
+using Serilog;
 using WebAppServer.Codes;
 using WebAppServer.Models;
 
@@ -23,15 +15,13 @@ namespace WebAppServer.Controllers.API
     public class MoviesController : Controller
     {
         private IMovies _moviesManager;
-        private readonly ILogger _logger;
 
 
         #region Public Methods
 
-        public MoviesController(IMovies moviesManager, ILogger<MoviesController> logger)
+        public MoviesController(IMovies moviesManager)
         {
             _moviesManager = moviesManager;
-            _logger = logger;
         }
 
         /// <summary>
@@ -41,7 +31,7 @@ namespace WebAppServer.Controllers.API
         [HttpGet]
         public async Task<IEnumerable<MovieInformation>> Get()
         {
-            _logger.LogInformation("Demande de récupération des films en local.");
+            Log.Information("Demande de récupération des films en local.");
             return await _moviesManager.GetListMoviesLocal();
         }
 
@@ -52,7 +42,7 @@ namespace WebAppServer.Controllers.API
         [HttpGet("dessinAnimes")]
         public async Task<IEnumerable<MovieInformation>> GetDessinAnimes()
         {
-            _logger.LogInformation("Demande de récupération des dessins animés en local.");
+            Log.Information("Demande de récupération des dessins animés en local.");
             return await _moviesManager.GetListDessinAnimesLocal();
         }
         
@@ -65,7 +55,7 @@ namespace WebAppServer.Controllers.API
             var tempVideo = DownloadVideoCore(movieInformation);
             _moviesManager.SetMovieDownloaded(movieInformation);
 
-            _logger.LogInformation("Récupération par API du film : " + movieInformation.Titre);
+            Log.Information("Récupération par API du film : " + movieInformation.Titre);
 
             return tempVideo;
         }
@@ -76,7 +66,7 @@ namespace WebAppServer.Controllers.API
         {
             MovieModel movie = _moviesManager.GetMovie(id);
 
-            _logger.LogInformation("Récupération par Web du film : " + movie.MovieInformation.Titre);
+            Log.Information("Récupération par Web du film : " + movie.MovieInformation.Titre);
 
 	        if (!System.IO.File.Exists(movie.MovieInformation.PathFile))
 	        {
@@ -118,7 +108,7 @@ namespace WebAppServer.Controllers.API
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, "Erreur sur la récupération du film " + movieInformation.Titre);
+                Log.Error(exception, "Erreur sur la récupération du film " + movieInformation.Titre);
                 temp = NoContent();
             }
 

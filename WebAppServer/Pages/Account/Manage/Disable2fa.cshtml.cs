@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using WepAppServer.Data;
 
 namespace WepAppServer.Pages.Account.Manage
@@ -13,14 +11,11 @@ namespace WepAppServer.Pages.Account.Manage
     public class Disable2faModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<Disable2faModel> _logger;
 
         public Disable2faModel(
-            UserManager<ApplicationUser> userManager,
-            ILogger<Disable2faModel> logger)
+            UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
-            _logger = logger;
         }
 
         public async Task<IActionResult> OnGet()
@@ -53,7 +48,7 @@ namespace WepAppServer.Pages.Account.Manage
                 throw new ApplicationException($"Unexpected error occurred disabling 2FA for user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            _logger.LogInformation("User with ID '{UserId}' has disabled 2fa.", _userManager.GetUserId(User));
+            Log.Information("User with ID '{UserId}' has disabled 2fa.", _userManager.GetUserId(User));
 
             return RedirectToPage("./TwoFactorAuthentication");
         }

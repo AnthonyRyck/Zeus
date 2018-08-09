@@ -3,8 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using MoviesLib.Entities;
+using Serilog;
 using WebAppServer.Codes;
 using WebAppServer.Models;
 
@@ -15,12 +15,10 @@ namespace WebAppServer.Controllers.API
     public class SerieController : Controller
     {
 	    private IShows _showsManager;
-		private readonly ILogger _logger;
 		
-		public SerieController(IShows showsManager, ILogger<MoviesController> logger)
+		public SerieController(IShows showsManager)
 		{
 			_showsManager = showsManager;
-			_logger = logger;
 		}
 
 		[HttpGet("{idShowModel}/{saison}/{episode}")]
@@ -40,7 +38,7 @@ namespace WebAppServer.Controllers.API
 				return StatusCode(204);
 			}
 
-			_logger.LogInformation("Récupération par Web de la série : " + showInformation.Titre);
+			Log.Information("Récupération par Web de la série : " + showInformation.Titre);
 			return DownloadVideoCore(showInformation);
 		}
 
@@ -72,7 +70,7 @@ namespace WebAppServer.Controllers.API
 		    }
 		    catch (Exception exception)
 		    {
-			    _logger.LogError(exception, "Erreur sur la récupération de la série " + information.Titre);
+			    Log.Error(exception, "Erreur sur la récupération de la série " + information.Titre);
 			    temp = NoContent();
 		    }
 

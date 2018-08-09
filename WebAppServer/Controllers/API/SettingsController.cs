@@ -32,7 +32,7 @@ namespace WebAppServer.Controllers.API
         [HttpGet("{id}")]
         public MovieModel Get(Guid id)
         {
-            //_logger.LogInformation("Demande liste d'affiche pour un ID.");
+            //Log.Information("Demande liste d'affiche pour un ID.");
             return _moviesManager.GetMovie(id);
 
             //return await _moviesManager.GetListVideoOnTmDb(video.MovieInformation.Titre);
