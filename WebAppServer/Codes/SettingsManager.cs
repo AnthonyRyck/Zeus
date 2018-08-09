@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace WebAppServer.Codes
@@ -62,18 +60,25 @@ namespace WebAppServer.Codes
 		    return _configApp.RegionPourTmDb;
 	    }
 
+		/// <summary>
+		/// Permet de sauvegarder le fichier de settings avec des valeurs
+		/// par défault.
+		/// NON FINI.
+		/// </summary>
+		/// <param name="langueTmdb"></param>
+		/// <param name="regionTmdb"></param>
+		/// <param name="tempsRefresh"></param>
+		/// <returns></returns>
 	    public async Task SaveSettings(string langueTmdb = "fr-FR", 
 										string regionTmdb = "FR",
 										int tempsRefresh = 3600000)
 	    {
+			//TODO : Finir la méthode de sauvegarde des Settings.
 		    ConfigurationApp config = new ConfigurationApp
 		    {
 			    LanguePourTmDb = langueTmdb,
 			    RegionPourTmDb = regionTmdb,
 			    TempsEnMillisecondPourTimerRefresh = tempsRefresh,
-				
-
-				// TODO : Finir la méthode pour la sauvegarde.
 			    ListeDeLangue = new List<string>
 				{
 				    "FRENCH", "TRUEFRENCH", "FR"

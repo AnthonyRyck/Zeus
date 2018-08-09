@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Events;
 
 namespace WebAppServer
 {
@@ -21,25 +17,29 @@ namespace WebAppServer
 		        Directory.CreateDirectory(pathLog);
 	        }
 
-			var logger = new LoggerConfiguration()
+			Log.Logger = new LoggerConfiguration()
 		        .MinimumLevel.Debug()
-		        .WriteTo.File(Path.Combine(pathLog, "log-system.txt"))
-		        .CreateLogger();
+				.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+				.MinimumLevel.Override("System", LogEventLevel.Warning)
+				.WriteTo.RollingFile(Path.Combine(pathLog, "log-{Date}.txt"))
+				.CreateLogger();
 
 			try
 	        {
-				logger.Information("***** Lancement de l'application *****");
+				Log.Information("***** Lancement de l'application *****");
 		        BuildWebHost(args).Run();
 			}
 	        catch (Exception e)
 	        {
-		        logger.Fatal(e, "Exception levé dans le Main");
+				Log.Fatal(e, "Exception levé dans le Main");
+				Log.CloseAndFlush();
 			}
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+				.UseSerilog()
                 .Build();
     }
 }

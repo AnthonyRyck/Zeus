@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using WebAppServer.Codes;
 
 namespace WebAppServer.Pages.Videos
@@ -14,8 +13,6 @@ namespace WebAppServer.Pages.Videos
 	    #region Fields
 
 	    private IShows _showsManager;
-	    private readonly ILogger _logger;
-
 
 	    #endregion
 
@@ -30,18 +27,18 @@ namespace WebAppServer.Pages.Videos
 
 	    #region Constructeur
 
-	    public SeriesModel(IShows showManager, ILogger<MovieModel> logger)
+	    public SeriesModel(IShows showManager)
 	    {
 		    _showsManager = showManager;
-		    _logger = logger;
 	    }
 
 	    #endregion
+
 		public void OnGet()
         {
-	        _logger.LogDebug("Consultation page - Series -");
+	        Log.Debug("Consultation page - Series -");
 	        Series = _showsManager.GetShows();
-	        _logger.LogDebug("Page Series - Nombre de séries = " + Series.Count());
+	        Log.Debug("Page Series - Nombre de séries = " + Series.Count());
 		}
 
 	}

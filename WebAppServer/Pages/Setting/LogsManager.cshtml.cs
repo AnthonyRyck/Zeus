@@ -50,10 +50,7 @@ namespace WebAppServer.Pages.Setting
 
 	    public async Task<IActionResult> OnPostLoadAsync()
 	    {
-		    bool stop = true;
-
 		    Logs = (await System.IO.File.ReadAllLinesAsync(FileLogSelected)).Reverse();
-			
 		    return Page(); //RedirectToPage();
 	    }
 

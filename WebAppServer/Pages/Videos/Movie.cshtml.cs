@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using MoviesLib.Entities;
+using Serilog;
 using WebAppServer.Codes;
 
 namespace WebAppServer.Pages.Videos
@@ -18,8 +14,6 @@ namespace WebAppServer.Pages.Videos
         #region Fields
 
         private IMovies _moviesManager;
-        private readonly ILogger _logger;
-
 
         #endregion
 
@@ -34,21 +28,19 @@ namespace WebAppServer.Pages.Videos
 
         #region Constructeur
 
-        public MovieModel(IMovies movieManager, ILogger<MovieModel> logger)
+        public MovieModel(IMovies movieManager)
         {
             _moviesManager = movieManager;
-            _logger = logger;
         }
 
         #endregion
 
 
-
         public async void OnGet()
         {
-            _logger.LogDebug("Consultation page - Films -");
+			Log.Debug("Consultation page - Films -");
             Movies = await _moviesManager.GetMovies();
-            _logger.LogDebug("Page Films - Movies = " + Movies.Count() + " films.");
+			Log.Debug("Page Films - Movies = " + Movies.Count() + " films.");
         }
     }
 }

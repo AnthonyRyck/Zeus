@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Serilog;
 using WebAppServer.Codes;
 
 namespace WebAppServer.Pages.Videos
@@ -39,7 +40,9 @@ namespace WebAppServer.Pages.Videos
 
         public async void OnGet()
         {
-            DessinAnimes = await _animeManager.GetDessinAnimes();
-        }
+			Log.Debug("Consultation page - Dessin Animes -");
+			DessinAnimes = await _animeManager.GetDessinAnimes();
+			Log.Debug("Page DessinAnimes - " + DessinAnimes.Count() + " dessin Animes.");
+		}
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using MoviesLib.Entities;
 using Newtonsoft.Json;
+using Serilog;
 using WebAppServer.Models;
 
 namespace WebAppServer.Codes
@@ -47,20 +48,24 @@ namespace WebAppServer.Codes
 		    _pathSauvegarde = GetSavePath();
 		}
 
-        #endregion
+		#endregion
 
-	    public void SetFunc(Func<string, TypeVideo, IEnumerable<MovieInformation>> getMovies)
-	    {
+		#region Public Methods
+
+		public void SetFunc(Func<string, TypeVideo, IEnumerable<MovieInformation>> getMovies)
+		{
 			_funcGetMovies = getMovies;
 		}
 
-        #region Internal Methods
+		#endregion
 
-        /// <summary>
-        /// Récupére les informations de configuration.
-        /// </summary>
-        /// <returns></returns>
-        internal async Task<ConfigurationApp> GetConfiguration()
+		#region Internal Methods
+
+		/// <summary>
+		/// Récupére les informations de configuration.
+		/// </summary>
+		/// <returns></returns>
+		internal async Task<ConfigurationApp> GetConfiguration()
         {
             ConfigurationApp config;
 
@@ -75,7 +80,7 @@ namespace WebAppServer.Codes
                 }
                 catch (Exception exception)
                 {
-                    // TODO : Mettre en log l'exception.
+					Log.Error(exception, "Exception levé dans la méthode GetConfiguration.");
                     
                     config = GetDefaultConfiguration();
 	                await SaveConfiguration(config);
@@ -221,8 +226,6 @@ namespace WebAppServer.Codes
         }
 
         #endregion
-
-
 
     }
 }

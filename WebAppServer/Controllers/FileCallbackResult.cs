@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -81,8 +82,8 @@ namespace WebAppServer.Controllers
             }
 
             public Task ExecuteAsync(ActionContext context, FileCallbackResult result)
-            {
-                SetHeadersAndLog(context, result, null);
+			{
+				SetHeadersAndLog(context, result, null, true);
                 return result.Callback(context.HttpContext.Response.Body, context);
             }
         }
