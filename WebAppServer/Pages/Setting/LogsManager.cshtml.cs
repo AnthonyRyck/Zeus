@@ -16,9 +16,7 @@ namespace WebAppServer.Pages.Setting
 	    public SelectList ListLogs { get; set; }
 
 	    private IHostingEnvironment _environment;
-
-
-	    private List<LogFile> _allLogFiles = new List<LogFile>();
+		private List<LogFile> _allLogFiles = new List<LogFile>();
 
 	    [BindProperty]
 		public string FileLogSelected { get; set; }
@@ -51,7 +49,7 @@ namespace WebAppServer.Pages.Setting
 	    public async Task<IActionResult> OnPostLoadAsync()
 	    {
 		    Logs = (await System.IO.File.ReadAllLinesAsync(FileLogSelected)).Reverse();
-		    return Page(); //RedirectToPage();
+		    return Page();
 	    }
 
 	}

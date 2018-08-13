@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace WebAppServer.Models
 {
@@ -13,17 +10,22 @@ namespace WebAppServer.Models
 		/// <summary>
 		/// Chemin complet du fichier de log, avec son nom
 		/// </summary>
-	    public string FullPath { get; set; }
+	    public string FullPath { get; private set; }
 
 		/// <summary>
 		/// Date du fichier log.
 		/// </summary>
-	    public DateTime DateFile { get; set; }
+	    public DateTime DateFile { get; private set; }
 
 		/// <summary>
-		/// Retourne la date sous forme : 04/07/2018
+		/// Retourne la date sous forme : 04/07/2018 - jj/mm/yyyy
 		/// </summary>
-		public String DateEnLettre => DateFile.ToString("d");
+		public String DateEnLettre => DateFile.ToString("d", CultureInfoFrance);
+
+		/// <summary>
+		/// C'est pour l'affichage des dates en francais.
+		/// </summary>
+		private static CultureInfo CultureInfoFrance => new CultureInfo("FR-fr");
 
 	    #endregion
 
