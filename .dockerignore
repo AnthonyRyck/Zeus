@@ -9,3 +9,4 @@ docker-compose.*.yml
 */bin
 */obj
 _ReSharper.Caches
+Zeus.Test

@@ -22,4 +22,7 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Logs\" />
+  </ItemGroup>
 </Project>
