@@ -31,8 +31,8 @@ namespace WebAppServer.Codes
 
         #region Constructeur
 
-        public MoviesManager(ISettings settings)
-		 : base(settings)
+        public MoviesManager(ISettings settings, IMailing mailingService)
+		 : base(settings, mailingService)
         {
             //_logger = logger;
 	        IEnumerable<string> langues = settings.GetLanguesVideos();
@@ -417,15 +417,21 @@ namespace WebAppServer.Codes
                     listeToAdd.Add(movieLocal);
                 }
             }
-            
-            List<MovieModel> tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
-            lock (Lock)
-            {
-                _movieModelsCollection.AddRange(tempAddMovieModels);
-            }
 
-            // Sauvegarde
-            Storage.SaveMoviesModels(_movieModelsCollection);
+			if (listeToAdd.Count > 0)
+			{
+				List<MovieModel> tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
+				await SendMailToUser(tempAddMovieModels);
+
+				lock (Lock)
+				{
+					_movieModelsCollection.AddRange(tempAddMovieModels);
+				}
+
+				// Sauvegarde
+				Storage.SaveMoviesModels(_movieModelsCollection);
+			}
+			
             IsUpdateTime = false;
         }
 

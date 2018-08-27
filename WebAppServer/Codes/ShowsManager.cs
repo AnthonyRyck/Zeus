@@ -22,8 +22,8 @@ namespace WebAppServer.Codes
 
         #region Constructeur
 
-        public ShowsManager(ISettings settings)
-			: base(settings)
+        public ShowsManager(ISettings settings, IMailing mailingService)
+			: base(settings, mailingService)
         {
             _seriesManager = new ShowManager();
 

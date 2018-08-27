@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebAppServer.Codes
@@ -71,7 +72,9 @@ namespace WebAppServer.Codes
 		/// <returns></returns>
 	    public async Task SaveSettings(string langueTmdb = "fr-FR", 
 										string regionTmdb = "FR",
-										int tempsRefresh = 3600000)
+										int tempsRefresh = 3600000,
+										string email = "",
+										string passwordMail = "")
 	    {
 			//TODO : Finir la méthode de sauvegarde des Settings.
 		    ConfigurationApp config = new ConfigurationApp
@@ -79,18 +82,29 @@ namespace WebAppServer.Codes
 			    LanguePourTmDb = langueTmdb,
 			    RegionPourTmDb = regionTmdb,
 			    TempsEnMillisecondPourTimerRefresh = tempsRefresh,
-			    ListeDeLangue = new List<string>
-				{
-				    "FRENCH", "TRUEFRENCH", "FR"
-			    },
-			    PathMovies = new List<string> { "/app/movies" },
-			    PathDessinAnimes = new List<string> { "/app/animes" },
-			    PathShows = new List<string> { "/app/series" },
+			    ListeDeLangue = GetLanguesVideos().ToList(),
+			    PathMovies = GetPathMovies(),
+			    PathDessinAnimes = GetPathDessinAnimes(),
+			    PathShows = GetPathShows(),
+				Mail = email,
+				PasswordMail = passwordMail
 			};
 			
 		    _configApp = await _storage.SaveConfiguration(config);
 	    }
 
-	    #endregion
+		/// <inheritdoc />
+		public string GetMail()
+		{
+			return _configApp.Mail;
+		}
+
+		/// <inheritdoc />
+		public string GetPasswordMail()
+		{
+			return _configApp.PasswordMail;
+		}
+
+		#endregion
 	}
 }

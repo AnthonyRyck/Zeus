@@ -46,6 +46,8 @@ namespace WebAppServer.Pages.Setting
 				LanguesPourTmDb = _setting.GetLangueTmdb(),
 				RegionPourTmdb = _setting.GetRegionTmdb(),
 				TimeToRefresh = MillisecondToMinute(_setting.GetTimeToUpdateVideos()), // passage en minute.
+				Email = _setting.GetMail(),
+				PasswordEmail = _setting.GetPasswordMail()
 			};
 		}
 		
@@ -54,7 +56,9 @@ namespace WebAppServer.Pages.Setting
 			// Sauvegarde de la configuration
 		    await _setting.SaveSettings(langueTmdb: Input.LanguesPourTmDb, 
 										regionTmdb: Input.RegionPourTmdb, 
-										tempsRefresh: MinuteToMillisecond(Input.TimeToRefresh));
+										tempsRefresh: MinuteToMillisecond(Input.TimeToRefresh),
+										email:Input.Email,
+										passwordMail:Input.PasswordEmail);
 
 		    return Page();
 	    }
@@ -95,7 +99,9 @@ namespace WebAppServer.Pages.Setting
 		// "PathMovies":["C:/Docker/Zeus/movies"],
 		// "PathDessinAnimes":["C:/Docker/Zeus/animes"],
 		// "PathShows":["C:/Docker/Zeus/series"],
-		// "TempsEnMillisecondPourTimerRefresh":60000}
+		// "TempsEnMillisecondPourTimerRefresh":60000},
+		// "Email":"plouf@gmail.com",
+		// "PasswordMail":"okokokok"
 
 		public class ConfigModel
 	    {
@@ -116,6 +122,12 @@ namespace WebAppServer.Pages.Setting
 
 			[DisplayName("Chemin pour les dessins animes")]
 		    public List<string> PathDessinAnimes { get; set; }
+
+			[DisplayName("Email utilisé pour l'envoie de mail (pour l'instant QUE un gmail")]
+			public string Email { get; set; }
+
+			[DisplayName("Mot de passe du compte mail")]
+			public string PasswordEmail { get; set; }
 
 			[Required]
 			[DisplayName("Temps pour rafraichissement")]
