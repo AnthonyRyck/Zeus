@@ -26,6 +26,10 @@
 						<a href="@Url.Action("Download", "Movies", new {item.Id})">
 							<span class="glyphicon glyphicon-download-alt"></span>
 						</a>
+						
+						<a href="@Url.Action("GetStream", "Streaming", new {item.Id})">
+							<span class="glyphicon glyphicon-play"></span>
+						</a>
 
 						@if (User.IsInRole("Admin") || User.IsInRole("Manager"))
 						{
