@@ -34,8 +34,8 @@ namespace WebAppServer.Codes
 			_appContext = context;
 			string webRoot = hostingEnvironment.WebRootPath;
 
-			_pathVideoContentHtml = Path.Combine(webRoot, @"mail\videoContent.html");
-			_pathMailContentHtml = Path.Combine(webRoot, @"mail\mailContent.html");
+			_pathVideoContentHtml = Path.Combine(webRoot, "mail", "videoContent.html");
+			_pathMailContentHtml = Path.Combine(webRoot, "mail", "mailContent.html");
 		}
 		
 		#endregion

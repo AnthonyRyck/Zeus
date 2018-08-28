@@ -38,6 +38,7 @@ namespace WebAppServer
 			        options.Conventions.AuthorizeFolder("/Account/Manage");
 					options.Conventions.AuthorizePage("/Account/Logout");
 			        options.Conventions.AuthorizeFolder("/Videos");
+					options.Conventions.AuthorizeFolder("/Setting");
 				});
 
 			services.AddSingleton<ISettings, SettingsManager>();

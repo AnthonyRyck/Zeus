@@ -1,13 +1,17 @@
 ﻿@page
 @model WebAppServer.Pages.Setting.UsersManagerModel
-@{
-    ViewData["Title"] = "UsersManager";
-}
 
-<h2>UsersManager</h2>
+<h2>Gestion des utilisateurs</h2>
 
 <div class="row">
 	<div class="col-md-6">
-		<p> User list</p>
+		
+		@foreach (var user in Model.AllUsers)
+		{
+			<div>
+				<span>@user.Email</span>
+			</div>
+		}
+
 	</div>
 </div>
