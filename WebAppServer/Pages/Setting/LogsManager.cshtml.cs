@@ -32,15 +32,18 @@ namespace WebAppServer.Pages.Setting
         public void OnGet()
         {
 	        string[] tempFiles = Directory.GetFiles(Path.Combine(_environment.ContentRootPath,"Logs"));
+			List<LogFile> tempLogFiles = new List<LogFile>();
 
 	        foreach (string filePath in tempFiles)
 	        {
 				// Pour éviter de prendre le log de "System".
 				if (!filePath.Contains("system"))
 				{
-					_allLogFiles.Add(new LogFile(filePath));
+					tempLogFiles.Add(new LogFile(filePath));
 				}
 			}
+
+			_allLogFiles = tempLogFiles.OrderByDescending(x => x.DateFile).ToList();
 
 			ListLogs = new SelectList(_allLogFiles, "FullPath", "DateEnLettre");
 		}
