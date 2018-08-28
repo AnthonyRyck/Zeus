@@ -34,6 +34,7 @@ RUN mkdir -p animes
 RUN mkdir -p Database
 
 COPY WebAppServer/Database/app.db ./Database/app.db
+VOLUME ./Database
 
 COPY --from=build-env /src/WebAppServer/out .
 
