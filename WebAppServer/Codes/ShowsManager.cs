@@ -108,8 +108,8 @@ namespace WebAppServer.Codes
 	            await Task.Delay(1000);
 
 	            Guid idShow = _serieCollection.GetIdShow(serieLocal.Titre);
-
-	            if (idShow == Guid.Empty)
+				
+				if (idShow == Guid.Empty)
 	            {
 					ShowModel showModel = await CreateNewShowModel(serieLocal);
 
@@ -150,10 +150,18 @@ namespace WebAppServer.Codes
 		            }
 	            }
             }
-            
-            // Sauvegarde
-            Storage.SaveSeriesModels(_serieCollection);
-            IsUpdateTime = false;
+
+			var allNouveautes = _serieCollection.GetAllNouveautes();
+
+			if (allNouveautes.Any())
+			{
+				// Sauvegarde
+				Storage.SaveSeriesModels(_serieCollection);
+
+				await SendMailToUser(allNouveautes);
+			}
+			
+			IsUpdateTime = false;
         }
 
 		#endregion

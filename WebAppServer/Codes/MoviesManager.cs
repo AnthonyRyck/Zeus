@@ -201,7 +201,13 @@ namespace WebAppServer.Codes
             return retourInfo;
         }
 
-
+		/// <summary>
+		/// Permet de change la video par rapport à son ID, en donnant
+		/// l'ID de TheMovieDatabase.
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="idVideoTmDb"></param>
+		/// <returns></returns>
         public async Task<MovieModel> ChangeVideo(Guid id, int idVideoTmDb)
         {
             MovieModel videoToChange = GetMovie(id);
@@ -219,6 +225,10 @@ namespace WebAppServer.Codes
             return videoToChange;
         }
 
+		/// <summary>
+		/// Permet de supprimer la video par rapport à son ID.
+		/// </summary>
+		/// <param name="id"></param>
 		public void RemoveVideo(Guid id)
 	    {
 		    lock (Lock)

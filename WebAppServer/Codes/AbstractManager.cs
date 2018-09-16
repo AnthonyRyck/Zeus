@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TMDbLib.Client;
+using TMDbLib.Objects.TvShows;
 using WebAppServer.Models;
 
 namespace WebAppServer.Codes
@@ -53,9 +54,24 @@ namespace WebAppServer.Codes
 
 		#region Protected Methods
 
+		/// <summary>
+		/// Perment l'envoi d'un mail aux utilisateurs et Mananger.
+		/// </summary>
+		/// <param name="movies">Liste des films/dessin animés</param>
+		/// <returns></returns>
 		protected async Task SendMailToUser(IEnumerable<MovieModel> movies)
 		{
 			await _mailingService.SendNewVideo(movies);
+		}
+
+		/// <summary>
+		/// Perment l'envoi d'un mail aux utilisateurs et Mananger.
+		/// </summary>
+		/// <param name="nouveauteSeries">Liste des séries</param>
+		/// <returns></returns>
+		protected async Task SendMailToUser(IEnumerable<KeyValuePair<TvSeason, TvEpisode>> nouveauteSeries)
+		{
+			await _mailingService.SendNewVideo(nouveauteSeries);
 		}
 
 		#endregion

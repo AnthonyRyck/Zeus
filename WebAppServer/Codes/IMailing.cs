@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TMDbLib.Objects.TvShows;
 using WebAppServer.Models;
 
 namespace WebAppServer.Codes
@@ -14,5 +15,12 @@ namespace WebAppServer.Codes
 		/// <param name="newVideos"></param>
 		/// <returns></returns>
 		Task SendNewVideo(IEnumerable<MovieModel> newVideos);
+
+		/// <summary>
+		/// Envoie un mail aux membres sur les nouvelles séries.
+		/// </summary>
+		/// <param name="nouveauteSeries"></param>
+		/// <returns></returns>
+		Task SendNewVideo(IEnumerable<KeyValuePair<TvSeason, TvEpisode>> nouveauteSeries);
 	}
 }

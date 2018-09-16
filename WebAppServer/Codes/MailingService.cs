@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
+using TMDbLib.Objects.TvShows;
 using WebAppServer.Models;
 using WepAppServer.Data;
 
@@ -20,6 +21,7 @@ namespace WebAppServer.Codes
 		private readonly ApplicationDbContext _appContext;
 		private readonly string _pathVideoContentHtml;
 		private readonly string _pathMailContentHtml;
+		private readonly string _pathSerieContentHtml;
 
 		private const string MEMBER = "MEMBER";
 		private const string MANAGER = "MANAGER";
@@ -36,6 +38,7 @@ namespace WebAppServer.Codes
 
 			_pathVideoContentHtml = Path.Combine(webRoot, "mail", "videoContent.html");
 			_pathMailContentHtml = Path.Combine(webRoot, "mail", "mailContent.html");
+			_pathSerieContentHtml = Path.Combine(webRoot, "mail", "serieContent.html");
 		}
 		
 		#endregion
@@ -116,6 +119,24 @@ namespace WebAppServer.Codes
 			return string.Format(message, bodyMessage);
 		}
 
+		private string GetMessageComplet(IEnumerable<KeyValuePair<TvSeason, TvEpisode>> nouveauteSeries)
+		{
+			string bodyMessage = string.Empty;
+
+			string template = File.ReadAllText(_pathSerieContentHtml);
+			foreach (KeyValuePair<TvSeason, TvEpisode> video in nouveauteSeries)
+			{
+				string messageVideo = string.Format(template,
+					"https://image.tmdb.org/t/p/w370_and_h556_bestv2" + video.Key.PosterPath,
+					video.Value.Overview, video.Key.SeasonNumber, video.Value.EpisodeNumber);
+
+				bodyMessage += messageVideo;
+			}
+
+			string message = File.ReadAllText(_pathMailContentHtml);
+			return string.Format(message, bodyMessage);
+		}
+
 		#endregion
 
 		#region Implement IMailing
@@ -139,10 +160,32 @@ namespace WebAppServer.Codes
 			}
 			catch (Exception exception)
 			{
-				Log.Error(exception, "Erreur dans l'envoie des mails pour les utilisateurs.");
+				Log.Error(exception, "Erreur dans l'envoie des mails pour les films.");
 			}
 		}
 
+		/// <inheritdoc />
+		public async Task SendNewVideo(IEnumerable<KeyValuePair<TvSeason, TvEpisode>> nouveauteSeries)
+		{
+			try
+			{
+				IEnumerable<ApplicationUser> usersList = GetAllUsersExceptAdmin();
+
+				if (nouveauteSeries.Any())
+				{
+					var messageComplet = GetMessageComplet(nouveauteSeries);
+
+					foreach (ApplicationUser user in usersList)
+					{
+						await SendMail(user.Email, messageComplet);
+					}
+				}
+			}
+			catch (Exception exception)
+			{
+				Log.Error(exception, "Erreur dans l'envoie des mails pour les séries.");
+			}
+		}
 
 		#endregion
 		
