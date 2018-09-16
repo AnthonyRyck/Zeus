@@ -140,7 +140,8 @@ namespace WebAppServer.Codes
 			foreach (ShowModel model in _list)
 		    {
 			    if (model.TvShow != null 
-					&& IsSameShow(model.TvShow.Name, title))
+					&& (IsSameShow(model.TvShow.Name, title)
+						|| model.ShowInformation.Any(x => x.Titre == title)))
 			    {
 				    return model.IdShowModel;
 			    }
@@ -148,14 +149,14 @@ namespace WebAppServer.Codes
 
 		    return Guid.Empty;
 		}
-
-	    /// <summary>
-	    /// Ajoute un épisode à la série donnée par l'id.
-	    /// </summary>
-	    /// <param name="idShow"></param>
-	    /// <param name="episode"></param>
-	    /// <param name="serieLocal"></param>
-	    public void AddEpisode(Guid idShow, TvEpisode episode, ShowInformation serieLocal)
+		
+		/// <summary>
+		/// Ajoute un épisode à la série donnée par l'id.
+		/// </summary>
+		/// <param name="idShow"></param>
+		/// <param name="episode"></param>
+		/// <param name="serieLocal"></param>
+		public void AddEpisode(Guid idShow, TvEpisode episode, ShowInformation serieLocal)
 	    {
 		    ShowModel showModel = GetShowModel(idShow);
 			showModel.TvEpisodes.Add(episode);
