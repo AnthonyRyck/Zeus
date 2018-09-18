@@ -174,6 +174,7 @@ namespace WebAppServer.Codes
 				Storage.SaveSeriesModels(_serieCollection);
 
 				await SendMailToUser(allNouveautes);
+				_serieCollection.ResetNouveautes();
 			}
 			
 			IsUpdateTime = false;
