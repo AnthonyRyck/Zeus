@@ -181,7 +181,7 @@ namespace WebAppServer.Codes
 		/// <returns></returns>
 		private string GetConfigPath()
         {
-            return GetFolder(@"/config");
+            return GetFolder(@"config");
         }
 
         /// <summary>
@@ -190,12 +190,12 @@ namespace WebAppServer.Codes
         /// <returns></returns>
         private string GetSavePath()
         {
-            return GetFolder(@"/save");
+            return GetFolder(@"save");
         }
 
         private string GetFolder(string folderName)
         {
-            string folder = AppContext.BaseDirectory + folderName;
+            string folder = Path.Combine(AppContext.BaseDirectory,folderName);
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
@@ -221,7 +221,9 @@ namespace WebAppServer.Codes
                 PathMovies = new List<string> {"/app/movies"},
                 PathDessinAnimes = new List<string>{"/app/animes"},
                 PathShows = new List<string> {"/app/series"},
-                TempsEnMillisecondPourTimerRefresh = 600000
+                TempsEnMillisecondPourTimerRefresh = 600000,
+				Mail = string.Empty,
+				PasswordMail = string.Empty
             };
         }
 

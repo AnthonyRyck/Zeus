@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  webappserver:
+    image: ${DOCKER_REGISTRY}webappserver
+    build:
+      context: .
+      dockerfile: WebAppServer/Dockerfile

@@ -22,8 +22,8 @@ namespace WebAppServer.Codes
 
         #region Constructeur
 
-        public ShowsManager(ISettings settings)
-			: base(settings)
+        public ShowsManager(ISettings settings, IMailing mailingService)
+			: base(settings, mailingService)
         {
             _seriesManager = new ShowManager();
 
@@ -71,6 +71,39 @@ namespace WebAppServer.Codes
 			return showModel;
 	    }
 
+
+		private async Task GetSeasonAndEpisodeInformation(Guid idShow, ShowInformation serieLocal)
+		{
+			// Si la saison est connu.
+			if (_serieCollection.HaveSeason(idShow, serieLocal.Saison))
+			{
+				// Si Episode est non connu.
+				if (!_serieCollection.HaveEpisode(idShow, serieLocal.Saison, serieLocal.Episode))
+				{
+					int idSerie = _serieCollection.GetIdSerieTmDb(idShow);
+					TvEpisode episode = await ClientTmDb.GetTvEpisodeAsync(idSerie, serieLocal.Saison, serieLocal.Episode);
+
+					lock (_objetToLock)
+					{
+						_serieCollection.AddEpisode(idShow, episode, serieLocal);
+					}
+				}
+			}
+			else
+			{
+				// Cas ou il ne connait pas la saison.
+				int idSerie = _serieCollection.GetIdSerieTmDb(idShow);
+				TvSeason saison = await ClientTmDb.GetTvSeasonAsync(idSerie, serieLocal.Saison);
+				await Task.Delay(500);
+				TvEpisode episode = await ClientTmDb.GetTvEpisodeAsync(idSerie, serieLocal.Saison, serieLocal.Episode);
+
+				lock (_objetToLock)
+				{
+					_serieCollection.AddSaison(idShow, saison, episode, serieLocal);
+				}
+			}
+		}
+
 	    #endregion
 
         #region Timer Method
@@ -108,52 +141,43 @@ namespace WebAppServer.Codes
 	            await Task.Delay(1000);
 
 	            Guid idShow = _serieCollection.GetIdShow(serieLocal.Titre);
-
-	            if (idShow == Guid.Empty)
+				
+				if (idShow == Guid.Empty)
 	            {
 					ShowModel showModel = await CreateNewShowModel(serieLocal);
 
-		            lock (_objetToLock)
-		            {
-						_serieCollection.Add(showModel);
+					Guid idTemp = _serieCollection.GetIdShow(showModel.TvShow.Name);
+
+					if (idTemp == Guid.Empty)
+					{
+						lock (_objetToLock)
+						{
+							_serieCollection.Add(showModel);
+						}
+					}
+					else
+					{
+						await GetSeasonAndEpisodeInformation(idTemp, serieLocal);
 					}
 				}
 	            else
-	            {
-					// Si la saison est connu.
-		            if (_serieCollection.HaveSeason(idShow, serieLocal.Saison))
-		            {
-						// Si Episode est non connu.
-			            if (!_serieCollection.HaveEpisode(idShow, serieLocal.Saison, serieLocal.Episode))
-			            {
-				            int idSerie = _serieCollection.GetIdSerieTmDb(idShow);
-				            TvEpisode episode = await ClientTmDb.GetTvEpisodeAsync(idSerie, serieLocal.Saison, serieLocal.Episode);
-
-				            lock (_objetToLock)
-				            {
-					            _serieCollection.AddEpisode(idShow, episode, serieLocal);
-				            }
-			            }
-					}
-		            else
-		            {
-			            // Cas ou il ne connait pas la saison.
-			            int idSerie = _serieCollection.GetIdSerieTmDb(idShow);
-			            TvSeason saison = await ClientTmDb.GetTvSeasonAsync(idSerie, serieLocal.Saison);
-			            await Task.Delay(500);
-			            TvEpisode episode = await ClientTmDb.GetTvEpisodeAsync(idSerie, serieLocal.Saison, serieLocal.Episode);
-
-			            lock (_objetToLock)
-			            {
-				            _serieCollection.AddSaison(idShow, saison, episode, serieLocal);
-			            }
-		            }
-	            }
+				{
+					await GetSeasonAndEpisodeInformation(idShow, serieLocal);
+				}
             }
-            
-            // Sauvegarde
-            Storage.SaveSeriesModels(_serieCollection);
-            IsUpdateTime = false;
+
+			var allNouveautes = _serieCollection.GetAllNouveautes();
+
+			if (allNouveautes.Any())
+			{
+				// Sauvegarde
+				Storage.SaveSeriesModels(_serieCollection);
+
+				await SendMailToUser(allNouveautes);
+				_serieCollection.ResetNouveautes();
+			}
+			
+			IsUpdateTime = false;
         }
 
 		#endregion

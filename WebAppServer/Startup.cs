@@ -25,7 +25,8 @@ namespace WebAppServer
         public void ConfigureServices(IServiceCollection services)
         {
 	        services.AddDbContext<ApplicationDbContext>(options =>
-		        options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+		        options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")),
+				ServiceLifetime.Singleton, ServiceLifetime.Singleton);
 
 	        services.AddIdentity<ApplicationUser, IdentityRole>()
 		        .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -37,20 +38,20 @@ namespace WebAppServer
 			        options.Conventions.AuthorizeFolder("/Account/Manage");
 					options.Conventions.AuthorizePage("/Account/Logout");
 			        options.Conventions.AuthorizeFolder("/Videos");
+					options.Conventions.AuthorizeFolder("/Setting");
 				});
 
-	        ISettings settings = new SettingsManager();
-	        services.AddSingleton<ISettings>(settings);
+			services.AddSingleton<ISettings, SettingsManager>();
+			services.AddSingleton<IMailing, MailingService>();
+			
+			services.AddSingleton<IMovies, MoviesManager>();
+			services.AddSingleton<IShows, ShowsManager>();
 
-			MoviesManager moviesManager = new MoviesManager(settings);
-            services.AddSingleton<IMovies>(moviesManager);
+			// Register no-op EmailSender used by account confirmation and password reset during development
+			// For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
+			services.AddSingleton<IEmailSender, EmailSender>();
 
-			ShowsManager showManagers = new ShowsManager(settings);
-	        services.AddSingleton<IShows>(showManagers);
-
-	        // Register no-op EmailSender used by account confirmation and password reset during development
-	        // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
-	        services.AddSingleton<IEmailSender, EmailSender>();
+			services.AddScoped<IVideoStreamService, VideoStreamService>();
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

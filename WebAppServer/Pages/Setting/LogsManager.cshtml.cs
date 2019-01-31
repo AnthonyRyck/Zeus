@@ -16,9 +16,7 @@ namespace WebAppServer.Pages.Setting
 	    public SelectList ListLogs { get; set; }
 
 	    private IHostingEnvironment _environment;
-
-
-	    private List<LogFile> _allLogFiles = new List<LogFile>();
+		private List<LogFile> _allLogFiles = new List<LogFile>();
 
 	    [BindProperty]
 		public string FileLogSelected { get; set; }
@@ -34,15 +32,18 @@ namespace WebAppServer.Pages.Setting
         public void OnGet()
         {
 	        string[] tempFiles = Directory.GetFiles(Path.Combine(_environment.ContentRootPath,"Logs"));
+			List<LogFile> tempLogFiles = new List<LogFile>();
 
 	        foreach (string filePath in tempFiles)
 	        {
 				// Pour éviter de prendre le log de "System".
 				if (!filePath.Contains("system"))
 				{
-					_allLogFiles.Add(new LogFile(filePath));
+					tempLogFiles.Add(new LogFile(filePath));
 				}
 			}
+
+			_allLogFiles = tempLogFiles.OrderByDescending(x => x.DateFile).ToList();
 
 			ListLogs = new SelectList(_allLogFiles, "FullPath", "DateEnLettre");
 		}
@@ -51,7 +52,7 @@ namespace WebAppServer.Pages.Setting
 	    public async Task<IActionResult> OnPostLoadAsync()
 	    {
 		    Logs = (await System.IO.File.ReadAllLinesAsync(FileLogSelected)).Reverse();
-		    return Page(); //RedirectToPage();
+		    return Page();
 	    }
 
 	}

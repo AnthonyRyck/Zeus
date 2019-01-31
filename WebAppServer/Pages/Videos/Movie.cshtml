@@ -25,18 +25,22 @@
 						<img id="imageVideo" src="@Url.Content("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @item.MovieTmDb.PosterPath)" />
 					}
 
-					<div class="meta" data-role="tooltip">
-						<a href="@Url.Action("Download", "Movies", new {item.Id})">
-							<span class="glyphicon glyphicon-download-alt"></span>
-						</a>
+						<div class="meta" data-role="tooltip">
+							<a href="@Url.Action("Download", "Movies", new {item.Id})">
+								<span class="glyphicon glyphicon-download-alt"></span>
+							</a>
 
-						@if (User.IsInRole("Admin") || User.IsInRole("Manager"))
-						{
-							<button type="button" class="submit-with-icon" data-toggle="modal" data-target="#myModal" data-id="@item.Id" onclick="getVideo('@item.Id')">
-								<span class="glyphicon glyphicon-refresh"></span>
-							</button>
-						}
-					</div>
+							<a href="@Url.Action("GetStream", "Streaming", new {item.Id})">
+								<span class="glyphicon glyphicon-play"></span>
+							</a>
+
+							@if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+							{
+								<button type="button" class="submit-with-icon" data-toggle="modal" data-target="#myModal" data-id="@item.Id" onclick="getVideo('@item.Id')">
+									<span class="glyphicon glyphicon-refresh"></span>
+								</button>
+							}
+						</div>
 				</div>
 
 				<div class="info">

@@ -31,8 +31,8 @@ namespace WebAppServer.Codes
 
         #region Constructeur
 
-        public MoviesManager(ISettings settings)
-		 : base(settings)
+        public MoviesManager(ISettings settings, IMailing mailingService)
+		 : base(settings, mailingService)
         {
             //_logger = logger;
 	        IEnumerable<string> langues = settings.GetLanguesVideos();
@@ -201,7 +201,13 @@ namespace WebAppServer.Codes
             return retourInfo;
         }
 
-
+		/// <summary>
+		/// Permet de change la video par rapport à son ID, en donnant
+		/// l'ID de TheMovieDatabase.
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="idVideoTmDb"></param>
+		/// <returns></returns>
         public async Task<MovieModel> ChangeVideo(Guid id, int idVideoTmDb)
         {
             MovieModel videoToChange = GetMovie(id);
@@ -219,6 +225,10 @@ namespace WebAppServer.Codes
             return videoToChange;
         }
 
+		/// <summary>
+		/// Permet de supprimer la video par rapport à son ID.
+		/// </summary>
+		/// <param name="id"></param>
 		public void RemoveVideo(Guid id)
 	    {
 		    lock (Lock)
@@ -417,15 +427,21 @@ namespace WebAppServer.Codes
                     listeToAdd.Add(movieLocal);
                 }
             }
-            
-            List<MovieModel> tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
-            lock (Lock)
-            {
-                _movieModelsCollection.AddRange(tempAddMovieModels);
-            }
 
-            // Sauvegarde
-            Storage.SaveMoviesModels(_movieModelsCollection);
+			if (listeToAdd.Count > 0)
+			{
+				List<MovieModel> tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
+				await SendMailToUser(tempAddMovieModels);
+
+				lock (Lock)
+				{
+					_movieModelsCollection.AddRange(tempAddMovieModels);
+				}
+
+				// Sauvegarde
+				Storage.SaveMoviesModels(_movieModelsCollection);
+			}
+			
             IsUpdateTime = false;
         }
 

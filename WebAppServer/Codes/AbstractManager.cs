@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TMDbLib.Client;
+using TMDbLib.Objects.TvShows;
+using WebAppServer.Models;
 
 namespace WebAppServer.Codes
 {
@@ -15,6 +17,7 @@ namespace WebAppServer.Codes
         protected readonly TMDbClient ClientTmDb;
         protected readonly StorageManager Storage;
         protected readonly ISettings Settings;
+		private readonly IMailing _mailingService;
 
         private Timer _timerUpdate;
 
@@ -29,11 +32,12 @@ namespace WebAppServer.Codes
 
         #region Constructeur
 
-        protected AbstractManager(ISettings settings)
+        protected AbstractManager(ISettings settings, IMailing mailingService)
         {
             // TODO : Mettre en paramtère pour que ce soit configurable.
-            
-            ClientTmDb = new TMDbClient("034c4e19f68e958da378fd83c9e6f450")
+
+			_mailingService = mailingService;
+			ClientTmDb = new TMDbClient("034c4e19f68e958da378fd83c9e6f450")
             {
                 DefaultLanguage = "fr-FR",
                 DefaultCountry = "FR"
@@ -48,13 +52,37 @@ namespace WebAppServer.Codes
 
         #endregion
 
-        #region Timer Methods
+		#region Protected Methods
 
-        /// <summary>
-        /// Méthode qui appelé lorsque le Timer arrive à la fin.
-        /// </summary>
-        /// <param name="state"></param>
-        protected abstract void TimerUpdate(object state);
+		/// <summary>
+		/// Perment l'envoi d'un mail aux utilisateurs et Mananger.
+		/// </summary>
+		/// <param name="movies">Liste des films/dessin animés</param>
+		/// <returns></returns>
+		protected async Task SendMailToUser(IEnumerable<MovieModel> movies)
+		{
+			await _mailingService.SendNewVideo(movies);
+		}
+
+		/// <summary>
+		/// Perment l'envoi d'un mail aux utilisateurs et Mananger.
+		/// </summary>
+		/// <param name="nouveauteSeries">Liste des séries</param>
+		/// <returns></returns>
+		protected async Task SendMailToUser(IEnumerable<KeyValuePair<TvSeason, TvEpisode>> nouveauteSeries)
+		{
+			await _mailingService.SendNewVideo(nouveauteSeries);
+		}
+
+		#endregion
+
+		#region Timer Methods
+
+		/// <summary>
+		/// Méthode qui appelé lorsque le Timer arrive à la fin.
+		/// </summary>
+		/// <param name="state"></param>
+		protected abstract void TimerUpdate(object state);
 
         #endregion
     }

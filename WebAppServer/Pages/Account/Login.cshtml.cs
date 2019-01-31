@@ -69,7 +69,7 @@ namespace WepAppServer.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Login, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    Log.Information("User logged in.");
+                    Log.Information("User logged in. -- " + Input.Login + " --");
                     return LocalRedirect(Url.GetLocalUrl(returnUrl));
                 }
                 if (result.RequiresTwoFactor)
@@ -78,12 +78,12 @@ namespace WepAppServer.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
-                    Log.Warning("User account locked out.");
+                    Log.Warning("User account locked out. -- " + Input.Login + " --");
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt. -- " + Input.Login + " --");
                     return Page();
                 }
             }

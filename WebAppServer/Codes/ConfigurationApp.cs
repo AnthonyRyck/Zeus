@@ -41,5 +41,15 @@ namespace WebAppServer.Codes
         /// Temps en milliseconde pour faire un update sur les films/séries.
         /// </summary>
         public int TempsEnMillisecondPourTimerRefresh { get; set; }
+
+		/// <summary>
+		/// C'est le compte utilisé pour envoyer les mails.
+		/// </summary>
+		public string Mail { get; set; }
+
+		/// <summary>
+		/// C'est le mot de passe pour le compte mail.
+		/// </summary>
+		public string PasswordMail { get; set; }
     }
 }

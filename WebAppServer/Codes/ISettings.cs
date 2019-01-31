@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Org.BouncyCastle.Asn1;
 
 namespace WebAppServer.Codes
 {
@@ -55,6 +56,18 @@ namespace WebAppServer.Codes
 		/// </summary>
 		/// <returns></returns>
 	    Task SaveSettings(string langueTmdb = "fr-FR", string regionTmdb = "FR",
-			int tempsRefresh = 3600000);
-    }
+			int tempsRefresh = 3600000, string email = "", string passwordMail = "");
+		
+		/// <summary>
+		/// Retourne l'adresse mail pour l'envoie d'email.
+		/// </summary>
+		/// <returns></returns>
+		string GetMail();
+
+		/// <summary>
+		/// Mot de passe pour le compte mail.
+		/// </summary>
+		/// <returns></returns>
+		string GetPasswordMail();
+	}
 }

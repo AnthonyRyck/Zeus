@@ -11,9 +11,18 @@ namespace WebAppServer.Codes
 {
     public class SerieCollection : IList<ShowModel>
     {
-        private readonly IList<ShowModel> _list = new List<ShowModel>();
+		#region Properties
+
+		private readonly IList<ShowModel> _list = new List<ShowModel>();
 		private static readonly Object _objectToLock = new object();
 
+		/// <summary>
+		/// Propriété utilisé pour savoir ce qui est ajouté.
+		/// </summary>
+		private List<KeyValuePair<TvSeason, TvEpisode>> _nouveautes = new List<KeyValuePair<TvSeason, TvEpisode>>();
+
+		#endregion
+		
 		#region Implementation of IEnumerable
 
 		public IEnumerator<ShowModel> GetEnumerator()
@@ -33,6 +42,11 @@ namespace WebAppServer.Codes
         public void Add(ShowModel item)
         {
             _list.Add(item);
+
+			if (item.TvEpisodes.Count == 1 && item.TvSeasons.Count == 1)
+			{
+				AddNouveaute(item.TvSeasons.First(), item.TvEpisodes.First());
+			}
         }
 
         public void Clear()
@@ -126,7 +140,8 @@ namespace WebAppServer.Codes
 			foreach (ShowModel model in _list)
 		    {
 			    if (model.TvShow != null 
-					&& IsSameShow(model.TvShow.Name, title))
+					&& (IsSameShow(model.TvShow.Name, title)
+						|| model.ShowInformation.Any(x => x.Titre == title)))
 			    {
 				    return model.IdShowModel;
 			    }
@@ -134,19 +149,21 @@ namespace WebAppServer.Codes
 
 		    return Guid.Empty;
 		}
-
-	    /// <summary>
-	    /// Ajoute un épisode à la série donnée par l'id.
-	    /// </summary>
-	    /// <param name="idShow"></param>
-	    /// <param name="episode"></param>
-	    /// <param name="serieLocal"></param>
-	    public void AddEpisode(Guid idShow, TvEpisode episode, ShowInformation serieLocal)
+		
+		/// <summary>
+		/// Ajoute un épisode à la série donnée par l'id.
+		/// </summary>
+		/// <param name="idShow"></param>
+		/// <param name="episode"></param>
+		/// <param name="serieLocal"></param>
+		public void AddEpisode(Guid idShow, TvEpisode episode, ShowInformation serieLocal)
 	    {
 		    ShowModel showModel = GetShowModel(idShow);
 			showModel.TvEpisodes.Add(episode);
 			showModel.ShowInformation.Add(serieLocal);
-	    }
+
+			AddNouveaute(showModel.TvSeasons.Where(x => x.SeasonNumber == episode.SeasonNumber).First(), episode);
+		}
 
 		/// <summary>
 		/// Ajoute la saison et un épisode à la série donnée par l'id.
@@ -161,6 +178,8 @@ namespace WebAppServer.Codes
 			showModel.TvSeasons.Add(saison);
 		    showModel.TvEpisodes.Add(episode);
 		    showModel.ShowInformation.Add(serieLocal);
+
+			AddNouveaute(saison, episode);
 		}
 
 		/// <summary>
@@ -247,6 +266,23 @@ namespace WebAppServer.Codes
 			return _list.FirstOrDefault(x => x.IdShowModel == id);
 		}
 
+		/// <summary>
+		/// Retourne toutes les nouveautés.
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<KeyValuePair<TvSeason, TvEpisode>> GetAllNouveautes()
+		{
+			return _nouveautes;
+		}
+
+		/// <summary>
+		/// Permet de réinitialisé la liste des nouveautés.
+		/// </summary>
+		public void ResetNouveautes()
+		{
+			_nouveautes = new List<KeyValuePair<TvSeason, TvEpisode>>();
+		}
+
 		#endregion
 
 		#region Private Methods
@@ -275,6 +311,16 @@ namespace WebAppServer.Codes
 		    string tempTmDb = titleTmDb.Replace("'", string.Empty);
 		    return tempTmDb.ToUpper() == titleInformationShow.ToUpper();
 	    }
+
+		/// <summary>
+		/// Permet l'ajout d'une nouveaute.
+		/// </summary>
+		/// <param name="season"></param>
+		/// <param name="episode"></param>
+		private void AddNouveaute(TvSeason season, TvEpisode episode)
+		{
+			_nouveautes.Add(new KeyValuePair<TvSeason, TvEpisode>(season, episode));
+		}
 
 		#endregion
 
