@@ -1,0 +1,97 @@
+﻿@page
+@model FindWishModel
+@*@{
+    ViewData["Title"] = "FindWish";
+}*@
+
+
+<div class="margin-10percent">
+
+	<h2>Recherche de film</h2>
+
+	<div class="flex">
+
+		@foreach (var item in Model.MoviesOnPlaying)
+		{
+			<div class="card">
+				<div class="test">
+					@if (string.IsNullOrEmpty(item.UrlAffiche))
+					{
+						<img src="../images/VideoInconnu.jpg" />
+					}
+					else
+					{
+						<img id="imageVideo" src="@Url.Content(@item.UrlAffiche)" />
+					}
+				</div>
+
+				<div class="display-block">
+					<div class="info-movie">
+						<p id="title">
+							<span class="title display-block">@item.Titre</span>
+							<span class="original-title display-block">@item.OriginalTitle</span>
+						</p>
+					
+						<p id="description" class="overview">@item.Description</p>
+					</div>
+				
+					<div>
+						<p class="top-separator text-left">
+							<a target="_blank" href="@Url.Content("https://www.themoviedb.org/movie/" + @item.IdVideoTmDb + "?language=fr-FR")">More info</a>
+							<button type="button" class="btn @item.ToClassButton()" style="float:right;">@item.ToTextContent()</button>
+						</p>
+					</div>
+				</div>
+				
+				<div id="@item.IdVideoTmDb" class="hide-imgRechercher"></div>
+			</div>
+		}
+
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	@*<div>
+		<form id="fix-incorrect-match-form">
+			<div>
+				<div class="row">
+					<div class="col-md-4">
+						<label for="titrevideo">
+							<span class="glyphicon .glyphicon-film"></span>
+							Titre à rechercher
+						</label>
+						<input type="text"
+							   class="form-control"
+							   id="titrevideo">
+
+						<button type="button"
+								class="btn btn-primary"
+								id="idBtnSearchVideo"
+								onclick="getMoviesByName()">
+							<span>Rechercher</span>
+						</button>
+					</div>
+				</div>
+
+				<div id="resultSearchVideo" class="flex"></div>
+			</div>
+		</form>
+	</div>*@

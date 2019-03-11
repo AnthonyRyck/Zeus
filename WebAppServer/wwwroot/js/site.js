@@ -84,3 +84,44 @@ function getSearchVideos() {
 		}
 	});
 }
+
+
+function getMoviesByName() {
+
+	$('.result-search-video').remove();
+
+	$.ajax({
+		url: "/api/Settings/search",
+		type: "POST",
+		data: JSON.stringify($("#titrevideo").val()),
+		contentType: "application/json",
+		dataType: "json",
+		success: function (datas) {
+
+			$.each(datas, function (index, value) {
+
+				var image = document.createElement("img");
+				image.setAttribute("src", value.urlAffiche);
+				image.setAttribute("class", "imgRechercher");
+				image.setAttribute("id", value.idVideoTmDb);
+
+				var divTitre = document.createElement("div");
+				divTitre.textContent = value.titre;
+				divTitre.setAttribute("class", "text-center text-bold");
+
+				var div = document.createElement("div");
+				div.setAttribute("class", "result-search-video");
+
+				div.appendChild(image);
+				div.appendChild(divTitre);
+
+				$('#resultSearchVideo').append(div);
+				$('#' + value.idVideoTmDb).click({ param1: value.idVideoTmDb, param2: $("#idBtnSearchVideo").attr("value") }, setVideo);
+			});
+
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+			console.log("Error." + thrownError);
+		}
+	});
+}

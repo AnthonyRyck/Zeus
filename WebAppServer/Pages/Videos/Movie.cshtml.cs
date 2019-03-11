@@ -13,7 +13,7 @@ namespace WebAppServer.Pages.Videos
     {
         #region Fields
 
-        private IMovies _moviesManager;
+        private readonly IMovies _moviesManager;
 
         #endregion
 

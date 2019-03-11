@@ -30,6 +30,13 @@ namespace WebAppServer.Codes
         /// </summary>
         private const string FILE_MOVIES_MODELS = "saveMoviesModels.json";
 
+        /// <summary>
+        /// Nom du fichier de sauvegarde contenant toutes
+        /// les souhaits de films.
+        /// présent en local.
+        /// </summary>
+        private const string FILE_WISH_MODELS = "saveWishModels.json";
+
         private string _pathConfiguration;
         private const string NAME_FILE_CONFIG = "config_app.json";
 
@@ -60,12 +67,95 @@ namespace WebAppServer.Codes
 		#endregion
 
 		#region Internal Methods
+        
 
-		/// <summary>
-		/// Récupére les informations de configuration.
-		/// </summary>
-		/// <returns></returns>
-		internal async Task<ConfigurationApp> GetConfiguration()
+        #region WishList
+
+        /// <summary>
+        /// Retourne la liste de souhait de film.
+        /// </summary>
+        /// <returns></returns>
+        internal IEnumerable<WishModel> GetWishList()
+        {
+            return Get<WishModel>(FILE_WISH_MODELS);
+        }
+
+        /// <summary>
+        /// Permet de faire la sauvegarde de liste de souhait.
+        /// </summary>
+        /// <param name="listSouhait"></param>
+        internal void SaveWishModels(IEnumerable<WishModel> listSouhait)
+        {
+            SaveContent(listSouhait, FILE_WISH_MODELS);
+        }
+
+        #endregion
+
+        #region Movies
+
+        /// <summary>
+        /// Retourne les informations des films, d'après le site The Movie Database.
+        /// </summary>
+        /// <returns></returns>
+        internal IEnumerable<MovieModel> GetMoviesTmDb()
+        {
+            return Get<MovieModel>(FILE_MOVIES_MODELS);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="retourMovieModels"></param>
+        internal void SaveMoviesModels(IEnumerable<MovieModel> retourMovieModels)
+        {
+            SaveContent(retourMovieModels, FILE_MOVIES_MODELS);
+        }
+
+        #endregion
+
+        #region Series
+
+        /// <summary>
+        /// Sauvegarde la collection de série.
+        /// </summary>
+        /// <param name="serieCollection"></param>
+        internal void SaveSeriesModels(SerieCollection serieCollection)
+        {
+            SaveContent(serieCollection.Get(), FILE_SHOWS);
+        }
+
+        /// <summary>
+        /// Retourne la sauvegarde des séries.
+        /// </summary>
+        /// <returns></returns>
+        internal IEnumerable<ShowModel> GetShowModel()
+        {
+            return Get<ShowModel>(FILE_SHOWS);
+        }
+
+        #endregion
+
+        #region Configuration
+
+        /// <summary>
+        /// Permet de sauvegarder la configuration donnée.
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        internal async Task<ConfigurationApp> SaveConfiguration(ConfigurationApp config)
+        {
+            string fileConfig = Path.Combine(_pathConfiguration, NAME_FILE_CONFIG);
+            string contentJson = JsonConvert.SerializeObject(config);
+            await File.WriteAllTextAsync(fileConfig, contentJson);
+
+            return config;
+        }
+
+        /// <summary>
+        /// Récupére les informations de configuration.
+        /// </summary>
+        /// <returns></returns>
+        internal async Task<ConfigurationApp> GetConfiguration()
         {
             ConfigurationApp config;
 
@@ -80,106 +170,32 @@ namespace WebAppServer.Codes
                 }
                 catch (Exception exception)
                 {
-					Log.Error(exception, "Exception levé dans la méthode GetConfiguration.");
-                    
+                    Log.Error(exception, "Exception levé dans la méthode GetConfiguration.");
+
                     config = GetDefaultConfiguration();
-	                await SaveConfiguration(config);
+                    await SaveConfiguration(config);
                 }
             }
             else
             {
                 config = GetDefaultConfiguration();
-				await SaveConfiguration(config);
-			}
-            
+                await SaveConfiguration(config);
+            }
+
             return config;
         }
 
+        #endregion
+
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
-        /// Retourne les informations des films, d'après le site The Movie Database.
+        /// Retourne le chemin d'acces pour les fichiers de configuration.
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<MovieModel> GetMoviesTmDb()
-        {
-            List<MovieModel> listeMovieModels = null;
-
-            // Voir en fichier de sauvegarde s'il y a des informations.
-            string fullPathMovieModel = Path.Combine(_pathSauvegarde, FILE_MOVIES_MODELS);
-            if (File.Exists(fullPathMovieModel))
-            {
-                string contentJson = File.ReadAllText(fullPathMovieModel);
-                listeMovieModels = JsonConvert.DeserializeObject<List<MovieModel>>(contentJson);
-            }
-
-            return listeMovieModels;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="retourMovieModels"></param>
-        internal void SaveMoviesModels(IEnumerable<MovieModel> retourMovieModels)
-        {
-            string contentJson = JsonConvert.SerializeObject(retourMovieModels);
-
-            string pathSaveMovieModel = Path.Combine(_pathSauvegarde, FILE_MOVIES_MODELS);
-            File.WriteAllText(pathSaveMovieModel, contentJson);
-        }
-
-		/// <summary>
-		/// Sauvegarde la collection de série.
-		/// </summary>
-		/// <param name="serieCollection"></param>
-	    internal void SaveSeriesModels(SerieCollection serieCollection)
-	    {
-			string contentJson = JsonConvert.SerializeObject(serieCollection.Get());
-
-		    string pathSaveMovieModel = Path.Combine(_pathSauvegarde, FILE_SHOWS);
-		    File.WriteAllText(pathSaveMovieModel, contentJson);
-		}
-
-	    /// <summary>
-	    /// Retourne la sauvegarde des séries.
-	    /// </summary>
-	    /// <returns></returns>
-	    internal IEnumerable<ShowModel> GetShowModel()
-	    {
-		    List<ShowModel> tempShows = null;
-
-		    // Voir en fichier de sauvegarde s'il y a des informations.
-		    string path = Path.Combine(_pathSauvegarde, FILE_SHOWS);
-		    if (File.Exists(path))
-		    {
-			    string contentJson = File.ReadAllText(path);
-			    tempShows = JsonConvert.DeserializeObject<List<ShowModel>>(contentJson);
-		    }
-
-		    return tempShows;
-	    }
-
-		/// <summary>
-		/// Permet de sauvegarder la configuration donnée.
-		/// </summary>
-		/// <param name="config"></param>
-		/// <returns></returns>
-	    internal async Task<ConfigurationApp> SaveConfiguration(ConfigurationApp config)
-	    {
-		    string fileConfig = Path.Combine(_pathConfiguration, NAME_FILE_CONFIG);
-		    string contentJson = JsonConvert.SerializeObject(config);
-		    await File.WriteAllTextAsync(fileConfig, contentJson);
-
-			return config;
-		}
-
-		#endregion
-
-		#region Private Methods
-
-		/// <summary>
-		/// Retourne le chemin d'acces pour les fichiers de configuration.
-		/// </summary>
-		/// <returns></returns>
-		private string GetConfigPath()
+        private string GetConfigPath()
         {
             return GetFolder(@"config");
         }
@@ -225,6 +241,41 @@ namespace WebAppServer.Codes
 				Mail = string.Empty,
 				PasswordMail = string.Empty
             };
+        }
+
+        /// <summary>
+        /// Permet de sauvegardé le contenu sous format JSON.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="contentToSave"></param>
+        /// <param name="fileName"></param>
+        private void SaveContent<T>(T contentToSave, string fileName)
+        {
+            string contentJson = JsonConvert.SerializeObject(contentToSave);
+
+            string pathSave = Path.Combine(_pathSauvegarde, fileName);
+            File.WriteAllText(pathSave, contentJson);
+        }
+
+        /// <summary>
+        /// Retourne la liste des vidéos du fichier demandé.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="nomFichier"></param>
+        /// <returns></returns>
+        private IEnumerable<T> Get<T>(string nomFichier)
+        {
+            List<T> tempVideos = null;
+
+            // Voir en fichier de sauvegarde s'il y a des informations.
+            string path = Path.Combine(_pathSauvegarde, nomFichier);
+            if (File.Exists(path))
+            {
+                string contentJson = File.ReadAllText(path);
+                tempVideos = JsonConvert.DeserializeObject<List<T>>(contentJson);
+            }
+
+            return tempVideos;
         }
 
         #endregion

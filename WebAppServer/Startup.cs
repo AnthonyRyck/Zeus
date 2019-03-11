@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebAppServer.Codes;
+using WebAppServer.Codes.Wish;
 using WepAppServer.Data;
 using WepAppServer.Services;
 
@@ -39,7 +40,8 @@ namespace WebAppServer
 					options.Conventions.AuthorizePage("/Account/Logout");
 			        options.Conventions.AuthorizeFolder("/Videos");
 					options.Conventions.AuthorizeFolder("/Setting");
-				});
+		            options.Conventions.AuthorizeFolder("/Wish");
+		        });
 
 			services.AddSingleton<ISettings, SettingsManager>();
 			services.AddSingleton<IMailing, MailingService>();
@@ -47,12 +49,15 @@ namespace WebAppServer
 			services.AddSingleton<IMovies, MoviesManager>();
 			services.AddSingleton<IShows, ShowsManager>();
 
+            services.AddSingleton<IWish, WishMaster>();
+
 			// Register no-op EmailSender used by account confirmation and password reset during development
 			// For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
 			services.AddSingleton<IEmailSender, EmailSender>();
 
 			services.AddScoped<IVideoStreamService, VideoStreamService>();
-		}
+            services.AddScoped<ITheMovieDatabase, MovieDatabase>();
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public async void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)

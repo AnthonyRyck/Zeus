@@ -14,9 +14,12 @@
 		<link rel="stylesheet" href="~/css/site.css" />
 	</environment>
 	<environment exclude="Development">
-		<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+		<link rel="stylesheet" 
+		      href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
 			  asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-			  asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+		      asp-fallback-test-class="sr-only" 
+		      asp-fallback-test-property="position" 
+		      asp-fallback-test-value="absolute" />
 		<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	</environment>
 </head>
@@ -40,6 +43,7 @@
 					<li><a asp-page="/Videos/Movie">Films</a></li>
 					<li><a asp-page="/Videos/DessinAnimes">Dessin Animés</a></li>
 					<li><a asp-page="/Videos/Series">Séries</a></li>
+					<li><a asp-page="/Wish/WishList">WishList</a></li>
 				</ul>
 			}
 				@await Html.PartialAsync("_LoginPartial")

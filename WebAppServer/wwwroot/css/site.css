@@ -54,6 +54,14 @@ body {
 	overflow: hidden;
 }
 
+.info-movie {
+	height: 258px;
+	width: 250px;
+	box-sizing: border-box;
+	padding: 5px 16px 5px 8px;
+	overflow: hidden;
+}
+
 .item {
 	margin-top: 30px;
 	color: #000;
@@ -66,7 +74,7 @@ p.overview {
 	color: #4d4d4d;
 	font-size: 0.9em;
 	line-height: 1.2em;
-	margin-top: 30px;
+	margin-top: 15px;
 	overflow: hidden;
 }
 
@@ -83,8 +91,32 @@ p.overview {
 .title {
 	text-align: center;
 	font-weight: 600;
-	font-size: 1.1em;
-	line-height: 1.1em;
+	font-size: 1.5em;
+}
+
+.original-title {
+	text-align: center;
+	font-weight: 600;
+	font-size: 0.8em;
+	color: gray;
+}
+
+
+p.top-separator {
+	padding: 3px;
+	height: 50px;
+	border-top: 1px solid #e3e3e3;
+	bottom: 0;
+	right: 0;
+	display: block;
+}
+
+.display-block {
+	display: block;
+}
+
+.display-line {
+	display: inline;
 }
 
 .meta {
@@ -294,4 +326,20 @@ p.overview {
 .display-log {
 	font-size: 10px;
 	font-family: monospace;
+}
+
+.circle-button {
+	width: 50px;
+	height: 50px;
+	border-radius: 100%;
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 40px;
+	text-decoration: none;
+	text-align: center;
+	vertical-align: middle;
+	border: 5px solid;
+	border-color: #9ff0f0;
+	-moz-border-radius: 100%;
+	-webkit-border-radius: 100%;
 }
