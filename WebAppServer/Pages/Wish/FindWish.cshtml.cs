@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebAppServer.Codes;
 using WebAppServer.Codes.Wish;
@@ -57,24 +58,25 @@ namespace WebAppServer.Pages.Wish
                 // Récupération des souhaits de l'utilisateur
                 var listeMoviesCurrentUser = allWishes.Where(x => x.HasUserId(userId)).ToList();
 
-                // Jointure entre la liste de l'utilisateur et celle du site pour mettre la valeur à true
-                // sur les films ajoutés en souhait.
-                var temp = listeMoviesCurrentUser.Join(moviesSite.MovieWishModels, userWish => userWish.MovieTmDb.Id, 
-                    site => site.IdVideoTmDb,
-                    (userWish, site) => site);
-
-                foreach (MovieWishModel customModel in temp)
+                foreach (var movies in moviesSite.MovieWishModels)
                 {
-                    customModel.IsMovieAdded = true;
+                    if (listeMoviesCurrentUser.Any(x => x.IdMovie == movies.IdVideoTmDb))
+                        movies.IsMovieAdded = true;
                 }
+            }
 
-                MoviesOnPlaying = temp.ToList();
-            }
-            else
-            {
-                MoviesOnPlaying = moviesSite.MovieWishModels;
-            }
+            MoviesOnPlaying = moviesSite.MovieWishModels;
         }
 
+        public void OnPostAddWishMovie(int idMovie)
+        {
+            string userId = this.User.GetUserId();
+            _wishMaster.AddMovie(idMovie, Guid.Parse(userId));
+        }
+
+        public void OnPost(int idMovie)
+        {
+            var stop = true;
+        }
     }
 }

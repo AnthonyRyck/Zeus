@@ -9,45 +9,63 @@
 
 	<h2>Recherche de film</h2>
 
-	<div class="flex">
+	<form method="post">
+		@Html.AntiForgeryToken()
 
-		@foreach (var item in Model.MoviesOnPlaying)
-		{
-			<div class="card">
-				<div class="test">
-					@if (string.IsNullOrEmpty(item.UrlAffiche))
-					{
-						<img src="../images/VideoInconnu.jpg" />
-					}
-					else
-					{
-						<img id="imageVideo" src="@Url.Content(@item.UrlAffiche)" />
-					}
-				</div>
+		<div class="flex">
 
-				<div class="display-block">
-					<div class="info-movie">
-						<p id="title">
-							<span class="title display-block">@item.Titre</span>
-							<span class="original-title display-block">@item.OriginalTitle</span>
-						</p>
-					
-						<p id="description" class="overview">@item.Description</p>
+			@foreach (var item in Model.MoviesOnPlaying)
+			{
+				<div class="card">
+					<div class="test">
+						@if (string.IsNullOrEmpty(item.UrlAffiche))
+						{
+							<img src="../images/VideoInconnu.jpg" />
+						}
+						else
+						{
+							<img id="imageVideo" src="@Url.Content(@item.UrlAffiche)" />
+						}
 					</div>
-				
-					<div>
-						<p class="top-separator text-left">
-							<a target="_blank" href="@Url.Content("https://www.themoviedb.org/movie/" + @item.IdVideoTmDb + "?language=fr-FR")">More info</a>
-							<button type="button" class="btn @item.ToClassButton()" style="float:right;">@item.ToTextContent()</button>
-						</p>
+
+					<div class="display-block">
+						<div class="info-movie">
+							<p id="title">
+								<span class="title display-block">@item.Titre</span>
+								<span class="original-title display-block">@item.OriginalTitle</span>
+							</p>
+
+							<p id="description" class="overview">@item.Description</p>
+						</div>
+
+						<div>
+							<p class="top-separator text-left">
+								<a target="_blank" href="@Url.Content("https://www.themoviedb.org/movie/" + @item.IdVideoTmDb + "?language=fr-FR")">More info</a>
+
+								<button type="button"
+								        onclick="addMovieToWishList(@item.IdVideoTmDb)"
+								        id="id_@item.IdVideoTmDb"
+								        class="btn @item.ToClassButton()"
+								        style="float: right;"
+								        value="@item.IdVideoTmDb">
+									@item.ToTextContent()
+								</button>
+							</p>
+						</div>
 					</div>
+
+					<div id="@item.IdVideoTmDb" class="hide-imgRechercher"></div>
 				</div>
-				
-				<div id="@item.IdVideoTmDb" class="hide-imgRechercher"></div>
+			}
+
+			<div class="center-content">
+				<button class="btn btn-default btn-lg">Previous</button>
+				<button class="btn btn-default btn-lg">Next</button>
 			</div>
-		}
 
-	</div>
+
+		</div>
+	</form>
 </div>
 
 

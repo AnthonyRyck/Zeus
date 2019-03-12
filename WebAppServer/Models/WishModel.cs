@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebAppServer.Models
 {
-    public class WishModel : MovieModel
+    public class WishModel
     {
         #region Properties
 
@@ -14,13 +14,18 @@ namespace WebAppServer.Models
         /// </summary>
         public List<Guid> IdUsers { get; set; }
 
+        /// <summary>
+        /// ID du film.
+        /// </summary>
+        public int IdMovie { get; set; }
+        
         #endregion
         
         #region Constructeur
 
-        public WishModel(Guid idMovie, List<Guid> idUsers) 
-            : base(idMovie)
+        public WishModel(int idMovie, List<Guid> idUsers)
         {
+            IdMovie = idMovie;
             IdUsers = idUsers;
         }
 
@@ -36,6 +41,16 @@ namespace WebAppServer.Models
         public bool HasUserId(string userId)
         {
             return IdUsers.Any(x => x.ToString() == userId);
+        }
+
+        /// <summary>
+        /// Indique si l'ID passé en paramètre est dans la liste IdUsers
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public bool HasUserId(Guid userId)
+        {
+            return IdUsers.Any(x => x == userId);
         }
 
         #endregion

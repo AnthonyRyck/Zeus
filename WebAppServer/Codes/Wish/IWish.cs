@@ -13,5 +13,13 @@ namespace WebAppServer.Codes.Wish
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<WishModel>> GetWishes();
+
+
+        /// <summary>
+        /// Permet d'ajouter un film dans la liste de souhait.
+        /// </summary>
+        /// <param name="idMovie"></param>
+        /// <param name="idUser"></param>
+        void AddMovie(int idMovie, Guid idUser);
     }
 }

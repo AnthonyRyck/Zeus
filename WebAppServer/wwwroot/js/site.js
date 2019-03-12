@@ -45,6 +45,27 @@ function getVideo(idVideo) {
 	});
 }
 
+function addMovieToWishList(idVideo) {
+
+	$.ajax({
+		type: "POST",
+		url: "/Wish/FindWish?handler=AddWishMovie",
+		data: { "idMovie": idVideo },
+		headers: {
+			RequestVerificationToken:
+				$('input:hidden[name="__RequestVerificationToken"]').val()
+		},
+		success: function (data) {
+			$("#id_" + idVideo).text("Ajouté");
+			$("#id_" + idVideo).attr("class", "btn btn-success");
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+			alert(xhr.status);
+			alert(thrownError);
+		}
+	});
+}
+
 function getSearchVideos() {
 
 	$('.result-search-video').remove();

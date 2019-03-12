@@ -40,8 +40,8 @@ namespace WebAppServer
 					options.Conventions.AuthorizePage("/Account/Logout");
 			        options.Conventions.AuthorizeFolder("/Videos");
 					options.Conventions.AuthorizeFolder("/Setting");
-		            options.Conventions.AuthorizeFolder("/Wish");
-		        });
+                    options.Conventions.AuthorizeFolder("/Wish");
+                });
 
 			services.AddSingleton<ISettings, SettingsManager>();
 			services.AddSingleton<IMailing, MailingService>();
