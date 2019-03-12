@@ -14,18 +14,19 @@ namespace WebAppServer.Models
         /// </summary>
         public List<Guid> IdUsers { get; set; }
 
+
         /// <summary>
-        /// ID du film.
+        /// C'est le film qui est dans la liste de souhait.
         /// </summary>
-        public int IdMovie { get; set; }
-        
+        public MovieWishModel Movie { get; set; }
+
         #endregion
         
         #region Constructeur
 
-        public WishModel(int idMovie, List<Guid> idUsers)
+        public WishModel(MovieWishModel movie, List<Guid> idUsers)
         {
-            IdMovie = idMovie;
+            Movie = movie;
             IdUsers = idUsers;
         }
 

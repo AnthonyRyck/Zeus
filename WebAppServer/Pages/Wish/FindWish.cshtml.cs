@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebAppServer.Codes;
 using WebAppServer.Codes.Wish;
@@ -19,9 +18,7 @@ namespace WebAppServer.Pages.Wish
 
         private readonly IWish _wishMaster;
         private readonly ITheMovieDatabase _database;
-
-
-
+        
         /// <summary>
         /// Liste des films qui sont en diffusion au cinéma.
         /// </summary>
@@ -46,6 +43,8 @@ namespace WebAppServer.Pages.Wish
 
         #endregion
 
+        #region Events RazorPage
+
         public async Task OnGet()
         {
             string userId = this.User.GetUserId();
@@ -60,7 +59,7 @@ namespace WebAppServer.Pages.Wish
 
                 foreach (var movies in moviesSite.MovieWishModels)
                 {
-                    if (listeMoviesCurrentUser.Any(x => x.IdMovie == movies.IdVideoTmDb))
+                    if (listeMoviesCurrentUser.Any(x => x.Movie.IdVideoTmDb == movies.IdVideoTmDb))
                         movies.IsMovieAdded = true;
                 }
             }
@@ -68,15 +67,22 @@ namespace WebAppServer.Pages.Wish
             MoviesOnPlaying = moviesSite.MovieWishModels;
         }
 
-        public void OnPostAddWishMovie(int idMovie)
+        public async Task OnPostAddWishMovie(int idMovie)
         {
+            MovieWishModel tempMovie = await _database.GetMovie(idMovie);
+            tempMovie.IsMovieAdded = true;
+
             string userId = this.User.GetUserId();
-            _wishMaster.AddMovie(idMovie, Guid.Parse(userId));
+
+            _wishMaster.AddMovie(tempMovie, Guid.Parse(userId));
         }
 
         public void OnPost(int idMovie)
         {
             var stop = true;
         }
+
+        #endregion
+
     }
 }

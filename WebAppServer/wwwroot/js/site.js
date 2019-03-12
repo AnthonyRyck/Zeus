@@ -106,7 +106,6 @@ function getSearchVideos() {
 	});
 }
 
-
 function getMoviesByName() {
 
 	$('.result-search-video').remove();

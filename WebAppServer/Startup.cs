@@ -32,8 +32,8 @@ namespace WebAppServer
 	        services.AddIdentity<ApplicationUser, IdentityRole>()
 		        .AddEntityFrameworkStores<ApplicationDbContext>()
 		        .AddDefaultTokenProviders();
-
-	        services.AddMvc()
+            
+            services.AddMvc()
 		        .AddRazorPagesOptions(options =>
 		        {
 			        options.Conventions.AuthorizeFolder("/Account/Manage");
@@ -74,7 +74,7 @@ namespace WebAppServer
 
             app.UseStaticFiles();
 
-			await CreateRoles(serviceProvider);
+            await CreateRoles(serviceProvider);
 			
 			app.UseAuthentication();
 

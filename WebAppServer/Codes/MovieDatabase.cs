@@ -33,31 +33,6 @@ namespace WebAppServer.Codes
 
         #region Implement ITheMovieDatabase
 
-        
-        //public async Task<IEnumerable<MovieWishModel>> GetMoviesNowPlayingAsync(int numeroPage = 1)
-        //{
-        //    var moviesTemp = await _clientTmDb.GetMovieNowPlayingListAsync("fr-FR", numeroPage);
-
-        //    List<MovieWishModel> retourInfo = new List<MovieWishModel>();
-        //    foreach (var result in moviesTemp.Results)
-        //    {
-        //        if (!string.IsNullOrEmpty(result.PosterPath))
-        //        {
-        //            retourInfo.Add(new MovieWishModel()
-        //            {
-        //                UrlAffiche = "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + result.PosterPath,
-        //                IdVideoTmDb = result.Id,
-        //                Titre = result.Title,
-        //                OriginalTitle = result.OriginalTitle,
-        //                Description = result.Overview,
-        //                IsMovieAdded = false
-        //            });
-        //        }
-        //    }
-
-        //    return retourInfo;
-        //}
-
         /// <summary>
         /// Permet de récupérer la liste des films qui sont en cours au cinéma.
         /// </summary>
@@ -91,6 +66,26 @@ namespace WebAppServer.Codes
             };
 
             return returnInformation;
+        }
+
+        /// <summary>
+        /// Récupère le film par rapport à son ID.
+        /// </summary>
+        /// <param name="idMovie"></param>
+        /// <returns></returns>
+        public async Task<MovieWishModel> GetMovie(int idMovie)
+        {
+            var movieTemp = await _clientTmDb.GetMovieAsync(idMovie);
+
+            return new MovieWishModel()
+            {
+                UrlAffiche = "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + movieTemp.PosterPath,
+                IdVideoTmDb = movieTemp.Id,
+                Titre = movieTemp.Title,
+                OriginalTitle = movieTemp.OriginalTitle,
+                Description = movieTemp.Overview,
+                IsMovieAdded = false
+            };
         }
 
         #endregion

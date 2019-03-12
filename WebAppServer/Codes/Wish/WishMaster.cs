@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.UI.V3.Pages.Internal.Account;
 using WebAppServer.Models;
 
 namespace WebAppServer.Codes.Wish
@@ -42,12 +41,12 @@ namespace WebAppServer.Codes.Wish
             return _storage.GetWishList();
         }
 
-        public void AddMovie(int idMovie, Guid idUser)
+        public void AddMovie(MovieWishModel movie, Guid idUser)
         {
-            if (HaveMovieInWish(idMovie))
+            if (HaveMovieInWish(movie.IdVideoTmDb))
             {
                 // Ajout de l'utilisateur dans la liste
-                WishModel wish = _wishListModels.FirstOrDefault(x => x.IdMovie == idMovie);
+                WishModel wish = _wishListModels.FirstOrDefault(x => x.Movie.IdVideoTmDb == movie.IdVideoTmDb);
 
                 if (wish != null)
                 {
@@ -62,7 +61,7 @@ namespace WebAppServer.Codes.Wish
             else
             {
                 // Ajout du film dans la liste de Souhait.
-                WishModel model = new WishModel(idMovie, new List<Guid>(){idUser});
+                WishModel model = new WishModel(movie, new List<Guid>(){idUser});
                 _wishListModels.Add(model);
                 _storage.SaveWishModels(_wishListModels);
             }
@@ -74,7 +73,7 @@ namespace WebAppServer.Codes.Wish
 
         private bool HaveMovieInWish(int idMovie)
         {
-            return _wishListModels.Any(x => x.IdMovie == idMovie);
+            return _wishListModels.Any(x => x.Movie.IdVideoTmDb == idMovie);
         }
 
         #endregion

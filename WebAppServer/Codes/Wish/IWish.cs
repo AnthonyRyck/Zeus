@@ -18,8 +18,8 @@ namespace WebAppServer.Codes.Wish
         /// <summary>
         /// Permet d'ajouter un film dans la liste de souhait.
         /// </summary>
-        /// <param name="idMovie"></param>
+        /// <param name="movie"></param>
         /// <param name="idUser"></param>
-        void AddMovie(int idMovie, Guid idUser);
+        void AddMovie(MovieWishModel movie, Guid idUser);
     }
 }

@@ -16,8 +16,8 @@ namespace WebAppServer.Pages.Wish
         public async void OnGet()
         {
             Log.Debug("Consultation page - WishList -");
-            //Wishes = await _wishMaster.GetWishes();
-            //Log.Debug("Page WishList - Wish = " + Wishes.Count() + " films.");
+            Wishes = await _wishMaster.GetWishes();
+            Log.Debug("Page WishList - Wish = " + Wishes.Count() + " films.");
         }
 
         #region Fields

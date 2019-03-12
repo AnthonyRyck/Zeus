@@ -77,7 +77,8 @@ namespace WebAppServer.Codes
         /// <returns></returns>
         internal IEnumerable<WishModel> GetWishList()
         {
-            return Get<WishModel>(FILE_WISH_MODELS);
+            IEnumerable<WishModel> temp = Get<WishModel>(FILE_WISH_MODELS);
+            return temp ?? new List<WishModel>();
         }
 
         /// <summary>

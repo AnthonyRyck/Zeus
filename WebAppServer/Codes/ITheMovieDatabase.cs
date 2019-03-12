@@ -13,5 +13,12 @@ namespace WebAppServer.Codes
         /// </summary>
         /// <returns></returns>
         Task<CollectionMovieWishModel> GetMoviesNowPlayingAsync(int numeroPage = 1);
+
+        /// <summary>
+        /// Récupère les informations pour 1 film donnée.
+        /// </summary>
+        /// <param name="idMovie"></param>
+        /// <returns></returns>
+        Task<MovieWishModel> GetMovie(int idMovie);
     }
 }
