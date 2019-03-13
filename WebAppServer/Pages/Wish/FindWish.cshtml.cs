@@ -28,7 +28,33 @@ namespace WebAppServer.Pages.Wish
         /// Pour l'affichage du titre de la page.
         /// </summary>
         public string TitrePage { get; set; }
-        
+
+        /// <summary>
+        /// Donne le nom du type Handler que la page doit utiliser
+        /// pour faire les boutons Next/Previous
+        /// </summary>
+        public string Handler { get; set; }
+
+        /// <summary>
+        /// Numéro de la prochaine page
+        /// </summary>
+        public int NextPage { get; set; }
+
+        /// <summary>
+        /// Numéro de la page précédente
+        /// </summary>
+        public int PreviousPage { get; set; }
+
+        /// <summary>
+        /// Indiqua s'il y a une prochaine page 
+        /// </summary>
+        public string HaveNextPage { get; set; }
+
+        /// <summary>
+        /// Indique s'il y a une page précédente.
+        /// </summary>
+        public string HavePreviousPage { get; set; }
+
         #endregion
 
         #region Constructeur
@@ -63,6 +89,36 @@ namespace WebAppServer.Pages.Wish
             }
 
             ListMovies = moviesSite.MovieWishModels;
+
+            UpdatePageProperties(moviesSite);
+        }
+
+
+        private void UpdatePageProperties(CollectionMovieWishModel moviesSite)
+        {
+            // Traitement pour le bouton Previous Page
+            if (moviesSite.Page - 1 >= 1)
+            {
+                HavePreviousPage = string.Empty;
+                PreviousPage = moviesSite.Page - 1;
+            }
+            else
+            {
+                HavePreviousPage = "disabled";
+                PreviousPage = 1;
+            }
+
+            // Traitement pour le bouton Next Page
+            if (moviesSite.Page + 1 <= moviesSite.TotalPage)
+            {
+                HaveNextPage = string.Empty;
+                NextPage = moviesSite.Page + 1;
+            }
+            else
+            {
+                HaveNextPage = "disabled";
+                NextPage = moviesSite.TotalPage;
+            }
         }
 
         #endregion
@@ -76,31 +132,35 @@ namespace WebAppServer.Pages.Wish
             await OnGetNowPlaying();
         }
 
-        public async Task OnGetNowPlaying()
+        public async Task OnGetNowPlaying(int attendeeId = 1)
         {
-            CollectionMovieWishModel moviesSite = await _database.GetMoviesNowPlayingAsync();
+            CollectionMovieWishModel moviesSite = await _database.GetMoviesNowPlayingAsync(attendeeId);
             TitrePage = "Films actuellement au cinéma";
+            Handler = "NowPlaying";
             LoadMovies(moviesSite);
         }
 
-        public async Task OnGetPopular()
+        public async Task OnGetPopular(int attendeeId = 1)
         {
-            CollectionMovieWishModel moviesSite = await _database.GetMoviesPopularAsync();
+            CollectionMovieWishModel moviesSite = await _database.GetMoviesPopularAsync(attendeeId);
             TitrePage = "Films populaires";
+            Handler = "Popular";
             LoadMovies(moviesSite);
         }
 
-        public async Task OnGetTopRated()
+        public async Task OnGetTopRated(int attendeeId = 1)
         {
-            CollectionMovieWishModel moviesSite = await _database.GetMoviesTopRatedAsync();
+            CollectionMovieWishModel moviesSite = await _database.GetMoviesTopRatedAsync(attendeeId);
             TitrePage = "Films mieux notés";
+            Handler = "TopRated";
             LoadMovies(moviesSite);
         }
 
-        public async Task OnGetUpcoming()
+        public async Task OnGetUpcoming(int attendeeId = 1)
         {
-            CollectionMovieWishModel moviesSite = await _database.GetMoviesUpcomingAsync();
+            CollectionMovieWishModel moviesSite = await _database.GetMoviesUpcomingAsync(attendeeId);
             TitrePage = "Films bientôt au cinéma";
+            Handler = "Upcoming";
             LoadMovies(moviesSite);
         }
 

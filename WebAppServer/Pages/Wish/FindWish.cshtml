@@ -60,10 +60,10 @@
 									<a target="_blank" href="@Url.Content("https://www.themoviedb.org/movie/" + @item.IdVideoTmDb + "?language=fr-FR")">More info</a>
 
 									<button type="button"
-											onclick="@item.ToAjaxMethodAddOrRemoveMovie()"
-											id="id_@item.IdVideoTmDb"
-											class="btn @item.ToClassButton()"
-											style="float: right;">
+									        onclick="@item.ToAjaxMethodAddOrRemoveMovie()"
+									        id="id_@item.IdVideoTmDb"
+									        class="btn @item.ToClassButton()"
+									        style="float: right;">
 										@item.ToTextContent()
 									</button>
 								</p>
@@ -71,12 +71,25 @@
 						</div>
 					</div>
 				}
-
-				<div class="center-content">
-					<button class="btn btn-default btn-lg">Précédent</button>
-					<button class="btn btn-default btn-lg">Suivant</button>
-				</div>
 			</div>
+			
+			<div class="text-center">
+				<a asp-page="/Wish/FindWish"
+				   asp-page-handler="@Model.Handler"
+				   asp-route-attendeeid="@Model.PreviousPage"
+				   class="btn btn-primary btn-lg @Model.HavePreviousPage"
+				   role="button">
+					Précédent
+				</a>
+				<a asp-page="/Wish/FindWish"
+				   asp-page-handler="@Model.Handler"
+				   asp-route-attendeeid="@Model.NextPage"
+				   class="btn btn-primary btn-lg @Model.HaveNextPage"
+				   role="button">
+					Suivant
+				</a>
+			</div>
+
 		</form>
 	</div>
 
