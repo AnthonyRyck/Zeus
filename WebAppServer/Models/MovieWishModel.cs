@@ -37,24 +37,5 @@ namespace WebAppServer.Models
         /// </summary>
         public bool IsMovieAdded { get; set; }
 
-
-
-        #region Public Methods
-
-        public string ToClassButton()
-        {
-            return IsMovieAdded
-                ? "btn-success"
-                : "btn-primary";
-        }
-
-        public string ToTextContent()
-        {
-            return IsMovieAdded
-                ? "Ajouté"
-                : "Ajouter";
-        }
-
-        #endregion
     }
 }

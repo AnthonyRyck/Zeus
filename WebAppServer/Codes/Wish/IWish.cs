@@ -12,7 +12,14 @@ namespace WebAppServer.Codes.Wish
         /// Permet de récupérer toutes la liste de souhait.
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<WishModel>> GetWishes();
+        IEnumerable<WishModel> GetWishes();
+
+        /// <summary>
+        /// Permet de récupérer toutes la liste de souhait pour un utilisateur
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        IEnumerable<WishModel> GetWishes(string userId);
 
 
         /// <summary>
@@ -21,5 +28,7 @@ namespace WebAppServer.Codes.Wish
         /// <param name="movie"></param>
         /// <param name="idUser"></param>
         void AddMovie(MovieWishModel movie, Guid idUser);
+
+        
     }
 }

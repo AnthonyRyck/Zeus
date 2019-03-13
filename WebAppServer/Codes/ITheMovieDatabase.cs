@@ -15,10 +15,31 @@ namespace WebAppServer.Codes
         Task<CollectionMovieWishModel> GetMoviesNowPlayingAsync(int numeroPage = 1);
 
         /// <summary>
+        /// Retourne la liste des films qui sont populaires.
+        /// </summary>
+        /// <param name="numeroPage"></param>
+        /// <returns></returns>
+        Task<CollectionMovieWishModel> GetMoviesPopularAsync(int numeroPage = 1);
+
+        /// <summary>
         /// Récupère les informations pour 1 film donnée.
         /// </summary>
         /// <param name="idMovie"></param>
         /// <returns></returns>
         Task<MovieWishModel> GetMovie(int idMovie);
+
+        /// <summary>
+        /// Retourne la liste des films qui vont sortir au cinéma.
+        /// </summary>
+        /// <param name="numeroPage"></param>
+        /// <returns></returns>
+        Task<CollectionMovieWishModel> GetMoviesUpcomingAsync(int numeroPage = 1);
+
+        /// <summary>
+        /// Retourne la liste des films qui sont les mieux notés.
+        /// </summary>
+        /// <param name="numeroPage"></param>
+        /// <returns></returns>
+        Task<CollectionMovieWishModel> GetMoviesTopRatedAsync(int numeroPage = 1);
     }
 }

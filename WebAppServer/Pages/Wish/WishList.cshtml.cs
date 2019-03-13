@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Serilog;
 using WebAppServer.Codes.Wish;
+using WebAppServer.Extensions;
 
 namespace WebAppServer.Pages.Wish
 {
     [Authorize]
     public class WishListModel : PageModel
     {
-        public async void OnGet()
+        public void OnGet()
         {
             Log.Debug("Consultation page - WishList -");
-            Wishes = await _wishMaster.GetWishes();
+            string userId = this.User.GetUserId();
+            Wishes = _wishMaster.GetWishes(userId);
             Log.Debug("Page WishList - Wish = " + Wishes.Count() + " films.");
         }
 

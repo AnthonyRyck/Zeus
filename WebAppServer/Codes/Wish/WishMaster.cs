@@ -36,9 +36,18 @@ namespace WebAppServer.Codes.Wish
 
         #region Implement IWish
 
-        public async Task<IEnumerable<WishModel>> GetWishes()
+        public IEnumerable<WishModel> GetWishes()
         {
             return _storage.GetWishList();
+        }
+
+        public IEnumerable<WishModel> GetWishes(string idUser)
+        {
+            var allWishesSaved = _storage.GetWishList();
+            Guid userId = Guid.Parse(idUser);
+
+            return allWishesSaved.Where(x => x.IdUsers.Contains(userId))
+                                .ToList();
         }
 
         public void AddMovie(MovieWishModel movie, Guid idUser)

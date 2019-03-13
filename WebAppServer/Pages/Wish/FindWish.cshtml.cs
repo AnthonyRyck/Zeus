@@ -22,7 +22,12 @@ namespace WebAppServer.Pages.Wish
         /// <summary>
         /// Liste des films qui sont en diffusion au cinéma.
         /// </summary>
-        public IEnumerable<MovieWishModel> MoviesOnPlaying { get; private set; }
+        public IEnumerable<MovieWishModel> ListMovies { get; private set; }
+
+        /// <summary>
+        /// Pour l'affichage du titre de la page.
+        /// </summary>
+        public string TitrePage { get; set; }
 
         #endregion
 
@@ -32,25 +37,18 @@ namespace WebAppServer.Pages.Wish
         {
             _wishMaster = wishMaster;
             _database = tmDbSite;
-            MoviesOnPlaying = new List<MovieWishModel>();
+            ListMovies = new List<MovieWishModel>();
         }
 
         #endregion
 
-        #region Public Methods
+        #region private Methods
 
-
-
-        #endregion
-
-        #region Events RazorPage
-
-        public async Task OnGet()
+        private void LoadMovies(CollectionMovieWishModel moviesSite)
         {
             string userId = this.User.GetUserId();
-
-            CollectionMovieWishModel moviesSite = await _database.GetMoviesNowPlayingAsync();
-            IEnumerable<WishModel> allWishes = await _wishMaster.GetWishes();
+            
+            IEnumerable<WishModel> allWishes = _wishMaster.GetWishes();
 
             if (allWishes != null && allWishes.Any())
             {
@@ -64,8 +62,51 @@ namespace WebAppServer.Pages.Wish
                 }
             }
 
-            MoviesOnPlaying = moviesSite.MovieWishModels;
+            ListMovies = moviesSite.MovieWishModels;
         }
+
+        #endregion
+
+        #region Events RazorPage
+
+        #region Get Methods
+
+        public async Task OnGet()
+        {
+            await OnGetNowPlaying();
+        }
+
+        public async Task OnGetNowPlaying()
+        {
+            CollectionMovieWishModel moviesSite = await _database.GetMoviesNowPlayingAsync();
+            TitrePage = "Films actuellement au cinéma";
+            LoadMovies(moviesSite);
+        }
+
+        public async Task OnGetPopular()
+        {
+            CollectionMovieWishModel moviesSite = await _database.GetMoviesPopularAsync();
+            TitrePage = "Films populaires";
+            LoadMovies(moviesSite);
+        }
+
+        public async Task OnGetTopRated()
+        {
+            CollectionMovieWishModel moviesSite = await _database.GetMoviesTopRatedAsync();
+            TitrePage = "Films mieux notés";
+            LoadMovies(moviesSite);
+        }
+
+        public async Task OnGetUpcoming()
+        {
+            CollectionMovieWishModel moviesSite = await _database.GetMoviesUpcomingAsync();
+            TitrePage = "Films bientôt au cinéma";
+            LoadMovies(moviesSite);
+        }
+
+        #endregion
+
+        #region Post Methods
 
         public async Task OnPostAddWishMovie(int idMovie)
         {
@@ -77,10 +118,7 @@ namespace WebAppServer.Pages.Wish
             _wishMaster.AddMovie(tempMovie, Guid.Parse(userId));
         }
 
-        public void OnPost(int idMovie)
-        {
-            var stop = true;
-        }
+        #endregion
 
         #endregion
 
