@@ -343,3 +343,16 @@ p.top-separator {
 	-moz-border-radius: 100%;
 	-webkit-border-radius: 100%;
 }
+
+.search {
+	width: 100%;
+	background-color: #fff;
+	height: 46px;
+	border-bottom: 1px solid #dedede;
+}
+
+.input-search {
+	border: none;
+	font-size: 30px;
+	width: 100%;
+}

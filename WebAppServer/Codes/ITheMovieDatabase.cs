@@ -41,5 +41,13 @@ namespace WebAppServer.Codes
         /// <param name="numeroPage"></param>
         /// <returns></returns>
         Task<CollectionMovieWishModel> GetMoviesTopRatedAsync(int numeroPage = 1);
+        
+        /// <summary>
+        /// Cherche les films par rapport au nom qui est donnée.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="numeroPage"></param>
+        /// <returns></returns>
+        Task<CollectionMovieWishModel> GetMoviesByName(string name, int numeroPage = 0);
     }
 }

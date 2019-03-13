@@ -34,51 +34,35 @@ namespace WebAppServer.Codes
 
         #region Implement ITheMovieDatabase
 
-        /// <summary>
-        /// Permet de récupérer la liste des films qui sont en cours au cinéma.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc cref="ITheMovieDatabase.GetMoviesNowPlayingAsync"/>
         public async Task<CollectionMovieWishModel> GetMoviesNowPlayingAsync(int numeroPage = 1)
         {
             var moviesTemp = await _clientTmDb.GetMovieNowPlayingListAsync("fr-FR", numeroPage);
             return BuildCollectionMovieWishModel(moviesTemp.Results, moviesTemp.Page, moviesTemp.TotalPages);
         }
 
-        /// <summary>
-        /// Permet de récupérer la liste des films qui sont les plus populaires.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc cref="ITheMovieDatabase.GetMoviesPopularAsync"/>
         public async Task<CollectionMovieWishModel> GetMoviesPopularAsync(int numeroPage = 1)
         {
             var moviesTemp = await _clientTmDb.GetMoviePopularListAsync("fr-FR", numeroPage);
             return BuildCollectionMovieWishModel(moviesTemp.Results, moviesTemp.Page, moviesTemp.TotalPages);
         }
 
-        /// <summary>
-        /// Permet de récupérer la liste des films qui vont sortir au cinéma.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc cref="ITheMovieDatabase.GetMoviesUpcomingAsync"/>
         public async Task<CollectionMovieWishModel> GetMoviesUpcomingAsync(int numeroPage = 1)
         {
             var moviesTemp = await _clientTmDb.GetMovieUpcomingListAsync("fr-FR", numeroPage);
             return BuildCollectionMovieWishModel(moviesTemp.Results, moviesTemp.Page, moviesTemp.TotalPages);
         }
 
-        /// <summary>
-        /// Permet de récupérer la liste des films qui sont les mieux notés.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc cref="ITheMovieDatabase.GetMoviesTopRatedAsync"/>
         public async Task<CollectionMovieWishModel> GetMoviesTopRatedAsync(int numeroPage = 1)
         {
             var moviesTemp = await _clientTmDb.GetMovieTopRatedListAsync("fr-FR", numeroPage);
             return BuildCollectionMovieWishModel(moviesTemp.Results, moviesTemp.Page, moviesTemp.TotalPages);
         }
 
-        /// <summary>
-        /// Récupère le film par rapport à son ID.
-        /// </summary>
-        /// <param name="idMovie"></param>
-        /// <returns></returns>
+        /// <inheritdoc cref="ITheMovieDatabase.GetMovie"/>
         public async Task<MovieWishModel> GetMovie(int idMovie)
         {
             var movieTemp = await _clientTmDb.GetMovieAsync(idMovie);
@@ -93,7 +77,14 @@ namespace WebAppServer.Codes
                 IsMovieAdded = false
             };
         }
-        
+
+        /// <inheritdoc cref="ITheMovieDatabase.GetMoviesByName"/>
+        public async Task<CollectionMovieWishModel> GetMoviesByName(string name, int numeroPage = 0)
+        {
+            var moviesTemp = await _clientTmDb.SearchMovieAsync(name, numeroPage);
+            return BuildCollectionMovieWishModel(moviesTemp.Results, moviesTemp.Page, moviesTemp.TotalPages);
+        }
+
         #endregion
 
         #region Private Methods
@@ -126,9 +117,7 @@ namespace WebAppServer.Codes
 
             return returnInformation;
         }
-
         
-
         #endregion
 
     }

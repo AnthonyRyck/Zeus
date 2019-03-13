@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebAppServer.Codes;
 using WebAppServer.Codes.Wish;
@@ -54,6 +55,12 @@ namespace WebAppServer.Pages.Wish
         /// Indique s'il y a une page précédente.
         /// </summary>
         public string HavePreviousPage { get; set; }
+
+        /// <summary>
+        /// Nom du film recherché.
+        /// </summary>
+        [BindProperty(SupportsGet = true)]
+        public string NameMovie { get; set; }
 
         #endregion
 
@@ -135,7 +142,7 @@ namespace WebAppServer.Pages.Wish
         public async Task OnGetNowPlaying(int attendeeId = 1)
         {
             CollectionMovieWishModel moviesSite = await _database.GetMoviesNowPlayingAsync(attendeeId);
-            TitrePage = "Films actuellement au cinéma";
+            TitrePage = "Films actuellement en salle";
             Handler = "NowPlaying";
             LoadMovies(moviesSite);
         }
@@ -159,10 +166,22 @@ namespace WebAppServer.Pages.Wish
         public async Task OnGetUpcoming(int attendeeId = 1)
         {
             CollectionMovieWishModel moviesSite = await _database.GetMoviesUpcomingAsync(attendeeId);
-            TitrePage = "Films bientôt au cinéma";
+            TitrePage = "Films prochainement";
             Handler = "Upcoming";
             LoadMovies(moviesSite);
         }
+        
+        public async Task OnGetMoviesByName()
+        {
+            CollectionMovieWishModel moviesSite = await _database.GetMoviesByName(NameMovie);
+            TitrePage = $"Recherche pour \"{NameMovie}\"";
+            Handler = "MoviesByName";
+            LoadMovies(moviesSite);
+
+            HavePreviousPage = "disabled";
+            HaveNextPage = "disabled";
+        }
+
 
         #endregion
 
