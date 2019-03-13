@@ -60,7 +60,7 @@
 									<a target="_blank" href="@Url.Content("https://www.themoviedb.org/movie/" + @item.IdVideoTmDb + "?language=fr-FR")">More info</a>
 
 									<button type="button"
-											onclick="addMovieToWishList(@item.IdVideoTmDb)"
+											onclick="@item.ToAjaxMethodAddOrRemoveMovie()"
 											id="id_@item.IdVideoTmDb"
 											class="btn @item.ToClassButton()"
 											style="float: right;">

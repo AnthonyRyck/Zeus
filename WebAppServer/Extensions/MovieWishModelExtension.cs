@@ -31,5 +31,13 @@ namespace WebAppServer.Extensions
                 ? "Ajouté"
                 : "Souhait";
         }
+
+
+        public static string ToAjaxMethodAddOrRemoveMovie(this MovieWishModel model)
+        {
+            return model.IsMovieAdded
+                ? $"removeMovieToWishList({model.IdVideoTmDb})"
+                : $"addMovieToWishList({model.IdVideoTmDb})";
+        }
     }
 }

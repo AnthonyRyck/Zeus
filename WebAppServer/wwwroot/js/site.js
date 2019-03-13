@@ -58,6 +58,29 @@ function addMovieToWishList(idVideo) {
 		success: function (data) {
 			$("#id_" + idVideo).text("Ajouté");
 			$("#id_" + idVideo).attr("class", "btn btn-success");
+			$("#id_" + idVideo).attr("onclick", "removeMovieToWishList(" + idVideo + ")");
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+			alert(xhr.status);
+			alert(thrownError);
+		}
+	});
+}
+
+function removeMovieToWishList(idVideo) {
+
+	$.ajax({
+		type: "POST",
+		url: "/Wish/FindWish?handler=RemoveWishMovie",
+		data: { "idMovie": idVideo },
+		headers: {
+			RequestVerificationToken:
+				$('input:hidden[name="__RequestVerificationToken"]').val()
+		},
+		success: function (data) {
+			$("#id_" + idVideo).text("Souhait");
+			$("#id_" + idVideo).attr("class", "btn btn-primary");
+			$("#id_" + idVideo).attr("onclick", "addMovieToWishList(" + idVideo + ")");
 		},
 		error: function (xhr, ajaxOptions, thrownError) {
 			alert(xhr.status);

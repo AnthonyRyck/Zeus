@@ -28,7 +28,7 @@ namespace WebAppServer.Pages.Wish
         /// Pour l'affichage du titre de la page.
         /// </summary>
         public string TitrePage { get; set; }
-
+        
         #endregion
 
         #region Constructeur
@@ -116,6 +116,15 @@ namespace WebAppServer.Pages.Wish
             string userId = this.User.GetUserId();
 
             _wishMaster.AddMovie(tempMovie, Guid.Parse(userId));
+        }
+
+        public async Task OnPostRemoveWishMovie(int idMovie)
+        {
+            MovieWishModel tempMovie = await _database.GetMovie(idMovie);
+            tempMovie.IsMovieAdded = false;
+
+            string userId = this.User.GetUserId();
+            _wishMaster.RemoveMovie(tempMovie, Guid.Parse(userId));
         }
 
         #endregion

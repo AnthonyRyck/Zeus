@@ -29,6 +29,13 @@ namespace WebAppServer.Codes.Wish
         /// <param name="idUser"></param>
         void AddMovie(MovieWishModel movie, Guid idUser);
 
-        
+        /// <summary>
+        /// Permet de supprimer un utilisateur d'un film souhaité,
+        /// et si plus aucun utilisateur, enlever le film de la liste.
+        /// </summary>
+        /// <param name="movie"></param>
+        /// <param name="idUser"></param>
+        void RemoveMovie(MovieWishModel movie, Guid idUser);
+
     }
 }

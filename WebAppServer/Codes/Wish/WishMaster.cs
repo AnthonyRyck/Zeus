@@ -50,6 +50,12 @@ namespace WebAppServer.Codes.Wish
                                 .ToList();
         }
 
+        /// <summary>
+        /// Permet d'ajout un film dans la liste de souhait, ou ajouter
+        /// un utilisateur sur le film déjà souhaité.
+        /// </summary>
+        /// <param name="movie"></param>
+        /// <param name="idUser"></param>
         public void AddMovie(MovieWishModel movie, Guid idUser)
         {
             if (HaveMovieInWish(movie.IdVideoTmDb))
@@ -73,6 +79,36 @@ namespace WebAppServer.Codes.Wish
                 WishModel model = new WishModel(movie, new List<Guid>(){idUser});
                 _wishListModels.Add(model);
                 _storage.SaveWishModels(_wishListModels);
+            }
+        }
+
+        /// <summary>
+        /// Permet de supprimer un utilisateur d'un film souhaité,
+        /// et si plus aucun utilisateur, enlever le film de la liste.
+        /// </summary>
+        /// <param name="movie"></param>
+        /// <param name="idUser"></param>
+        public void RemoveMovie(MovieWishModel movie, Guid idUser)
+        {
+            if (HaveMovieInWish(movie.IdVideoTmDb))
+            {
+                // Ajout de l'utilisateur dans la liste
+                WishModel wish = _wishListModels.FirstOrDefault(x => x.Movie.IdVideoTmDb == movie.IdVideoTmDb);
+
+                if (wish != null)
+                {
+                    if (wish.HasUserId(idUser))
+                    {
+                        wish.IdUsers.Remove(idUser);
+
+                        if (wish.IdUsers.Count == 0)
+                        {
+                            _wishListModels.Remove(wish);
+                        }
+
+                        _storage.SaveWishModels(_wishListModels);
+                    }
+                }
             }
         }
 
