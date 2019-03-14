@@ -31,6 +31,7 @@ namespace WebAppServer.Pages.Setting
 		public UsersManagerModel(ApplicationDbContext context)
 		{
 			_appContext = context;
+		    AllUsers = new List<ApplicationUser>();
 		}
 
 		#endregion
@@ -74,7 +75,18 @@ namespace WebAppServer.Pages.Setting
 
         public void OnGet()
 		{
-			IEnumerable<ApplicationUser> allUsers = GetAllUser();
+		    AllUsers = GetAllUser();
 		}
+
+        public void OnPostDeleteUser(string attendeeid)
+        {
+            if(_appContext.Users.Any(x => x.Id == attendeeid))
+            {
+                var user = _appContext.Users.FirstOrDefault(x => x.Id == attendeeid);
+
+                _appContext.Users.Remove(user);
+                _appContext.SaveChanges();
+            }
+        }
     }
 }
