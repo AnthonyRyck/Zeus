@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using TMDbLib.Objects.TvShows;
+using WebAppServer.Codes.Wish;
 using WebAppServer.Models;
 using WepAppServer.Data;
 
@@ -19,9 +20,12 @@ namespace WebAppServer.Codes
 
 		private readonly ISettings _settings;
 		private readonly ApplicationDbContext _appContext;
-		private readonly string _pathVideoContentHtml;
+	    private readonly IWish _wishManager;
+
+        private readonly string _pathVideoContentHtml;
 		private readonly string _pathMailContentHtml;
 		private readonly string _pathSerieContentHtml;
+	    private readonly string _pathWishMovieContentHtml;
 
 		private const string MEMBER = "MEMBER";
 		private const string MANAGER = "MANAGER";
@@ -30,15 +34,19 @@ namespace WebAppServer.Codes
 
 		#region Constructeur
 
-		public MailingService(ISettings settings, ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
+		public MailingService(ISettings settings, ApplicationDbContext context, IHostingEnvironment hostingEnvironment,
+		    IWish wishManager)
 		{
 			_settings = settings;
 			_appContext = context;
 			string webRoot = hostingEnvironment.WebRootPath;
+		    _wishManager = wishManager;
 
-			_pathVideoContentHtml = Path.Combine(webRoot, "mail", "videoContent.html");
+            _pathVideoContentHtml = Path.Combine(webRoot, "mail", "videoContent.html");
 			_pathMailContentHtml = Path.Combine(webRoot, "mail", "mailContent.html");
 			_pathSerieContentHtml = Path.Combine(webRoot, "mail", "serieContent.html");
+		    _pathWishMovieContentHtml = Path.Combine(webRoot, "mail", "wishMovieContent.html");
+
 		}
 		
 		#endregion
@@ -101,17 +109,45 @@ namespace WebAppServer.Codes
 			}
 		}
 
+        /// <summary>
+        /// Méthode qui va créer le mail sous format HTML.
+        /// </summary>
+        /// <param name="newVideos"></param>
+        /// <returns></returns>
 		private string GetMessageComplet(IEnumerable<MovieModel> newVideos)
 		{
 			string bodyMessage = string.Empty;
 
 			string template = File.ReadAllText(_pathVideoContentHtml);
+		    string templateWish = File.ReadAllText(_pathWishMovieContentHtml);
+
 			foreach (MovieModel video in newVideos)
 			{
-				string messageVideo = string.Format(template,
-					"https://image.tmdb.org/t/p/w370_and_h556_bestv2" + video.MovieTmDb.PosterPath,
-					video.MovieTmDb.Overview);
+			    string messageVideo;
 
+                // Dans le cas ou la vidéo n'est pas trouvé sur le site de TmDb.
+                if (video.MovieTmDb.Id == 0)
+                {
+                    messageVideo = string.Format(template,
+                        "https://image.tmdb.org/t/p/w370_and_h556_bestv2",
+                        "Titre non trouvé. Titre extrait du nom du fichier : " + video.MovieInformation.Titre);
+                }
+			    else
+			    {
+			        if (_wishManager.HaveMovieInWish(video.MovieTmDb.Id))
+			        {
+			            messageVideo = string.Format(templateWish,
+			                "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + video.MovieTmDb.PosterPath,
+			                video.MovieTmDb.Overview);
+                    }
+			        else
+			        {
+			            messageVideo = string.Format(template,
+			                "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + video.MovieTmDb.PosterPath,
+			                video.MovieTmDb.Overview);
+                    }
+                }
+                
 				bodyMessage += messageVideo;
 			}
 

@@ -21,6 +21,13 @@ namespace WebAppServer.Codes.Wish
         /// <returns></returns>
         IEnumerable<WishModel> GetWishes(string userId);
 
+        /// <summary>
+        /// Indique si le couple ID film et ID User est présent.
+        /// </summary>
+        /// <param name="idMovie"></param>
+        /// <param name="idUser"></param>
+        /// <returns></returns>
+        bool HaveMovieInWish(int idMovie, string idUser);
 
         /// <summary>
         /// Permet d'ajouter un film dans la liste de souhait.

@@ -112,6 +112,13 @@ namespace WebAppServer.Codes.Wish
             }
         }
 
+        /// <inheritdoc cref="IWish.HaveMovieInWish"/>
+        public bool HaveMovieInWish(int idMovie, string idUser)
+        {
+            return _wishListModels.Any(x => x.Movie.IdVideoTmDb == idMovie 
+                                        && x.IdUsers.Contains(Guid.Parse(idUser)));
+        }
+
         #endregion
 
         #region Private Methods
