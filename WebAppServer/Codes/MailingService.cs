@@ -113,8 +113,9 @@ namespace WebAppServer.Codes
         /// Méthode qui va créer le mail sous format HTML.
         /// </summary>
         /// <param name="newVideos"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
-		private string GetMessageComplet(IEnumerable<MovieModel> newVideos)
+		private string GetMessageComplet(IEnumerable<MovieModel> newVideos, string userId)
 		{
 			string bodyMessage = string.Empty;
 
@@ -133,19 +134,12 @@ namespace WebAppServer.Codes
                         "Titre non trouvé. Titre extrait du nom du fichier : " + video.MovieInformation.Titre);
                 }
 			    else
-			    {
-			        if (_wishManager.HaveMovieInWish(video.MovieTmDb.Id))
-			        {
-			            messageVideo = string.Format(templateWish,
-			                "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + video.MovieTmDb.PosterPath,
-			                video.MovieTmDb.Overview);
-                    }
-			        else
-			        {
-			            messageVideo = string.Format(template,
-			                "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + video.MovieTmDb.PosterPath,
-			                video.MovieTmDb.Overview);
-                    }
+                {
+                    // Dans le cas ou la vidéo est dans la WishList.
+                    messageVideo = string.Format(_wishManager.HaveMovieInWish(video.MovieTmDb.Id, userId) 
+                                                                ? templateWish 
+                                                                : template, 
+                        "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + video.MovieTmDb.PosterPath, video.MovieTmDb.Overview);
                 }
                 
 				bodyMessage += messageVideo;
@@ -186,11 +180,10 @@ namespace WebAppServer.Codes
 
 				if (newVideos.Any())
 				{
-					var messageComplet = GetMessageComplet(newVideos);
-
 					foreach (ApplicationUser user in usersList)
 					{
-						await SendMail(user.Email, messageComplet);
+                        var messageComplet = GetMessageComplet(newVideos, user.Id);
+                        await SendMail(user.Email, messageComplet);
 					}
 				}
 			}
