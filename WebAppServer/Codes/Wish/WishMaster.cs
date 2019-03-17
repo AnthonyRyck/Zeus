@@ -92,7 +92,6 @@ namespace WebAppServer.Codes.Wish
         {
             if (HaveMovieInWish(movie.IdVideoTmDb))
             {
-                // Ajout de l'utilisateur dans la liste
                 WishModel wish = _wishListModels.FirstOrDefault(x => x.Movie.IdVideoTmDb == movie.IdVideoTmDb);
 
                 if (wish != null)
@@ -100,6 +99,30 @@ namespace WebAppServer.Codes.Wish
                     if (wish.HasUserId(idUser))
                     {
                         wish.IdUsers.Remove(idUser);
+
+                        if (wish.IdUsers.Count == 0)
+                        {
+                            _wishListModels.Remove(wish);
+                        }
+
+                        _storage.SaveWishModels(_wishListModels);
+                    }
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public void RemoveMovie(int idMovie, string userId)
+        {
+            if(HaveMovieInWish(idMovie, userId))
+            {
+                WishModel wish = _wishListModels.FirstOrDefault(x => x.Movie.IdVideoTmDb == idMovie);
+
+                if (wish != null)
+                {
+                    if (wish.HasUserId(userId))
+                    {
+                        wish.IdUsers.Remove(Guid.Parse(userId));
 
                         if (wish.IdUsers.Count == 0)
                         {

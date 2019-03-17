@@ -136,10 +136,19 @@ namespace WebAppServer.Codes
 			    else
                 {
                     // Dans le cas ou la vidéo est dans la WishList.
-                    messageVideo = string.Format(_wishManager.HaveMovieInWish(video.MovieTmDb.Id, userId) 
-                                                                ? templateWish 
-                                                                : template, 
-                        "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + video.MovieTmDb.PosterPath, video.MovieTmDb.Overview);
+                    if (_wishManager.HaveMovieInWish(video.MovieTmDb.Id, userId))
+                    {
+                        messageVideo = string.Format(templateWish,
+                            "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + video.MovieTmDb.PosterPath, video.MovieTmDb.Overview);
+
+                        // Suppression du film de la WishList
+                        _wishManager.RemoveMovie(video.MovieTmDb.Id, userId);
+                    }
+                    else
+                    {
+                        messageVideo = string.Format(template,
+                            "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + video.MovieTmDb.PosterPath, video.MovieTmDb.Overview);
+                    }
                 }
                 
 				bodyMessage += messageVideo;
@@ -180,7 +189,7 @@ namespace WebAppServer.Codes
 
 				if (newVideos.Any())
 				{
-					foreach (ApplicationUser user in usersList)
+                    foreach (ApplicationUser user in usersList)
 					{
                         var messageComplet = GetMessageComplet(newVideos, user.Id);
                         await SendMail(user.Email, messageComplet);
