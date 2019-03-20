@@ -15,8 +15,17 @@ namespace WebAppServer.Pages.Wish
         public void OnGet()
         {
             Log.Debug("Consultation page - WishList -");
-            string userId = this.User.GetUserId();
-            Wishes = _wishMaster.GetWishes(userId);
+            
+            if (this.User.IsInRole("Manager") || this.User.IsInRole("Admin"))
+            {
+                Wishes = _wishMaster.GetWishes();
+            }
+            else
+            {
+                string userId = this.User.GetUserId();
+                Wishes = _wishMaster.GetWishes(userId);
+            }
+            
             Log.Debug("Page WishList - Wish = " + Wishes.Count() + " films.");
         }
 

@@ -7,7 +7,14 @@
 
 <div class="margin-10percent">
 
-	<h2>Ma liste de souhait</h2>
+	@if (this.User.IsInRole("Manager") || this.User.IsInRole("Admin"))
+	{
+	<h2>Liste de souhaits de tous les utilisateurs</h2>
+	}
+	else
+	{
+	<h2>Ma liste de souhaits</h2>
+	}
 
 	<a asp-page="/Wish/FindWish">Find movies</a>
 
