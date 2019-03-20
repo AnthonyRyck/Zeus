@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebAppServer.Models;
 
 namespace WebAppServer.Codes.Wish
@@ -10,31 +9,35 @@ namespace WebAppServer.Codes.Wish
     {
         #region Properties
 
+        private readonly StorageManager _storage = new StorageManager();
+        //private readonly Timer _timerUpdate;
+
         /// <summary>
         /// Contient la liste de tous les souhaits en film
         /// </summary>
         private List<WishModel> _wishListModels = null;
-        private readonly StorageManager _storage;
+
+        //protected volatile Object Lock = new object();
 
         #endregion
-
 
         #region Constructeur
 
         public WishMaster()
         {
-            _storage = new StorageManager();
-
-            var tempWishList = _storage.GetWishList();
+            var tempWishList = GetWishes();
 
             _wishListModels = tempWishList != null 
                 ? tempWishList.ToList() 
                 : new List<WishModel>();
-        }
 
+            //_timerUpdate = new Timer(TimerUpdate, null, 5000, settings.GetTimeToUpdateVideos());
+        }
+        
         #endregion
 
         #region Implement IWish
+
 
         public IEnumerable<WishModel> GetWishes()
         {
@@ -43,7 +46,7 @@ namespace WebAppServer.Codes.Wish
 
         public IEnumerable<WishModel> GetWishes(string idUser)
         {
-            var allWishesSaved = _storage.GetWishList();
+            var allWishesSaved = GetWishes();
             Guid userId = Guid.Parse(idUser);
 
             return allWishesSaved.Where(x => x.IdUsers.Contains(userId))
@@ -150,6 +153,15 @@ namespace WebAppServer.Codes.Wish
         {
             return _wishListModels.Any(x => x.Movie.IdVideoTmDb == idMovie);
         }
+
+        #endregion
+
+        #region Method Timer
+
+        //private void TimerUpdate(object state)
+        //{
+        //    TorrentFinder torrentFinder = new TorrentFinder();
+        //}
 
         #endregion
     }

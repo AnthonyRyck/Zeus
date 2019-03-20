@@ -5,6 +5,8 @@
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CloudFlareUtilities" Version="1.3.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.1" />
     <PackageReference Include="Ryck.MoviesLib" Version="1.0.4" />
