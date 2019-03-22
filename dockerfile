@@ -1,15 +1,10 @@
-FROM microsoft/dotnet:2.2-sdk AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build-env
 WORKDIR /src
 
 # copy csproj and restore as distinct layers
 RUN mkdir WebAppServer
-RUN mkdir TMDbLib
 
 COPY WebAppServer/WebAppServer.csproj ./WebAppServer/WebAppServer.csproj
-COPY TMDbLib/TMDbLib.csproj ./TMDbLib/TMDbLib.csproj
-
-WORKDIR /src/TMDbLib
-RUN dotnet restore
 
 WORKDIR /src/WebAppServer
 RUN dotnet restore
@@ -17,12 +12,11 @@ RUN dotnet restore
 WORKDIR /src
 
 # copy everything else and build app
-COPY TMDbLib/. ./TMDbLib/
 COPY WebAppServer/. ./WebAppServer/
 WORKDIR /src/WebAppServer
 RUN dotnet publish -c Release -o out
 
-FROM microsoft/dotnet:2.2-aspnetcore-runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
 
 WORKDIR /app
 
