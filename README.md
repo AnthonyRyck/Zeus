@@ -1,6 +1,8 @@
 # Zeus
 C'est une application pour suivre et partager votre bibliothèque de films et de séries.
 
+**ATTENTION : Je suis en cours de migration de l'application sous Blazor !**
+
 <p align="center"><kbd><img src="https://image.ibb.co/jWZYfK/Zeus_0.jpg" height="450"></kbd></p>
 
 Vous indiquez à l'application ou trouver les films, les séries, et elle se charge de retrouver toutes les informations avec l'API de [**The Movie Database**](https://www.themoviedb.org/?language=fr).
