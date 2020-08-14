@@ -1,0 +1,33 @@
+﻿<div class="imagePlusTitre">
+	<div class="test">
+		@if (string.IsNullOrEmpty(UrlImage))
+		{
+			<img src="images/VideoInconnu.jpg" />
+		}
+		else
+		{
+			<img id="imageVideo" src="@("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @UrlImage)" />
+		}
+	</div>
+
+	<div class="infoDate">
+		@DateAjout.ToString("d")
+	</div>
+
+	<div class="title">
+		@Titre
+	</div>
+</div>
+
+
+@code {
+
+	[Parameter]
+	public DateTime DateAjout { get; set; }
+
+	[Parameter]
+	public string Titre { get; set; }
+
+	[Parameter]
+	public string UrlImage { get; set; }
+}

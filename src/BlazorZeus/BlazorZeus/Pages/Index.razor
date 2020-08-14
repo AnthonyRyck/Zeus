@@ -1,14 +1,16 @@
 ﻿@page "/"
 
+@using BlazorZeus.Composants;
+
 <div class="margin-5percent">
 
-	<h3>Films recemment ajoutes</h3>
+	<h3>Films récemments ajoutés</h3>
 
 	<div class="flex">
 
 		@foreach (var itemMovie in MoviesOrdered)
 		{
-			<div class="imagePlusTitre">
+			@*<div class="imagePlusTitre">
 				<div class="test">
 					@if (string.IsNullOrEmpty(itemMovie.MovieTmDb.PosterPath))
 					{
@@ -27,8 +29,17 @@
 				<p class="title" id="title">
 					@itemMovie.MovieTmDb.Title
 				</p>
-			</div>
+			</div>*@
+
+
+			<CardAffiche Titre="@itemMovie.MovieTmDb.Title"
+						DateAjout="@itemMovie.DateAdded"
+						UrlImage="@itemMovie.MovieTmDb.PosterPath" />
 		}
+
+
+
+
 	</div>
 
 	@*<hr class="separator-black" />

@@ -52,7 +52,7 @@ p.overview {
 .title {
 	text-align: center;
 	font-weight: 600;
-	font-size: 1.5em;
+	font-size: 1.1em;
 }
 
 .original-title {
@@ -261,22 +261,20 @@ p.top-separator {
 }
 
 .imagePlusTitre {
-	width: 200px;
-	height: 325px;
+	width: 210px;
+	height: auto;
 	align-items: center;
 	margin: 10px;
-	margin-bottom: 20px;
-	margin-top: 20px;
+	border-style: outset;
 }
 
-	.imagePlusTitre .test img {
-		max-width: 100%;
-	}
+.imagePlusTitre .test img {
+	max-width: 100%;
+}
 
-	.imagePlusTitre .title p {
-		margin-top: 2px;
-		margin-bottom: 5px;
-	}
+.imagePlusTitre .title {
+	margin: 2px;
+}
 
 .infoDate {
 	font-style: italic;
