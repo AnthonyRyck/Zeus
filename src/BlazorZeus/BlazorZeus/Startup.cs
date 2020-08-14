@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BlazorZeus.Areas.Identity;
 using BlazorZeus.Data;
+using BlazorZeus.Codes;
+using BlazorZeus.Codes.Wish;
 
 namespace BlazorZeus
 {
@@ -31,8 +33,15 @@ namespace BlazorZeus
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
+		//	services.AddDbContext<ApplicationDbContext>(options =>
+		//		options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+
 			services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+				options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")),
+				ServiceLifetime.Singleton, ServiceLifetime.Singleton);
+
+
+
 
 			services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 				.AddEntityFrameworkStores<ApplicationDbContext>();
@@ -41,6 +50,18 @@ namespace BlazorZeus
 			services.AddServerSideBlazor();
 			services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
+
+
+
+			services.AddSingleton<ISettings, SettingsManager>();
+			services.AddSingleton<IMailing, MailingService>();
+			
+			services.AddSingleton<IMovies, MoviesManager>();
+			//services.AddSingleton<IShows, ShowsManager>();
+			
+			services.AddSingleton<IWish, WishMaster>();
+			
+			//services.AddScoped<ITheMovieDatabase, MovieDatabase>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
