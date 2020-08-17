@@ -17,6 +17,7 @@ using BlazorZeus.Areas.Identity;
 using BlazorZeus.Data;
 using BlazorZeus.Codes;
 using BlazorZeus.Codes.Wish;
+using System.IO;
 
 namespace BlazorZeus
 {
@@ -33,13 +34,14 @@ namespace BlazorZeus
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
-			//services.AddDbContext<ApplicationDbContext>(options =>
-			//	options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")),
-			//	ServiceLifetime.Singleton, ServiceLifetime.Singleton);
-
 			services.AddDbContext<ApplicationDbContext>(options =>
-						options.UseSqlServer(Configuration.GetConnectionString("SqlServerConnection")),
-						ServiceLifetime.Singleton, ServiceLifetime.Singleton);
+				options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")),
+				ServiceLifetime.Singleton, ServiceLifetime.Singleton);
+
+			//services.AddDbContext<ApplicationDbContext>(options =>
+			//			options.UseSqlServer(Configuration.GetConnectionString("SqlServerConnection")),
+			//			ServiceLifetime.Singleton, ServiceLifetime.Singleton);
+
 
 			services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 				.AddRoles<IdentityRole>()
@@ -49,9 +51,6 @@ namespace BlazorZeus
 			services.AddServerSideBlazor();
 
 			services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-
-
-
 
 			// *** Service pour l'application ***
 			services.AddSingleton<ISettings, SettingsManager>();
@@ -80,8 +79,9 @@ namespace BlazorZeus
 				app.UseHsts();
 			}
 
-			// Création des roles et de Root.
-			DataInitializer.SeedRolesAsync(app.ApplicationServices).Wait();
+			// Création de la base, des roles et de Root.
+			DataInitializer.CreateDatabase(app.ApplicationServices).Wait();
+			//DataInitializer.SeedRolesAsync(app.ApplicationServices).Wait();
 
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
@@ -123,7 +123,6 @@ namespace BlazorZeus
 					}
 				}
 
-
 				// Création de l'utilisateur Root.
 				var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 				var user = await userManager.FindByNameAsync("root");
@@ -144,6 +143,29 @@ namespace BlazorZeus
 						await userManager.AddToRoleAsync(poweruser, "Admin");
 					}
 				}
+			}
+		}
+
+
+		public static async Task CreateDatabase(IServiceProvider serviceProvider)
+		{
+			// Tester la présence de la db
+			string pathDirectory = Path.Combine(AppContext.BaseDirectory, "Database");
+			string pathFileDb = Path.Combine(pathDirectory, "appBlazor.db");
+
+			if (!Directory.Exists(pathDirectory))
+				Directory.CreateDirectory(pathDirectory);
+
+			if (!File.Exists(pathFileDb))
+			{
+				// Créer la DB.
+				using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
+				{
+					var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+					context.Database.EnsureCreated();
+				}
+
+				await SeedRolesAsync(serviceProvider);
 			}
 		}
 	}
