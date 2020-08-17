@@ -1,0 +1,59 @@
+﻿
+<div class="card">
+	<div class="test">
+
+		@if (string.IsNullOrEmpty(PathPoster))
+		{
+			<img src="../images/VideoInconnu.jpg" />
+		}
+		else
+		{
+			<img id="imageVideo" src="@("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @PathPoster)" />
+		}
+
+		<div class="meta" data-role="tooltip">
+			@*<a href="@Url.Action("Download", "Movies", new {item.Id})">*@
+			<a>
+				<span class="glyphicon glyphicon-download-alt"></span>
+			</a>
+
+			@*<a href="@Url.Action("GetStream", "Streaming", new {item.Id})">
+				<span class="glyphicon glyphicon-play"></span>
+			</a>*@
+
+			@*@if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+			{
+				<button type="button" class="submit-with-icon" data-toggle="modal" data-target="#myModal" data-id="@item.Id" onclick="getVideo('@item.Id')">
+					<span class="glyphicon glyphicon-refresh"></span>
+				</button>
+			}*@
+		</div>
+	</div>
+
+	<div class="info">
+		<p class="title" id="title">
+			@Titre
+		</p>
+
+		<p id="description" class="overview">@Overview</p>
+	</div>
+
+	@*<div id="@item.Id" class="hide-imgRechercher"></div>*@
+</div>
+
+@code {
+
+	[Parameter]
+	public string Titre { get; set; }
+
+	[Parameter]
+	public string Overview { get; set; }
+
+	[Parameter]
+	public int IdFilm { get; set; }
+	
+	[Parameter]
+	public string PathPoster { get; set; }
+
+
+}

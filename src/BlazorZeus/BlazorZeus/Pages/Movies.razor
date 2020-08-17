@@ -1,0 +1,22 @@
+﻿@page "/movies"
+
+@using BlazorZeus.Composants
+
+<h3>Films</h3>
+
+<div class="flex">
+
+	@foreach (var item in MoviesCollection)
+	{
+		<CardWithDetail Titre="@item.MovieTmDb.Title"
+						Overview="@item.MovieTmDb.Overview"
+						PathPoster="@item.MovieTmDb.PosterPath"
+						IdFilm="@item.MovieTmDb.Id" />
+	}
+
+</div>
+
+
+	@code {
+
+	}

@@ -33,35 +33,36 @@ namespace BlazorZeus
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
-		//	services.AddDbContext<ApplicationDbContext>(options =>
-		//		options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+			//services.AddDbContext<ApplicationDbContext>(options =>
+			//	options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")),
+			//	ServiceLifetime.Singleton, ServiceLifetime.Singleton);
 
 			services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")),
-				ServiceLifetime.Singleton, ServiceLifetime.Singleton);
-
-
-
+						options.UseSqlServer(Configuration.GetConnectionString("SqlServerConnection")),
+						ServiceLifetime.Singleton, ServiceLifetime.Singleton);
 
 			services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
+
 			services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
 
 
 
+			// *** Service pour l'application ***
 			services.AddSingleton<ISettings, SettingsManager>();
 			services.AddSingleton<IMailing, MailingService>();
-			
+
 			services.AddSingleton<IMovies, MoviesManager>();
-			//services.AddSingleton<IShows, ShowsManager>();
-			
+			services.AddSingleton<IShows, ShowsManager>();
+
 			services.AddSingleton<IWish, WishMaster>();
-			
-			//services.AddScoped<ITheMovieDatabase, MovieDatabase>();
+
+			services.AddScoped<ITheMovieDatabase, MovieDatabase>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,6 +80,9 @@ namespace BlazorZeus
 				app.UseHsts();
 			}
 
+			// Création des roles et de Root.
+			DataInitializer.SeedRolesAsync(app.ApplicationServices).Wait();
+
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
@@ -94,13 +98,55 @@ namespace BlazorZeus
 				endpoints.MapFallbackToPage("/_Host");
 			});
 		}
-
-
-		#region Private methods
-
-		
-
-		#endregion
-
 	}
+
+
+
+
+	
+
+	public static class DataInitializer
+	{
+		private static readonly string[] Roles = new string[] { "Admin", "Manager", "Member" };
+
+		public static async Task SeedRolesAsync(IServiceProvider serviceProvider)
+		{
+			using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			{
+				var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+				foreach (var role in Roles)
+				{
+					if (!await roleManager.RoleExistsAsync(role))
+					{
+						await roleManager.CreateAsync(new IdentityRole(role));
+					}
+				}
+
+
+				// Création de l'utilisateur Root.
+				var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+				var user = await userManager.FindByNameAsync("root");
+
+				if (user == null)
+				{
+					var poweruser = new IdentityUser
+					{
+						UserName = "root",
+						Email = "change@email.com",
+						EmailConfirmed = true
+					};
+					string userPwd = "Azerty123!";
+
+					var createPowerUser = await userManager.CreateAsync(poweruser, userPwd);
+					if (createPowerUser.Succeeded)
+					{
+						await userManager.AddToRoleAsync(poweruser, "Admin");
+					}
+				}
+			}
+		}
+	}
+
+
 }
