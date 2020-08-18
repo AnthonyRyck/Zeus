@@ -38,10 +38,10 @@ namespace BlazorZeus
 				options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")),
 				ServiceLifetime.Singleton, ServiceLifetime.Singleton);
 
+			// Au cas ou je repasse sur SQLServer
 			//services.AddDbContext<ApplicationDbContext>(options =>
 			//			options.UseSqlServer(Configuration.GetConnectionString("SqlServerConnection")),
 			//			ServiceLifetime.Singleton, ServiceLifetime.Singleton);
-
 
 			services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 				.AddRoles<IdentityRole>()
@@ -81,7 +81,6 @@ namespace BlazorZeus
 
 			// Création de la base, des roles et de Root.
 			DataInitializer.CreateDatabase(app.ApplicationServices).Wait();
-			//DataInitializer.SeedRolesAsync(app.ApplicationServices).Wait();
 
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();

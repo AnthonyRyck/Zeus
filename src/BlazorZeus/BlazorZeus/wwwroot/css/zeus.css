@@ -3,19 +3,19 @@
 	margin-right: 5px;
 }
 
-.flex {
+.zeusflex {
 	display: flex;
 	flex-wrap: wrap;
 }
 
-.info {
+.zeusinfo {
 	height: 278px;
 	box-sizing: border-box;
 	padding: 10px 16px 16px 16px;
 	overflow: hidden;
 }
 
-.info-movie {
+.zeusinfo-movie {
 	height: 258px;
 	width: 250px;
 	box-sizing: border-box;
@@ -39,7 +39,7 @@ p.overview {
 	overflow: hidden;
 }
 
-.card {
+.zeuscard {
 	height: 300px;
 	width: 450px;
 	box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -125,7 +125,7 @@ p.top-separator {
 	display: block;
 }
 
-.card .test img {
+.zeuscard .test img {
 	max-width: 100%;
 }
 
