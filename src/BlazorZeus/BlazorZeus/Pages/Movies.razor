@@ -1,5 +1,7 @@
 ﻿@page "/movies"
 
+@attribute [Authorize(Roles = "Admin, Manager, Member")]
+
 @using BlazorZeus.Composants
 
 <h3>Films</h3>
@@ -17,6 +19,6 @@
 </div>
 
 
-	@code {
+@code {
 
-	}
+}

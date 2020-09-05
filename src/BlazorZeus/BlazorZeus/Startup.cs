@@ -38,11 +38,6 @@ namespace BlazorZeus
 				options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")),
 				ServiceLifetime.Singleton, ServiceLifetime.Singleton);
 
-			// Au cas ou je repasse sur SQLServer
-			//services.AddDbContext<ApplicationDbContext>(options =>
-			//			options.UseSqlServer(Configuration.GetConnectionString("SqlServerConnection")),
-			//			ServiceLifetime.Singleton, ServiceLifetime.Singleton);
-
 			services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
 				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>();
@@ -79,9 +74,6 @@ namespace BlazorZeus
 				app.UseHsts();
 			}
 
-			// Création de la base, des roles et de Root.
-			DataInitializer.CreateDatabase(app.ApplicationServices).Wait();
-
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
@@ -104,70 +96,68 @@ namespace BlazorZeus
 
 	
 
-	public static class DataInitializer
-	{
-		private static readonly string[] Roles = new string[] { "Admin", "Manager", "Member" };
+	//public static class DataInitializer
+	//{
+	//	private static readonly string[] Roles = new string[] { "Admin", "Manager", "Member" };
 
-		public static async Task SeedRolesAsync(IServiceProvider serviceProvider)
-		{
-			using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
-			{
-				var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+	//	public static async Task SeedRolesAsync(IServiceProvider serviceProvider)
+	//	{
+	//		using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+	//		{
+	//			var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-				foreach (var role in Roles)
-				{
-					if (!await roleManager.RoleExistsAsync(role))
-					{
-						await roleManager.CreateAsync(new IdentityRole(role));
-					}
-				}
+	//			foreach (var role in Roles)
+	//			{
+	//				if (!await roleManager.RoleExistsAsync(role))
+	//				{
+	//					await roleManager.CreateAsync(new IdentityRole(role));
+	//				}
+	//			}
 
-				// Création de l'utilisateur Root.
-				var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-				var user = await userManager.FindByNameAsync("root");
+	//			// Création de l'utilisateur Root.
+	//			var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+	//			var user = await userManager.FindByNameAsync("root");
 
-				if (user == null)
-				{
-					var poweruser = new IdentityUser
-					{
-						UserName = "root",
-						Email = "change@email.com",
-						EmailConfirmed = true
-					};
-					string userPwd = "Azerty123!";
+	//			if (user == null)
+	//			{
+	//				var poweruser = new IdentityUser
+	//				{
+	//					UserName = "root",
+	//					Email = "change@email.com",
+	//					EmailConfirmed = true,
+	//				};
+	//				string userPwd = "Azerty123!";
 
-					var createPowerUser = await userManager.CreateAsync(poweruser, userPwd);
-					if (createPowerUser.Succeeded)
-					{
-						await userManager.AddToRoleAsync(poweruser, "Admin");
-					}
-				}
-			}
-		}
+	//				var createPowerUser = await userManager.CreateAsync(poweruser, userPwd);
+	//				if (createPowerUser.Succeeded)
+	//				{
+	//					await userManager.AddToRoleAsync(poweruser, "Admin");
+	//				}
+	//			}
+	//		}
+	//	}
 
 
-		public static async Task CreateDatabase(IServiceProvider serviceProvider)
-		{
-			// Tester la présence de la db
-			string pathDirectory = Path.Combine(AppContext.BaseDirectory, "Database");
-			string pathFileDb = Path.Combine(pathDirectory, "appBlazor.db");
+	//	public static async Task CreateDatabase(IServiceProvider serviceProvider)
+	//	{
+	//		// Tester la présence de la db
+	//		string pathDirectory = Path.Combine(AppContext.BaseDirectory, "Database");
 
-			if (!Directory.Exists(pathDirectory))
-				Directory.CreateDirectory(pathDirectory);
+	//		if (!Directory.Exists(pathDirectory))
+	//			Directory.CreateDirectory(pathDirectory);
 
-			if (!File.Exists(pathFileDb))
-			{
-				// Créer la DB.
-				using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
-				{
-					var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-					context.Database.EnsureCreated();
-				}
+	//		// Créer la DB.
+	//		using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
+	//		{
+	//			var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+	//			if (context.Database.EnsureCreated())
+	//			{
+	//				await SeedRolesAsync(serviceProvider);
+	//			}
+	//		}
+	//	}
 
-				await SeedRolesAsync(serviceProvider);
-			}
-		}
-	}
+	//}
 
 
 }
