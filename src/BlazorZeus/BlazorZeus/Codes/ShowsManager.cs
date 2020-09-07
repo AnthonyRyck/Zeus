@@ -22,8 +22,8 @@ namespace BlazorZeus.Codes
 
         #region Constructeur
 
-        public ShowsManager(ISettings settings, IMailing mailingService)
-			: base(settings, mailingService)
+        public ShowsManager(ISettings settings)
+			: base(settings)
         {
             _seriesManager = new ShowManager();
 
@@ -108,13 +108,8 @@ namespace BlazorZeus.Codes
 
         #region Timer Method
 
-        protected override async void TimerUpdate(object state)
+        protected async void TimerUpdate(object state)
         {
-            if (IsUpdateTime)
-                return;
-			
-            IsUpdateTime = true;
-
             // Récupération des séries en locale.
             List<ShowInformation> seriesOnLocal = new List<ShowInformation>();
             foreach (var path in Settings.GetPathShows())
@@ -173,11 +168,9 @@ namespace BlazorZeus.Codes
 				// Sauvegarde
 				Storage.SaveSeriesModels(_serieCollection);
 
-				await SendMailToUser(allNouveautes);
+				//await SendMailToUser(allNouveautes);
 				_serieCollection.ResetNouveautes();
 			}
-			
-			IsUpdateTime = false;
         }
 
 		#endregion

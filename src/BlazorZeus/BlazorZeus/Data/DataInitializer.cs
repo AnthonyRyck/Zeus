@@ -61,12 +61,14 @@ namespace BlazorZeus.Data
 				}
 			}
 			// Création de l'utilisateur Root.
-			var user = await userManager.FindByNameAsync("root@email.com");
+			//var user = await userManager.FindByNameAsync("root@email.com");
+			var user = await userManager.FindByNameAsync("root");
 			if (user == null)
 			{
 				var poweruser = new IdentityUser
 				{
-					UserName = "root@email.com",
+					//UserName = "root@email.com",
+					UserName = "root",
 					Email = "root@email.com",
 					EmailConfirmed = true
 				};

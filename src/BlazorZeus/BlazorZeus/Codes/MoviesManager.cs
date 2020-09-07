@@ -31,8 +31,8 @@ namespace BlazorZeus.Codes
 
         #region Constructeur
 
-        public MoviesManager(ISettings settings, IMailing mailingService)
-		 : base(settings, mailingService)
+        public MoviesManager(ISettings settings)
+		 : base(settings)
         {
             //_logger = logger;
 	        IEnumerable<string> langues = settings.GetLanguesVideos();
@@ -243,6 +243,103 @@ namespace BlazorZeus.Codes
 			}
 	    }
 
+
+        public async Task AnalysePaths()
+		{
+            // Récupération des films en locale.
+            List<MovieInformation> videosOnLocal = new List<MovieInformation>();
+            foreach (var pathMovie in Settings.GetPathMovies())
+            {
+                if (!Directory.Exists(pathMovie))
+                {
+                    continue;
+                }
+
+                IEnumerable<MovieInformation> tempMoviesOnLocal = _movieManager.GetMoviesInformations(pathMovie, TypeVideo.Movie);
+
+                if (tempMoviesOnLocal.Any())
+                    videosOnLocal.AddRange(tempMoviesOnLocal);
+            }
+
+            // Récupération des dessins animés.
+            foreach (var dessinAnimes in Settings.GetPathDessinAnimes())
+            {
+                if (!Directory.Exists(dessinAnimes))
+                {
+                    continue;
+                }
+
+                IEnumerable<MovieInformation> tempAnimes = _movieManager.GetMoviesInformations(dessinAnimes, TypeVideo.DessinAnime);
+
+                if (tempAnimes.Any())
+                    videosOnLocal.AddRange(tempAnimes);
+            }
+
+            List<MovieModel> listeToDelete = new List<MovieModel>();
+
+            if (_movieModelsCollection != null)
+            {
+                // Détermination des différences entre ce qui est présent sur le disque
+                // et ce qui est connu en mémoire.
+                foreach (MovieModel movieLocal in _movieModelsCollection)
+                {
+                    if (!videosOnLocal.Contains(movieLocal.MovieInformation))
+                    {
+                        listeToDelete.Add(movieLocal);
+                    }
+                }
+
+                lock (Lock)
+                {
+                    // Suppression des films n'existant plus
+                    foreach (var toDelete in listeToDelete)
+                    {
+                        _movieModelsCollection.Remove(toDelete);
+                    }
+                }
+            }
+
+            if (_movieModelsCollection == null)
+                _movieModelsCollection = new List<MovieModel>();
+
+            // Voir s'il y a des rajouts.
+            List<MovieInformation> tempMovieInformations = _movieModelsCollection.Select(x => x.MovieInformation).ToList();
+            List<MovieInformation> listeToAdd = new List<MovieInformation>();
+
+            foreach (MovieInformation movieLocal in videosOnLocal)
+            {
+                if (!tempMovieInformations.Contains(movieLocal))
+                {
+                    listeToAdd.Add(movieLocal);
+                }
+            }
+
+            if (listeToAdd.Count > 0)
+            {
+				try
+				{
+                    List<MovieModel> tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
+
+                    // Envoie d'un mail
+                    //await SendMailToUser(tempAddMovieModels);
+
+                    lock (Lock)
+                    {
+                        _movieModelsCollection.AddRange(tempAddMovieModels);
+                    }
+
+                    // Sauvegarde
+                    Storage.SaveMoviesModels(_movieModelsCollection);
+                }
+				catch (Exception ex)
+				{
+
+					throw;
+				}
+                
+            }
+        }
+
 		#endregion
 
 		#region Private Methods
@@ -346,106 +443,6 @@ namespace BlazorZeus.Codes
         }
         
         #endregion
-
-        #region Timer Methods
-
-        /// <summary>
-        /// Méthode qui appelé lorsque le Timer arrive à la fin.
-        /// </summary>
-        /// <param name="state"></param>
-        protected override async void TimerUpdate(object state)
-        {
-            if (IsUpdateTime)
-                return;
-
-            IsUpdateTime = true;
-
-            // Récupération des films en locale.
-            List<MovieInformation> videosOnLocal = new List<MovieInformation>();
-            foreach (var pathMovie in Settings.GetPathMovies())
-            {
-                if (!Directory.Exists(pathMovie))
-                {
-                    continue;
-                }
-
-                IEnumerable<MovieInformation> tempMoviesOnLocal = _movieManager.GetMoviesInformations(pathMovie, TypeVideo.Movie);
-
-                if (tempMoviesOnLocal.Any())
-                    videosOnLocal.AddRange(tempMoviesOnLocal);
-            }
-
-            // Récupération des dessins animés.
-            foreach (var dessinAnimes in Settings.GetPathDessinAnimes())
-            {
-                if (!Directory.Exists(dessinAnimes))
-                {
-                    continue;
-                }
-
-                IEnumerable<MovieInformation> tempAnimes = _movieManager.GetMoviesInformations(dessinAnimes, TypeVideo.DessinAnime);
-
-                if (tempAnimes.Any())
-                    videosOnLocal.AddRange(tempAnimes);
-            }
-
-            List<MovieModel> listeToDelete = new List<MovieModel>();
-
-            if (_movieModelsCollection != null)
-            {
-                // Détermination des différences entre ce qui est présent sur le disque
-                // et ce qui est connu en mémoire.
-                foreach (MovieModel movieLocal in _movieModelsCollection)
-                {
-                    if (!videosOnLocal.Contains(movieLocal.MovieInformation))
-                    {
-                        listeToDelete.Add(movieLocal);
-                    }
-                }
-
-                lock (Lock)
-                {
-                    // Suppression des films n'existant plus
-                    foreach (var toDelete in listeToDelete)
-                    {
-                        _movieModelsCollection.Remove(toDelete);
-                    }
-                }
-            }
-
-            if(_movieModelsCollection == null)
-                _movieModelsCollection = new List<MovieModel>();
-
-           // Voir s'il y a des rajouts.
-            List<MovieInformation> tempMovieInformations = _movieModelsCollection.Select(x => x.MovieInformation).ToList();
-            List<MovieInformation> listeToAdd = new List<MovieInformation>();
-
-            foreach (MovieInformation movieLocal in videosOnLocal)
-            {
-                if (!tempMovieInformations.Contains(movieLocal))
-                {
-                    listeToAdd.Add(movieLocal);
-                }
-            }
-
-			if (listeToAdd.Count > 0)
-			{
-				List<MovieModel> tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
-				await SendMailToUser(tempAddMovieModels);
-
-				lock (Lock)
-				{
-					_movieModelsCollection.AddRange(tempAddMovieModels);
-				}
-
-				// Sauvegarde
-				Storage.SaveMoviesModels(_movieModelsCollection);
-			}
-			
-            IsUpdateTime = false;
-        }
-
-		#endregion
 
 	}
 }

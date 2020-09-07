@@ -18,6 +18,7 @@ using BlazorZeus.Data;
 using BlazorZeus.Codes;
 using BlazorZeus.Codes.Wish;
 using System.IO;
+using BlazorZeus.Services;
 
 namespace BlazorZeus
 {
@@ -48,15 +49,15 @@ namespace BlazorZeus
 			services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
 			// *** Service pour l'application ***
-			services.AddSingleton<ISettings, SettingsManager>();
-			services.AddSingleton<IMailing, MailingService>();
-
 			services.AddSingleton<IMovies, MoviesManager>();
-			services.AddSingleton<IShows, ShowsManager>();
+			services.AddSingleton<ISettings, SettingsManager>();
 
+			services.AddSingleton<IShows, ShowsManager>();
 			services.AddSingleton<IWish, WishMaster>();
 
 			services.AddScoped<ITheMovieDatabase, MovieDatabase>();
+
+			services.AddHostedService<AnalyserHostedService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,75 +90,6 @@ namespace BlazorZeus
 				endpoints.MapFallbackToPage("/_Host");
 			});
 		}
+
 	}
-
-
-
-
-	
-
-	//public static class DataInitializer
-	//{
-	//	private static readonly string[] Roles = new string[] { "Admin", "Manager", "Member" };
-
-	//	public static async Task SeedRolesAsync(IServiceProvider serviceProvider)
-	//	{
-	//		using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
-	//		{
-	//			var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-	//			foreach (var role in Roles)
-	//			{
-	//				if (!await roleManager.RoleExistsAsync(role))
-	//				{
-	//					await roleManager.CreateAsync(new IdentityRole(role));
-	//				}
-	//			}
-
-	//			// Création de l'utilisateur Root.
-	//			var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-	//			var user = await userManager.FindByNameAsync("root");
-
-	//			if (user == null)
-	//			{
-	//				var poweruser = new IdentityUser
-	//				{
-	//					UserName = "root",
-	//					Email = "change@email.com",
-	//					EmailConfirmed = true,
-	//				};
-	//				string userPwd = "Azerty123!";
-
-	//				var createPowerUser = await userManager.CreateAsync(poweruser, userPwd);
-	//				if (createPowerUser.Succeeded)
-	//				{
-	//					await userManager.AddToRoleAsync(poweruser, "Admin");
-	//				}
-	//			}
-	//		}
-	//	}
-
-
-	//	public static async Task CreateDatabase(IServiceProvider serviceProvider)
-	//	{
-	//		// Tester la présence de la db
-	//		string pathDirectory = Path.Combine(AppContext.BaseDirectory, "Database");
-
-	//		if (!Directory.Exists(pathDirectory))
-	//			Directory.CreateDirectory(pathDirectory);
-
-	//		// Créer la DB.
-	//		using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
-	//		{
-	//			var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-	//			if (context.Database.EnsureCreated())
-	//			{
-	//				await SeedRolesAsync(serviceProvider);
-	//			}
-	//		}
-	//	}
-
-	//}
-
-
 }
