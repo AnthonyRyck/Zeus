@@ -31,7 +31,7 @@ namespace BlazorZeus.Codes
 			return _configApp.ListeDeLangue;
 		}
 
-	    public int GetTimeToUpdateVideos()
+	    public uint GetTimeToUpdateVideos()
 	    {
 		    return _configApp.TempsEnMillisecondPourTimerRefresh;
 	    }
@@ -72,7 +72,7 @@ namespace BlazorZeus.Codes
 		/// <returns></returns>
 	    public async Task SaveSettings(string langueTmdb = "fr-FR", 
 										string regionTmdb = "FR",
-										int tempsRefresh = 3600000,
+										uint tempsRefresh = 3600000,
 										string email = "",
 										string passwordMail = "")
 	    {

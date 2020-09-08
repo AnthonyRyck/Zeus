@@ -18,7 +18,7 @@ namespace BlazorZeus.Codes
 	    /// Temps en secondes.
 	    /// </summary>
 	    /// <returns></returns>
-	    int GetTimeToUpdateVideos();
+	    uint GetTimeToUpdateVideos();
 
 	    /// <summary>
 	    /// Retourne la liste des chemins pour les vidéos des films.
@@ -55,7 +55,7 @@ namespace BlazorZeus.Codes
 		/// </summary>
 		/// <returns></returns>
 	    Task SaveSettings(string langueTmdb = "fr-FR", string regionTmdb = "FR",
-			int tempsRefresh = 3600000, string email = "", string passwordMail = "");
+			uint tempsRefresh = 3600000, string email = "", string passwordMail = "");
 		
 		/// <summary>
 		/// Retourne l'adresse mail pour l'envoie d'email.

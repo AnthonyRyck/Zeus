@@ -1,0 +1,43 @@
+﻿@page "/adminSetting"
+@using BlazorZeus.Composants
+
+
+<h3>Accès admin</h3>
+
+<MatTabGroup>
+	<MatTab>
+		<LabelContent>
+			Paramètres <MatIcon Icon="@MatIconNames.Settings"></MatIcon>
+		</LabelContent>
+		<ChildContent>
+			<ConfigApplication />
+		</ChildContent>
+	</MatTab>
+	
+	<MatTab>
+		<LabelContent>
+			Utilisateurs <MatIcon Icon="@MatIconNames.People"></MatIcon>
+		</LabelContent>
+		<ChildContent>
+			@*<GestionSalle />*@
+			<div>Pas encore développé</div>
+		</ChildContent>
+	</MatTab>
+
+	<MatTab>
+		<LabelContent>
+			Logs <MatIcon Icon="@MatIconNames.School"></MatIcon>
+		</LabelContent>
+		<ChildContent>
+			@*<GestionFormateur />*@
+			<div>Pas encore développé</div>
+		</ChildContent>
+	</MatTab>
+
+</MatTabGroup>
+
+
+
+@code {
+
+}

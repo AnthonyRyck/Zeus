@@ -19,6 +19,7 @@ using BlazorZeus.Codes;
 using BlazorZeus.Codes.Wish;
 using System.IO;
 using BlazorZeus.Services;
+using Radzen;
 
 namespace BlazorZeus
 {
@@ -58,6 +59,10 @@ namespace BlazorZeus
 			services.AddScoped<ITheMovieDatabase, MovieDatabase>();
 
 			services.AddHostedService<AnalyserHostedService>();
+
+			// Service Radzen
+			services.AddScoped<DialogService>();
+			services.AddScoped<NotificationService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

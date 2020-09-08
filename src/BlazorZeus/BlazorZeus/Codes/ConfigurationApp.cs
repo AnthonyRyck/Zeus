@@ -40,7 +40,7 @@ namespace BlazorZeus.Codes
         /// <summary>
         /// Temps en milliseconde pour faire un update sur les films/séries.
         /// </summary>
-        public int TempsEnMillisecondPourTimerRefresh { get; set; }
+        public uint TempsEnMillisecondPourTimerRefresh { get; set; }
 
 		/// <summary>
 		/// C'est le compte utilisé pour envoyer les mails.

@@ -1,0 +1,56 @@
+﻿
+<div class="row">
+	<div class="col-md-3">
+
+		<EditForm Model="ConfigModelApp" OnValidSubmit="HandleValidSubmit">
+			<div asp-validation-summary="All" class="text-danger"></div>
+			<div class="form-group">
+				<label>Langue pour The Movie Database</label>
+				<input @bind-value="ConfigModelApp.LanguesPourTmDb" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label>Region utilise pour The Movie Database</label>
+				<input @bind-value="ConfigModelApp.RegionPourTmdb" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label>Temps pour rafraichissement</label>
+				<MatTextField @bind-Value="ConfigModelApp.TimeToRefresh" 
+								TValue="UInt32"/>
+
+			</div>
+			<div class="form-group">
+				<label>Email utilisé pour l'envoie de mail</label>
+				<input @bind-value="ConfigModelApp.Email" class="form-control" type="email" />
+			</div>
+			<div class="form-group">
+				<label>Mot de passe du compte mail</label>
+				<input @bind-value="ConfigModelApp.PasswordEmail" class="form-control" type="password" />
+			</div>
+
+			<button type="submit" class="btn btn-default">Save</button>
+		</EditForm>
+	</div>
+
+	<div class="col-md-6">
+
+		<p>Information sur les différents éléments de configuration.</p>
+
+		<dl>
+			<dt>Langue pour The Movie Database.</dt>
+			<dd>C'est la langue qui va etre choisi pour retourner les informations de The Movie Database. (ex: fr-FR pour francais)</dd>
+
+			<dt>Region pour The Movie Database</dt>
+			<dd>Dans ce cas, la region agit simplement comme un filtre de presentation. Permet d'avoir des informations particulieres par rapport a la region (ex: FR pour la France).</dd>
+
+			<dt>Temps de rafraichissement</dt>
+			<dd>C'est l'intervalle de temps entre chaque mise a jour pour le serveur. Le temps est en minute.</dd>
+
+		</dl>
+
+	</div>
+</div>
+
+
+@code {
+
+}
