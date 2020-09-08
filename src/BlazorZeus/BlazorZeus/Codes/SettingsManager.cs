@@ -68,11 +68,11 @@ namespace BlazorZeus.Codes
 		/// </summary>
 		/// <param name="langueTmdb"></param>
 		/// <param name="regionTmdb"></param>
-		/// <param name="tempsRefresh"></param>
+		/// <param name="tempsRefresh">10 minutes de base</param>
 		/// <returns></returns>
 	    public async Task SaveSettings(string langueTmdb = "fr-FR", 
 										string regionTmdb = "FR",
-										uint tempsRefresh = 3600000,
+										uint tempsRefresh = 10,
 										string email = "",
 										string passwordMail = "")
 	    {

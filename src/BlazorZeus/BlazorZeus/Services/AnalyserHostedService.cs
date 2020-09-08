@@ -21,7 +21,7 @@ namespace BlazorZeus.Services
 
 		private Timer _timer;
 
-		private MovieManager _movieManager;
+		//private MovieManager _movieManager;
 
 		private readonly IServiceScopeFactory _scopeFactory;
 		public ISettings Settings { get; set; }
@@ -50,8 +50,11 @@ namespace BlazorZeus.Services
 			{
 				Settings = scope.ServiceProvider.GetRequiredService<ISettings>();
 
-				_movieManager = new MovieManager(Settings.GetLanguesVideos().ToArray());
-				_timer = new Timer(Analyse, null, 0, Settings.GetTimeToUpdateVideos());
+				//_movieManager = new MovieManager(Settings.GetLanguesVideos().ToArray());
+				//_timer = new Timer(Analyse, null, 0, Settings.GetTimeToUpdateVideos());
+
+				var tempsEnMillisecond = Convert.ToUInt32(TimeSpan.FromMinutes(Settings.GetTimeToUpdateVideos()).TotalMilliseconds);
+				_timer = new Timer(Analyse, null, 0, tempsEnMillisecond);
 			}
 
 			return Task.CompletedTask;
