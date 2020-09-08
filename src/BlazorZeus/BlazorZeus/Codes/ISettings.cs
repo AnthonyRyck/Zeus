@@ -55,7 +55,7 @@ namespace BlazorZeus.Codes
 		/// </summary>
 		/// <returns></returns>
 	    Task SaveSettings(string langueTmdb = "fr-FR", string regionTmdb = "FR",
-			uint tempsRefresh = 3600000, string email = "", string passwordMail = "");
+			uint tempsRefresh = 10, string email = "", string passwordMail = "");
 		
 		/// <summary>
 		/// Retourne l'adresse mail pour l'envoie d'email.

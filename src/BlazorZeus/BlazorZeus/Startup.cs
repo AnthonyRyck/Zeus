@@ -20,6 +20,7 @@ using BlazorZeus.Codes.Wish;
 using System.IO;
 using BlazorZeus.Services;
 using Radzen;
+using BlazorDownloadFile;
 
 namespace BlazorZeus
 {
@@ -63,6 +64,9 @@ namespace BlazorZeus
 			// Service Radzen
 			services.AddScoped<DialogService>();
 			services.AddScoped<NotificationService>();
+
+			// Pour téléchargement de fichier.
+			services.AddBlazorDownloadFile();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
