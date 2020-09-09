@@ -1,0 +1,41 @@
+﻿@using Models
+
+<div>
+	<label>Nom du fichier : </label>
+	<div>@NomDuFichier</div>
+</div>
+
+<div class="zeusflex">
+	@foreach (var film in ListFilms)
+	{
+		<ImageSearchVideo Titre="@film.Titre"
+						  UrlAffiche="@film.UrlAffiche"
+						  SelectThisMovie="@(e => GetId(@film.IdVideoTmDb))"
+						  DateRelease="@film.ReleaseDate" />
+	}
+</div>
+
+<div>
+	<button onclick="@OnCancel">Cancel</button>
+</div>
+
+@code {
+
+	[Parameter]
+	public IEnumerable<SearchVideoModel> ListFilms { get; set; }
+
+	[Parameter]
+	public EventCallback OnCancel { get; set; }
+
+	[Parameter]
+	public EventCallback<int> SelectMovie { get; set; }
+
+	[Parameter]
+	public string NomDuFichier { get; set; }
+
+
+	public void GetId(int id)
+	{
+		SelectMovie.InvokeAsync(id);
+	}
+}

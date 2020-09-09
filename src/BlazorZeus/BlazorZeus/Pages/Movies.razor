@@ -14,12 +14,18 @@
 						Overview="@item.MovieTmDb.Overview"
 						PathPoster="@item.MovieTmDb.PosterPath"
 						IdFilm="@item.MovieTmDb.Id"
-						OnClickDownloadMovieCallback="@(e => DownloadMovie(e, item.Id))" />
-
+						OnClickDownloadMovieCallback="@(e => DownloadMovie(e, item.Id))"
+						OnClickChangeMovieCallback="@(e => ChangeMovie(e, item))" />
 	}
 
 </div>
 
+<TemplatedDialog Show="ShowConfigureMovie">
+	<ConfigureMovie NomDuFichier="@_movieToChange.MovieInformation.FileName"
+					ListFilms="_searchVideos"
+					SelectMovie="SelectMovie"
+					OnCancel="CloseConfigure"/>
+</TemplatedDialog>
 
 @code {
 

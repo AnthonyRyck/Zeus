@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using BlazorDownloadFile;
 using System.IO;
+using BlazorZeus.Models;
+using MoviesLib.Entities;
 
 namespace BlazorZeus.Pages
 {
@@ -20,6 +22,11 @@ namespace BlazorZeus.Pages
 		[Inject]
 		IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
 
+		private bool ShowConfigureMovie = false;
+
+		private IEnumerable<SearchVideoModel> _searchVideos;
+		private MovieModel _movieToChange;
+
 		#endregion
 
 		#region Properties
@@ -27,14 +34,14 @@ namespace BlazorZeus.Pages
 		/// <summary>
 		/// Liste de tous les films.
 		/// </summary>
-		public IEnumerable<Models.MovieModel> MoviesCollection { get; set; }
+		public List<MovieModel> MoviesCollection { get; set; }
 
 		#endregion
 
 
 		protected override async Task OnInitializedAsync()
 		{
-            MoviesCollection = await MoviesManager.GetMovies();
+            MoviesCollection = (await MoviesManager.GetMovies()).ToList();
 		}
 
 
@@ -55,5 +62,37 @@ namespace BlazorZeus.Pages
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="e"></param>
+		public async Task ChangeMovie(MouseEventArgs e, MovieModel movie)
+		{
+			_movieToChange = movie;
+			_searchVideos = await MoviesManager.GetListVideoOnTmDb(movie.MovieInformation.Titre);
+			ShowConfigureMovie = true;
+		}
+
+		public async Task SelectMovie(int id)
+		{
+			ShowConfigureMovie = false;
+
+			var newVideo = await MoviesManager.ChangeVideo(_movieToChange.Id, id);
+
+			// Récupère le movie Model, et met à jour par passage de référence dans la liste.
+			var tempReference = MoviesCollection.FirstOrDefault(x => x.Id == _movieToChange.Id);
+			tempReference = newVideo;
+
+			_movieToChange = null;
+			_searchVideos = null;
+		}
+
+
+		public void CloseConfigure()
+		{
+			ShowConfigureMovie = false;
+		}
+
+		
 	}
 }

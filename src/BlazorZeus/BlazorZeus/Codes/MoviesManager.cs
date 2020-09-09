@@ -193,7 +193,8 @@ namespace BlazorZeus.Codes
                     {
                         UrlAffiche = "https://image.tmdb.org/t/p/w370_and_h556_bestv2" + result.PosterPath,
                         IdVideoTmDb = result.Id,
-						Titre = result.Title
+						Titre = result.Title,
+                        ReleaseDate = result.ReleaseDate
                     });
                 }
             }

@@ -1,0 +1,39 @@
+﻿<div class="result-search-video" @onclick="@InternalClick">
+	<div class="text-center text-bold">
+		@Titre
+	</div>
+	<img src="@UrlAffiche" class="imgRechercher" />
+	
+	@if(DateRelease.HasValue)
+	{
+	<div>@DateRelease.Value.ToString("d")</div>
+	}
+	else
+	{
+	<div>Aucune date</div>
+	}
+</div>
+
+
+@code {
+	[Parameter]
+	public string Titre { get; set; }
+
+	[Parameter]
+	public int IdTmdb { get; set; }
+
+	[Parameter]
+	public string UrlAffiche { get; set; }
+
+	[Parameter]
+	public DateTime? DateRelease { get; set; }
+
+	[Parameter]
+	public EventCallback<int> SelectThisMovie { get; set; }
+
+
+	public void InternalClick()
+	{
+		SelectThisMovie.InvokeAsync(IdTmdb);
+	}
+}
