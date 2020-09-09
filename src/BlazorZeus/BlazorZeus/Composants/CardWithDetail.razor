@@ -9,11 +9,14 @@
 		else
 		{
 			<div class="zeus-imageParent">
-				<img id="zeus-imageVideo" src="@("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @PathPoster)"
-					class="imageMovie"/>
+				<img id="zeus-imageVideo" src="@("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @PathPoster)" />
 				@if(@Resolution == "1080p")
 				{
 					<img class="zeus-imageResolution" src="../images/1080p-logo.png" />
+				}
+				else if(@Resolution == "2160p")
+				{
+					<img class="zeus-imageResolution" src="../images/4K-UHD-logo.png" />
 				}
 
 			</div>
