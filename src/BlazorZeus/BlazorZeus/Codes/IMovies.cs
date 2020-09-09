@@ -67,6 +67,6 @@ namespace BlazorZeus.Codes
 		/// <param name="id"></param>
 	    void RemoveVideo(Guid id);
 
-        Task AnalysePaths();
+        Task<IEnumerable<MovieModel>> AnalysePaths();
 	}
 }

@@ -346,3 +346,27 @@ p.top-separator {
 	animation: dialog-entry 0.4s;
 	animation-timing-function: cubic-bezier(0.075, 0.820, 0.165, 1.000);
 }
+
+
+
+
+.zeus-imageParent {
+	position: relative;
+	top: 0;
+	left: 0;
+}
+
+.zeus-imageMovie {
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: 1px solid #000000;
+}
+
+.zeus-imageResolution {
+	position: absolute;
+	top: 260px;
+	left: 0px;
+	width:50px;
+
+}

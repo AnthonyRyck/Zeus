@@ -245,7 +245,7 @@ namespace BlazorZeus.Codes
 	    }
 
 
-        public async Task AnalysePaths()
+        public async Task<IEnumerable<MovieModel>> AnalysePaths()
 		{
             // Récupération des films en locale.
             List<MovieInformation> videosOnLocal = new List<MovieInformation>();
@@ -315,14 +315,13 @@ namespace BlazorZeus.Codes
                 }
             }
 
+            List<MovieModel> tempAddMovieModels = null;
+
             if (listeToAdd.Count > 0)
             {
 				try
 				{
-                    List<MovieModel> tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
-
-                    // Envoie d'un mail
-                    //await SendMailToUser(tempAddMovieModels);
+                    tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
 
                     lock (Lock)
                     {
@@ -337,8 +336,9 @@ namespace BlazorZeus.Codes
 
 					throw;
 				}
-                
             }
+
+            return tempAddMovieModels;
         }
 
 		#endregion

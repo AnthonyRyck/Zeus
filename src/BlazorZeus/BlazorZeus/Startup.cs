@@ -17,9 +17,7 @@ using BlazorZeus.Areas.Identity;
 using BlazorZeus.Data;
 using BlazorZeus.Codes;
 using BlazorZeus.Codes.Wish;
-using System.IO;
 using BlazorZeus.Services;
-using Radzen;
 using BlazorDownloadFile;
 
 namespace BlazorZeus
@@ -60,10 +58,6 @@ namespace BlazorZeus
 			services.AddScoped<ITheMovieDatabase, MovieDatabase>();
 
 			services.AddHostedService<AnalyserHostedService>();
-
-			// Service Radzen
-			services.AddScoped<DialogService>();
-			services.AddScoped<NotificationService>();
 
 			// Pour téléchargement de fichier.
 			services.AddBlazorDownloadFile();
