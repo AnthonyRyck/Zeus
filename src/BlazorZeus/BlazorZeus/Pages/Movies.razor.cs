@@ -87,6 +87,11 @@ namespace BlazorZeus.Pages
 			_searchVideos = null;
 		}
 
+		public async Task GetNewTitle(string titre)
+		{
+			_searchVideos = await MoviesManager.GetListVideoOnTmDb(titre);
+		}
+
 
 		public void CloseConfigure()
 		{

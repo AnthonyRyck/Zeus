@@ -1,22 +1,33 @@
 ﻿@using Models
 
 <div>
-	<label>Nom du fichier : </label>
-	<div>@NomDuFichier</div>
-</div>
 
-<div class="zeusflex">
-	@foreach (var film in ListFilms)
-	{
-		<ImageSearchVideo Titre="@film.Titre"
-						  UrlAffiche="@film.UrlAffiche"
-						  SelectThisMovie="@(e => GetId(@film.IdVideoTmDb))"
-						  DateRelease="@film.ReleaseDate" />
-	}
-</div>
+	<div>
+		<div><b>Nom du fichier : </b></div>
+		<div><i>@NomDuFichier</i></div>
+	</div>
 
-<div>
-	<button onclick="@OnCancel">Cancel</button>
+	<span>
+		<b>Un autre titre ?</b>
+		<input @bind-value="@NouveauTitre" />
+		<button @onclick="@GetTitre">Chercher</button>
+	</span>
+
+	<div class="zeusflex maxHeight500pxWithScroll">
+		@foreach (var film in ListFilms)
+		{
+			<ImageSearchVideo Titre="@film.Titre"
+							  UrlAffiche="@film.UrlAffiche"
+							  SelectThisMovie="@(e => GetId(@film.IdVideoTmDb))"
+							  DateRelease="@film.ReleaseDate" />
+		}
+	</div>
+
+	<div>
+		<button onclick="@OnCancel">Cancel</button>
+	</div>
+
+
 </div>
 
 @code {
@@ -33,9 +44,22 @@
 	[Parameter]
 	public string NomDuFichier { get; set; }
 
+	[Parameter]
+	public EventCallback<string> GetNouveauTitre { get; set; }
 
+
+	public string NouveauTitre { get; set; }
+
+	
 	public void GetId(int id)
 	{
 		SelectMovie.InvokeAsync(id);
+	}
+
+
+	public void GetTitre()
+	{
+		if(!string.IsNullOrEmpty(NouveauTitre))
+			GetNouveauTitre.InvokeAsync(NouveauTitre);
 	}
 }
