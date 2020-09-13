@@ -1,0 +1,32 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+WORKDIR /src
+
+# copy csproj and restore as distinct layers
+RUN mkdir BlazorZeus
+
+COPY BlazorZeus/BlazorZeus.csproj ./BlazorZeus/BlazorZeus.csproj
+
+WORKDIR /src/BlazorZeus
+RUN dotnet restore
+
+WORKDIR /src
+
+# copy everything else and build app
+COPY BlazorZeus/. ./BlazorZeus/
+WORKDIR /src/BlazorZeus
+RUN dotnet publish -c Release -o out
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+
+WORKDIR /app
+
+RUN mkdir -p movies
+RUN mkdir -p series
+RUN mkdir -p save
+RUN mkdir -p config
+RUN mkdir -p Database
+
+COPY --from=build-env /src/BlazorZeus/out .
+
+EXPOSE 80
+ENTRYPOINT ["dotnet", "BlazorZeus.dll"]
