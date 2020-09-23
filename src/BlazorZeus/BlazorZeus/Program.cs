@@ -21,7 +21,7 @@ namespace BlazorZeus
 	{
 		public static void Main(string[] args)
 		{
-			string pathLog = AppContext.BaseDirectory + "/Logs/";
+			string pathLog = Path.Combine(AppContext.BaseDirectory,"Logs");
 			if (!Directory.Exists(pathLog))
 			{
 				Directory.CreateDirectory(pathLog);
@@ -34,27 +34,34 @@ namespace BlazorZeus
 				.WriteTo.RollingFile(Path.Combine(pathLog, "log-{Date}.txt"))
 				.CreateLogger();
 
-			var host = CreateHostBuilder(args).Build();
-
-			// Création du répertoire pour la base de donnée
-			string pathDatabase = Path.Combine(AppContext.BaseDirectory, "database");
-			if (!Directory.Exists(pathDatabase))
-				Directory.CreateDirectory(pathDatabase);
-
-			var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();
-			using (var scope = scopeFactory.CreateScope())
+			try
 			{
-				var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-				var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-				var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+				var host = CreateHostBuilder(args).Build();
 
-				if (db.Database.EnsureCreated())
+				// Création du répertoire pour la base de donnée
+				string pathDatabase = Path.Combine(AppContext.BaseDirectory, "database");
+				if (!Directory.Exists(pathDatabase))
+					Directory.CreateDirectory(pathDatabase);
+
+				var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();
+				using (var scope = scopeFactory.CreateScope())
 				{
-					DataInitializer.InitData(roleManager, userManager).Wait();
-				}
-			}
+					var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+					var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+					var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-			host.Run();
+					if (db.Database.EnsureCreated())
+					{
+						DataInitializer.InitData(roleManager, userManager).Wait();
+					}
+				}
+
+				host.Run();
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "Erreur dans Main");
+			}
 		}
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -4,6 +4,7 @@ using BlazorZeus.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace BlazorZeus.Services
 		#region Properties
 
 		private Timer _timer;
-
+		
 		private readonly IServiceScopeFactory _scopeFactory;
 		public ISettings Settings { get; set; }
 
@@ -77,19 +78,25 @@ namespace BlazorZeus.Services
 
 		private void Analyse(object state)
 		{
-			// Récupération des films en locale.
-			using (var scope = _scopeFactory.CreateScope())
+			try
 			{
-				IMovies moviesManager = scope.ServiceProvider.GetRequiredService<IMovies>();
-				moviesManager.AnalysePaths().Wait();
+				using (var scope = _scopeFactory.CreateScope())
+				{
+					IMovies moviesManager = scope.ServiceProvider.GetRequiredService<IMovies>();
+					moviesManager.AnalysePaths().Wait();
 
-				//IEnumerable<MovieModel> newMovies = moviesManager.AnalysePaths().Result;
-				//if(newMovies != null && newMovies.Any())
-				//{
+					//IEnumerable<MovieModel> newMovies = moviesManager.AnalysePaths().Result;
+					//if(newMovies != null && newMovies.Any())
+					//{
 					//var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 					//List<IdentityUser> listUser = db.Users.ToList();
 					//SendMail(listUser, newMovies);
-				//}
+					//}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "Erreur dans AnalyseHostedService");
 			}
 		}
 

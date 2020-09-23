@@ -25,6 +25,7 @@ RUN mkdir -p series
 RUN mkdir -p save
 RUN mkdir -p config
 RUN mkdir -p Database
+RUN mkdir -p Logs
 
 COPY --from=build-env /src/BlazorZeus/out .
 
