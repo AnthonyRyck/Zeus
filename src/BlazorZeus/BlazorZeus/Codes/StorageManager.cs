@@ -239,7 +239,7 @@ namespace BlazorZeus.Codes
                 //PathMovies = new List<string> { Path.Combine(@"C:\Docker\Zeus\movies") },
                 PathDessinAnimes = new List<string>{"/app/animes"},
                 PathShows = new List<string> {"/app/series"},
-                TempsEnMillisecondPourTimerRefresh = 30,
+                TempsEnMinutePourTimerRefresh = 30,
 				Mail = string.Empty,
 				PasswordMail = string.Empty
             };

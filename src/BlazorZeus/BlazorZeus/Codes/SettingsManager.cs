@@ -33,7 +33,7 @@ namespace BlazorZeus.Codes
 
 	    public uint GetTimeToUpdateVideos()
 	    {
-		    return _configApp.TempsEnMillisecondPourTimerRefresh;
+		    return _configApp.TempsEnMinutePourTimerRefresh;
 	    }
 
 	    public IEnumerable<string> GetPathMovies()
@@ -81,7 +81,7 @@ namespace BlazorZeus.Codes
 		    {
 			    LanguePourTmDb = langueTmdb,
 			    RegionPourTmDb = regionTmdb,
-			    TempsEnMillisecondPourTimerRefresh = tempsRefresh,
+			    TempsEnMinutePourTimerRefresh = tempsRefresh,
 			    ListeDeLangue = GetLanguesVideos().ToList(),
 			    PathMovies = GetPathMovies(),
 			    PathDessinAnimes = GetPathDessinAnimes(),

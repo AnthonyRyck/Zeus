@@ -38,9 +38,9 @@ namespace BlazorZeus.Codes
         public IEnumerable<string> PathShows { get; set; }
 
         /// <summary>
-        /// Temps en milliseconde pour faire un update sur les films/séries.
+        /// Temps en minute pour faire un update sur les films/séries.
         /// </summary>
-        public uint TempsEnMillisecondPourTimerRefresh { get; set; }
+        public uint TempsEnMinutePourTimerRefresh { get; set; }
 
 		/// <summary>
 		/// C'est le compte utilisé pour envoyer les mails.
