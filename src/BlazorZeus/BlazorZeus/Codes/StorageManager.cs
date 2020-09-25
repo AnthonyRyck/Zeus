@@ -235,11 +235,11 @@ namespace BlazorZeus.Codes
                 {
                     "FRENCH", "TRUEFRENCH", "FR"
                 },
-                //PathMovies = new List<string> { "/app/movies" },
-                PathMovies = new List<string> { Path.Combine(@"C:\Docker\Zeus\movies") },
+                PathMovies = new List<string> { "/app/movies" },
+                //PathMovies = new List<string> { Path.Combine(@"C:\Docker\Zeus\movies") },
                 PathDessinAnimes = new List<string>{"/app/animes"},
                 PathShows = new List<string> {"/app/series"},
-                TempsEnMillisecondPourTimerRefresh = 600000,
+                TempsEnMillisecondPourTimerRefresh = 30,
 				Mail = string.Empty,
 				PasswordMail = string.Empty
             };
