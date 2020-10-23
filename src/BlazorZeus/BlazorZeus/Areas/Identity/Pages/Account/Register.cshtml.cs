@@ -86,7 +86,8 @@ namespace BlazorZeus.Areas.Identity.Pages.Account
 				{
 					_logger.LogInformation("User created a new account with password.");
 
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    //await _signInManager.SignInAsync(user, isPersistent: false);
+                    await _userManager.AddToRoleAsync(user, "Member");
                     return LocalRedirect(returnUrl);
 
                     // *********** Pour confirmer le compte avec un mail ***********
