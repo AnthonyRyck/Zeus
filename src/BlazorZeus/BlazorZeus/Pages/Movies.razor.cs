@@ -98,6 +98,23 @@ namespace BlazorZeus.Pages
 			ShowConfigureMovie = false;
 		}
 
-		
+		public void ChangeQuality(string quality)
+		{
+			ShowConfigureMovie = false;
+
+			if (!string.IsNullOrEmpty(quality))
+			{
+				MoviesManager.ChangeResolution(_movieToChange.Id, quality);
+
+				// Récupère le movie Model, et met à jour par passage de référence dans la liste.
+				var tempReference = MoviesCollection.FirstOrDefault(x => x.Id == _movieToChange.Id);
+				tempReference.MovieInformation.Resolution = quality;
+			}
+
+			_movieToChange = null;
+			_searchVideos = null;
+		}
+
+
 	}
 }

@@ -68,5 +68,13 @@ namespace BlazorZeus.Codes
 	    void RemoveVideo(Guid id);
 
         Task<IEnumerable<MovieModel>> AnalysePaths();
+
+        /// <summary>
+        /// Permet de changer la résolution d'un film.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="quality"></param>
+        /// <returns></returns>
+		void ChangeResolution(Guid id, string quality);
 	}
 }

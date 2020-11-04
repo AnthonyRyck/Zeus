@@ -226,11 +226,24 @@ namespace BlazorZeus.Codes
             return videoToChange;
         }
 
-		/// <summary>
-		/// Permet de supprimer la video par rapport à son ID.
-		/// </summary>
-		/// <param name="id"></param>
-		public void RemoveVideo(Guid id)
+        public void ChangeResolution(Guid id, string quality)
+        {
+            MovieModel videoToChange = GetMovie(id);
+            if (videoToChange == null)
+                return;
+                        
+            lock (Lock)
+            {
+                videoToChange.MovieInformation.Resolution = quality;
+                Storage.SaveMoviesModels(_movieModelsCollection);
+            }
+        }
+
+        /// <summary>
+        /// Permet de supprimer la video par rapport à son ID.
+        /// </summary>
+        /// <param name="id"></param>
+        public void RemoveVideo(Guid id)
 	    {
 		    lock (Lock)
 		    {
@@ -442,8 +455,10 @@ namespace BlazorZeus.Codes
 
             return retourMovie;
         }
-        
-        #endregion
+
+
+
+		#endregion
 
 	}
 }

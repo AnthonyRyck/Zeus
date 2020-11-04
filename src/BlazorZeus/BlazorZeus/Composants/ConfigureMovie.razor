@@ -13,6 +13,19 @@
 		<button @onclick="@GetTitre">Chercher</button>
 	</span>
 
+	<div>
+		<span>
+			<b>Changer la qualité ?</b>
+			<select @bind="QualitySelected">
+				<option />
+				<option value="4K">4K</option>
+				<option value="1080p">1080p</option>
+			</select>
+			<button @onclick="@OnClick">Valider</button>
+		</span>
+	</div>
+	
+
 	<div class="zeusflex maxHeight500pxWithScroll">
 		@foreach (var film in ListFilms)
 		{
@@ -47,10 +60,12 @@
 	[Parameter]
 	public EventCallback<string> GetNouveauTitre { get; set; }
 
-
 	public string NouveauTitre { get; set; }
+	public string QualitySelected { get; set; }
 
-	
+	[Parameter]
+	public EventCallback<string> OnChangeQuality { get; set; }
+
 	public void GetId(int id)
 	{
 		SelectMovie.InvokeAsync(id);
@@ -62,4 +77,10 @@
 		if(!string.IsNullOrEmpty(NouveauTitre))
 			GetNouveauTitre.InvokeAsync(NouveauTitre);
 	}
+
+	public void OnClick()
+	{
+		OnChangeQuality.InvokeAsync(QualitySelected);
+	}
+
 }
