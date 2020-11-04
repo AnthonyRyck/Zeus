@@ -1,4 +1,8 @@
-﻿.float-my-children > * {
+﻿.petit-text {
+	font-size:0.7em;
+}
+
+.float-my-children > * {
 	float: left;
 	margin-right: 5px;
 }

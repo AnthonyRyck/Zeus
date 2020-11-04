@@ -45,8 +45,9 @@
 	<div class="zeusinfo">
 		<p class="title" id="title">
 			@Titre
-		</p>
-
+			<div class="text-muted petit-text">Taille : @FormatBytes(Size)</div>
+		</p>		
+		
 		<p id="description" class="overview">@Overview</p>
 	</div>
 		
@@ -70,8 +71,24 @@
 	public string Resolution { get; set; }
 
 	[Parameter]
+	public long Size { get; set; }
+
+	[Parameter]
 	public EventCallback<MouseEventArgs> OnClickDownloadMovieCallback { get; set; }
 
 	[Parameter]
 	public EventCallback<MouseEventArgs> OnClickChangeMovieCallback { get; set; }
+
+	private static string FormatBytes(long octets)
+	{
+		string[] Suffix = { "octets", "Ko", "Mo", "Go", "To" };
+		int i;
+		double dblSOctet = octets;
+		for (i = 0; i < Suffix.Length && octets >= 1024; i++, octets /= 1024)
+		{
+			dblSOctet = octets / 1024.0;
+		}
+
+		return String.Format("{0:0.##} {1}", dblSOctet, Suffix[i]);
+	}
 }

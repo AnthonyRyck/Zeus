@@ -15,6 +15,7 @@
 						PathPoster="@item.MovieTmDb.PosterPath"
 						IdFilm="@item.MovieTmDb.Id"
 						Resolution="@item.MovieInformation.Resolution"
+						Size="@item.MovieInformation.Size"
 						OnClickDownloadMovieCallback="@(e => DownloadMovie(e, item.Id))"
 						OnClickChangeMovieCallback="@(e => ChangeMovie(e, item))" />
 	}
