@@ -10,11 +10,11 @@
 		{
 			<div class="zeus-imageParent">
 				<img id="zeus-imageVideo" src="@("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + @PathPoster)" />
-				@if(@Resolution == "1080p")
+				@if(@Resolution == "1080p" || Resolution == "1080P")
 				{
 					<img class="zeus-imageResolution" src="../images/1080p-logo.png" />
 				}
-				else if(@Resolution == "2160p" || Resolution == "4K")
+				else if(@Resolution == "2160p" || Resolution == "4K" || Resolution == "2160P")
 				{
 					<img class="zeus-imageResolution" src="../images/4K-UHD-logo.png" />
 				}
@@ -24,20 +24,12 @@
 
 		<div class="meta" data-role="tooltip">
 
-			<a href="@Link">
+			<a href="@Link" target="_blank" rel="noopener noreferrer">
 				<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-download" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 					<path fill-rule="evenodd" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
 					<path fill-rule="evenodd" d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
 				</svg>
 			</a>
-
-
-			@*<button @onclick="OnClickDownloadMovieCallback">
-				<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-download" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-					<path fill-rule="evenodd" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
-					<path fill-rule="evenodd" d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
-				</svg>
-			</button>*@
 			
 			<AuthorizeView Roles="Admin, Manager">
 				<button @onclick="OnClickChangeMovieCallback">
@@ -83,9 +75,6 @@
 
 	[Parameter]
 	public long Size { get; set; }
-
-	[Parameter]
-	public EventCallback<MouseEventArgs> OnClickDownloadMovieCallback { get; set; }
 
 	[Parameter]
 	public EventCallback<MouseEventArgs> OnClickChangeMovieCallback { get; set; }

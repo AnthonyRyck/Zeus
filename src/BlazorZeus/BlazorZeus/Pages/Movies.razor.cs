@@ -20,9 +20,6 @@ namespace BlazorZeus.Pages
         [Inject]
         private IMovies MoviesManager { get; set; }
 
-		[Inject]
-		IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
-
 		private bool ShowConfigureMovie = false;
 
 		private IEnumerable<SearchVideoModel> _searchVideos;
@@ -48,25 +45,6 @@ namespace BlazorZeus.Pages
             MoviesCollection = (await MoviesManager.GetMovies()).ToList();
 		}
 
-		/// <summary>
-		/// Event sur un click pour DL une vidéo.
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param idMovieSelected="id">ID du film.</param>
-		public async void DownloadMovie(MouseEventArgs e, Guid idMovieSelected)
-		{
-			//await Http.GetStreamAsync(MyNavigationManager.BaseUri + "/api/" + idMovieSelected.ToString());
-
-			//var movieSelected = MoviesCollection.First(x => x.Id == idMovieSelected);
-			//var path = movieSelected.MovieInformation.PathFile;
-			//var fileName = movieSelected.MovieInformation.FileName;
-
-
-			//using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-			//{
-			//	BlazorDownloadFileService.DownloadFile(fileName, fs, "application/octet-stream");
-			//}
-		}
 
 		/// <summary>
 		/// 

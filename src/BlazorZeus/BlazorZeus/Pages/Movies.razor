@@ -17,7 +17,6 @@
 						Resolution="@item.MovieInformation.Resolution"
 						Size="@item.MovieInformation.Size"
 						Link="@(MyNavigationManager.BaseUri + "api/movies/" + item.Id.ToString())"
-						OnClickDownloadMovieCallback="@(e => DownloadMovie(e, item.Id))"
 						OnClickChangeMovieCallback="@(e => ChangeMovie(e, item))" />
 	}
 
