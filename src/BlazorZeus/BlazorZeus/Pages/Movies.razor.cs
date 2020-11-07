@@ -9,6 +9,7 @@ using BlazorDownloadFile;
 using System.IO;
 using BlazorZeus.Models;
 using MoviesLib.Entities;
+using System.Net.Http;
 
 namespace BlazorZeus.Pages
 {
@@ -27,6 +28,9 @@ namespace BlazorZeus.Pages
 		private IEnumerable<SearchVideoModel> _searchVideos;
 		private MovieModel _movieToChange;
 
+		[Inject]
+		public NavigationManager MyNavigationManager { get; set; }
+
 		#endregion
 
 		#region Properties
@@ -44,22 +48,24 @@ namespace BlazorZeus.Pages
             MoviesCollection = (await MoviesManager.GetMovies()).ToList();
 		}
 
-
 		/// <summary>
 		/// Event sur un click pour DL une vidéo.
 		/// </summary>
 		/// <param name="e"></param>
 		/// <param idMovieSelected="id">ID du film.</param>
-		public void DownloadMovie(MouseEventArgs e, Guid idMovieSelected)
+		public async void DownloadMovie(MouseEventArgs e, Guid idMovieSelected)
 		{
-			var movieSelected = MoviesCollection.First(x => x.Id == idMovieSelected);
-			var path = movieSelected.MovieInformation.PathFile;
-			var fileName = movieSelected.MovieInformation.FileName;
+			//await Http.GetStreamAsync(MyNavigationManager.BaseUri + "/api/" + idMovieSelected.ToString());
 
-			using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-			{
-				BlazorDownloadFileService.DownloadFile(fileName, fs, "application/octet-stream");
-			}
+			//var movieSelected = MoviesCollection.First(x => x.Id == idMovieSelected);
+			//var path = movieSelected.MovieInformation.PathFile;
+			//var fileName = movieSelected.MovieInformation.FileName;
+
+
+			//using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+			//{
+			//	BlazorDownloadFileService.DownloadFile(fileName, fs, "application/octet-stream");
+			//}
 		}
 
 		/// <summary>

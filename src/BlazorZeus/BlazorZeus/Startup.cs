@@ -19,6 +19,7 @@ using BlazorZeus.Codes;
 using BlazorZeus.Codes.Wish;
 using BlazorZeus.Services;
 using BlazorDownloadFile;
+using System.Net.Http;
 
 namespace BlazorZeus
 {
