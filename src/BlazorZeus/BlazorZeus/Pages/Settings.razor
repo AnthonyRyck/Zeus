@@ -1,6 +1,8 @@
 ﻿@page "/adminSetting"
 @using BlazorZeus.Composants
 
+@attribute [Authorize(Roles = "Admin")]
+
 
 <h3>Accès admin</h3>
 
@@ -13,7 +15,7 @@
 			<ConfigApplication />
 		</ChildContent>
 	</MatTab>
-	
+
 	<MatTab>
 		<LabelContent>
 			Utilisateurs <MatIcon Icon="@MatIconNames.People"></MatIcon>
