@@ -1,0 +1,17 @@
+﻿@using Composants.ViewModel
+
+@inject IGestionLog LogGestion 
+
+
+<h3>Gestion des logs</h3>
+
+<div @onclick="Click">Plouf</div>
+
+@code {
+
+	private void Click()
+	{
+		Console.WriteLine("Click sur DIV");
+	}
+
+}

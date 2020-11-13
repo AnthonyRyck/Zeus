@@ -20,6 +20,7 @@ using BlazorZeus.Codes.Wish;
 using BlazorZeus.Services;
 using BlazorDownloadFile;
 using System.Net.Http;
+using BlazorZeus.Composants.ViewModel;
 
 namespace BlazorZeus
 {
@@ -57,11 +58,14 @@ namespace BlazorZeus
 			services.AddSingleton<IWish, WishMaster>();
 
 			services.AddScoped<ITheMovieDatabase, MovieDatabase>();
+			services.AddScoped<IGestionLog, GestionLog>();
 
 			services.AddHostedService<AnalyserHostedService>();
 
+
+
 			// Pour téléchargement de fichier.
-			services.AddBlazorDownloadFile();
+			//services.AddBlazorDownloadFile();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
