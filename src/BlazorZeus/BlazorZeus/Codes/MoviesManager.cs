@@ -9,6 +9,7 @@ using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
 using TMDbLib.Objects.Search;
 using BlazorZeus.Models;
+using Serilog;
 
 namespace BlazorZeus.Codes
 {
@@ -276,18 +277,18 @@ namespace BlazorZeus.Codes
             }
 
             // Récupération des dessins animés.
-            foreach (var dessinAnimes in Settings.GetPathDessinAnimes())
-            {
-                if (!Directory.Exists(dessinAnimes))
-                {
-                    continue;
-                }
+            //foreach (var dessinAnimes in Settings.GetPathDessinAnimes())
+            //{
+            //    if (!Directory.Exists(dessinAnimes))
+            //    {
+            //        continue;
+            //    }
 
-                IEnumerable<MovieInformation> tempAnimes = _movieManager.GetMoviesInformations(dessinAnimes, TypeVideo.DessinAnime);
+            //    IEnumerable<MovieInformation> tempAnimes = _movieManager.GetMoviesInformations(dessinAnimes, TypeVideo.DessinAnime);
 
-                if (tempAnimes.Any())
-                    videosOnLocal.AddRange(tempAnimes);
-            }
+            //    if (tempAnimes.Any())
+            //        videosOnLocal.AddRange(tempAnimes);
+            //}
 
             List<MovieModel> listeToDelete = new List<MovieModel>();
 
@@ -305,6 +306,8 @@ namespace BlazorZeus.Codes
 
                 lock (Lock)
                 {
+                    Log.Logger.Information("Suppression de " + listeToDelete.Count + " films.");
+
                     // Suppression des films n'existant plus
                     foreach (var toDelete in listeToDelete)
                     {
@@ -334,6 +337,8 @@ namespace BlazorZeus.Codes
             {
 				try
 				{
+                    Log.Logger.Information("Ajout de " + listeToAdd.Count + " films.");
+
                     tempAddMovieModels = await GetMovieDbInformation(listeToAdd);
 
                     lock (Lock)
@@ -346,8 +351,8 @@ namespace BlazorZeus.Codes
                 }
 				catch (Exception ex)
 				{
-
-					throw;
+                    Log.Logger.Error(ex, "Erreur sur la récupération des infos sur TmDb.");
+                    throw;
 				}
             }
 
@@ -413,6 +418,8 @@ namespace BlazorZeus.Codes
                     MovieTmDb = movieDb,
 					DateAdded = GetDateFileCreated(movieInformation.PathFile)
                 });
+
+                Log.Logger.Information("Ajout de " + movieDb.OriginalTitle);
             }
 
             return returnMovieModels;

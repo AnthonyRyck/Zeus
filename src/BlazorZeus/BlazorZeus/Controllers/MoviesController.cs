@@ -89,6 +89,8 @@ namespace BlazorZeus.Controllers
 
             try
             {
+                Log.Logger.Information("Téléchargement de " + movieInformation.FileName);
+
                 FileStream file = new FileStream(movieInformation.PathFile, FileMode.Open, FileAccess.Read, FileShare.Read, 4096,
                     true);
 

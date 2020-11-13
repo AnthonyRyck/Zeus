@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace BlazorZeus.Areas.Identity.Pages.Account
 {
@@ -79,6 +80,7 @@ namespace BlazorZeus.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    Log.Logger.Information("User logged in : " + Input.Login);
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -88,10 +90,12 @@ namespace BlazorZeus.Areas.Identity.Pages.Account
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
+                    Log.Logger.Warning("User account locked out : " + Input.Login);
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
+                    Log.Logger.Warning("Invalide Login : " + Input.Login);
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
