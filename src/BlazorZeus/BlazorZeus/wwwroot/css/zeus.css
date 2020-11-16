@@ -597,3 +597,17 @@ p.top-separator {
 /*****************************/
 /* FIN Animation pour Loading*/
 /*****************************/
+
+
+.zeus-element-line {
+	border-color:black;
+	border-width:1px;
+	border-radius:3px;
+	background-color: lightskyblue;
+	color:black;
+	margin-top:4px;
+}
+
+.zeus-padding-left-10px{
+	padding-left:10px;
+}

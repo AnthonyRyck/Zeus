@@ -5,13 +5,35 @@
 
 <h3>Gestion des logs</h3>
 
-<div @onclick="Click">Plouf</div>
+<div class="row">
+	<div class="col-4">
+		<div>Sélectionner un fichier :</div>
+		
+		<div class="maxHeight500pxWithScroll">
+			@*Listes des fichiers de logs*@
+			@foreach (var line in LogGestion.FilesLogsCollection)
+			{
+				<ElementLine ElementName="@line.Name"
+							OnClickElement="@LogGestion.SelectFile"/>
+			}
+		</div>
+	</div>
+		
+	<div class="col-8">
+		@if (LogGestion.TextLog != null)
+		{
+			<div><u>Fichier sélectionné</u> : <b>@LogGestion.NomDuFichier</b></div>
+
+			<div class="maxHeight500pxWithScroll">
+				@foreach (var lineLog in LogGestion.TextLog)
+				{
+					<div>@lineLog</div>
+				}
+			</div>
+		}
+	</div>
+</div>
 
 @code {
-
-	private void Click()
-	{
-		Console.WriteLine("Click sur DIV");
-	}
 
 }
