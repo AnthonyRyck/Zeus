@@ -1,17 +1,38 @@
 ﻿@using Composants.ViewModel
+@using Codes
 
 @inject IGestionLog LogGestion 
 
 
 <h3>Gestion des logs</h3>
 
-<div @onclick="Click">Plouf</div>
+<div class="row">
+	
+	@*Liste des fichiers de logs*@
+	<div class="col-2">
+		<u>Nom des fichiers logs</u> :
+		<div class="zeus-border">
+			@foreach (FileLog item in LogGestion.FilesLog)
+			{
+				<div @onclick="(() => LogGestion.SelectFile(item.PathFile))">
+					@item.NameFile
+				</div>
+			}
+		</div>
+	</div>
 
-@code {
+	@*Visuel sur le fichier sélectionné*@
+	<div class="col-10 maxHeight500pxWithScroll">
 
-	private void Click()
-	{
-		Console.WriteLine("Click sur DIV");
-	}
+		@if (LogGestion.AllTextLogSelected != null)
+		{
+			@foreach (var line in LogGestion.AllTextLogSelected)
+			{
+				<div>
+					@line
+				</div>
+			}
+		}
+	</div>
 
-}
+</div>

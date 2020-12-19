@@ -380,6 +380,10 @@ p.top-separator {
 	overflow-y: scroll;
 }
 
+.zeus-border {
+	border: 2px solid black;
+	border-radius: 5px;
+}
 
 
 /************************/
