@@ -1,0 +1,15 @@
+﻿<div @onclick="@(() => OnClickElement.InvokeAsync(ElementName))"
+	class="zeus-element-line">
+	<div class="zeus-padding-left-10px">@ElementName</div>
+</div>
+
+
+
+@code {
+
+	[Parameter]
+	public EventCallback<string> OnClickElement { get; set; }
+
+	[Parameter]
+	public string ElementName { get; set; }
+}
