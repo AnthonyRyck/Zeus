@@ -1,7 +1,18 @@
-﻿@page "/gestionuser"
+﻿@using BlazorZeus.ViewModel
+@using BlazorZeus.Composants 
+
+@page "/gestionuser"
+
+@inject IUsersViewModel viewModel 
 
 
 <h3>Gestion des utilisateurs</h3>
+
+<TemplatedDialog Show="viewModel.ShowResetMdp">
+	<ResetMdpComponent OnCancel="viewModel.CancelChangeMdp"
+						GetNewPassword="viewModel.SetNewPassword">
+	</ResetMdpComponent>
+</TemplatedDialog>
 
 <table class="table">
 
@@ -20,7 +31,7 @@
 	</thead>
 
 	<tbody>
-		@foreach (var item in AllUsers)
+		@foreach (var item in viewModel.AllUsers)
 		{
 			<tr>
 				<td>
@@ -33,7 +44,7 @@
 					@item.Role
 				</td>
 				<td>
-					<select name="selectRole" @onchange="@(e =>  OnChangeRole(e, item.User.Id))">
+					<select name="selectRole" @onchange="@(e =>  viewModel.OnChangeRole(e, item.User.Id))">
 						<option value=""></option>
 						<option value="Member">Member</option>
 						<option value="Manager">Manager</option>
@@ -42,8 +53,13 @@
 					</select>
 				</td>
 				<td>
+					<button @onclick="(() => viewModel.OpenChangeMdp(item.User.Id))">
+						Réinit MDP
+					</button>
+				</td>
+				<td>
 					<button class="btn btn-link"
-							@onclick="(() => DeleteUser(item.User.Id))">
+							@onclick="(() => viewModel.DeleteUser(item.User.Id))">
 						Supprimer
 					</button>
 				</td>

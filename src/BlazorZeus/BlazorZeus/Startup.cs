@@ -61,6 +61,7 @@ namespace BlazorZeus
 			services.AddScoped<ITheMovieDatabase, MovieDatabase>();
 			services.AddScoped<IGestionLog, GestionLog>();
 			services.AddScoped<IMoviesViewModel, MoviesViewModel>();
+			services.AddScoped<IUsersViewModel, UsersViewModel>();
 
 			services.AddHostedService<AnalyserHostedService>();
 		}
