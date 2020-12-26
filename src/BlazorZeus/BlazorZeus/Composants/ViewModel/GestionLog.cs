@@ -52,7 +52,7 @@ namespace BlazorZeus.Composants.ViewModel
 			}
 			catch (Exception ex)
 			{
-				TextLogSelected = ex.Message;
+				AllTextLogSelected = new string[] { ex.Message };
 			}
 		}
 

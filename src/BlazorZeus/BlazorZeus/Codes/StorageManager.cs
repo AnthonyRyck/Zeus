@@ -235,8 +235,11 @@ namespace BlazorZeus.Codes
                 {
                     "FRENCH", "TRUEFRENCH", "FR"
                 },
+#if DEBUG
+                PathMovies = new List<string> { Path.Combine(@"F:\Docker\Zeus\movies") },
+#else
                 PathMovies = new List<string> { "/app/movies" },
-                //PathMovies = new List<string> { Path.Combine(@"C:\Docker\Zeus\movies") },
+#endif                
                 PathDessinAnimes = new List<string>{"/app/animes"},
                 PathShows = new List<string> {"/app/series"},
                 TempsEnMinutePourTimerRefresh = 30,
@@ -280,7 +283,7 @@ namespace BlazorZeus.Codes
             return tempVideos;
         }
 
-        #endregion
+#endregion
 
     }
 }

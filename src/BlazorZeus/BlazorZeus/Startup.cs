@@ -21,6 +21,7 @@ using BlazorZeus.Services;
 using BlazorDownloadFile;
 using System.Net.Http;
 using BlazorZeus.Composants.ViewModel;
+using BlazorZeus.ViewModel;
 
 namespace BlazorZeus
 {
@@ -51,21 +52,17 @@ namespace BlazorZeus
 			services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
 			// *** Service pour l'application ***
-			services.AddSingleton<IMovies, MoviesManager>();
 			services.AddSingleton<ISettings, SettingsManager>();
-
-			services.AddSingleton<IShows, ShowsManager>();
-			services.AddSingleton<IWish, WishMaster>();
+			services.AddSingleton<IMovies, MoviesManager>();
+			
+			//services.AddSingleton<IShows, ShowsManager>();
+			//services.AddSingleton<IWish, WishMaster>();
 
 			services.AddScoped<ITheMovieDatabase, MovieDatabase>();
 			services.AddScoped<IGestionLog, GestionLog>();
+			services.AddScoped<IMoviesViewModel, MoviesViewModel>();
 
 			services.AddHostedService<AnalyserHostedService>();
-
-
-
-			// Pour téléchargement de fichier.
-			//services.AddBlazorDownloadFile();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

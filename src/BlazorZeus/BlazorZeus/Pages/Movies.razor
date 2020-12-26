@@ -1,5 +1,7 @@
-﻿@page "/movies"
+﻿@using BlazorZeus.ViewModel
 
+@page "/movies"
+@inject IMoviesViewModel viewModel  
 @attribute [Authorize(Roles = "Admin, Manager, Member")]
 
 @using BlazorZeus.Composants
@@ -8,7 +10,7 @@
 
 <div class="zeusflex">
 
-	@foreach (var item in MoviesCollection)
+	@foreach (var item in viewModel.MoviesCollection)
 	{
 		<CardWithDetail Titre="@item.MovieTmDb.Title"
 						Overview="@item.MovieTmDb.Overview"
@@ -16,19 +18,19 @@
 						IdFilm="@item.MovieTmDb.Id"
 						Resolution="@item.MovieInformation.Resolution"
 						Size="@item.MovieInformation.Size"
-						Link="@(MyNavigationManager.BaseUri + "api/movies/" + item.Id.ToString())"
-						OnClickChangeMovieCallback="@(e => ChangeMovie(e, item))" />
+						Link="@(viewModel.MyNavigationManager.BaseUri + "api/movies/" + item.Id.ToString())"
+						OnClickChangeMovieCallback="@(e => viewModel.ChangeMovie(item))" />
 	}
 
 </div>
 
-<TemplatedDialog Show="ShowConfigureMovie">
-	<ConfigureMovie NomDuFichier="@_movieToChange.MovieInformation.FileName"
-					ListFilms="_searchVideos"
-					SelectMovie="SelectMovie"
-					GetNouveauTitre="GetNewTitle"
-					OnCancel="CloseConfigure"
-					OnChangeQuality="ChangeQuality"/>
+<TemplatedDialog Show="viewModel.ShowConfigureMovie">
+	<ConfigureMovie NomDuFichier="@viewModel.MovieToChange.MovieInformation.FileName"
+					ListFilms="viewModel.SearchVideos"
+					SelectMovie="viewModel.SelectMovie"
+					GetNouveauTitre="viewModel.GetNewTitle"
+					OnCancel="viewModel.CloseConfigure"
+					OnChangeQuality="viewModel.ChangeQuality"/>
 </TemplatedDialog>
 
 @code {
