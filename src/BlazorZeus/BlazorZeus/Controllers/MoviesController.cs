@@ -61,7 +61,7 @@ namespace BlazorZeus.Controllers
             return retourMovies;
         }
 
-        [HttpGet("info")]
+        [HttpGet("info/{idMovie}")]
         public async Task<DetailMovie> GetVideoInformation(Guid idMovie)
         {
             MovieModel filmSelected = _moviesManager.GetMovie(idMovie);
