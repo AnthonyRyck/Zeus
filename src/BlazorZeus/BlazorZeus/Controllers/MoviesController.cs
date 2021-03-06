@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MoviesLib.Entities;
 using Serilog;
+using ZeusCore;
 
 namespace BlazorZeus.Controllers
 {
@@ -35,6 +36,51 @@ namespace BlazorZeus.Controllers
         {
             Log.Information("Demande de récupération des films en local.");
             return await _moviesManager.GetListMoviesLocal();
+        }
+
+        [HttpGet("allmovies")]
+        public async Task<IEnumerable<InformationMovie>> GetInformationVideo()
+        {
+            List<InformationMovie> retourMovies = new List<InformationMovie>();
+
+            var temp = await _moviesManager.GetMovies();
+
+            foreach (MovieModel item in temp)
+            {
+                InformationMovie movie = new InformationMovie()
+                {
+                    IdMovie = item.Id,
+                    Titre = item.MovieInformation.Titre,
+                    DateAdded = item.DateAdded,
+                    PosterPath = item.MovieTmDb.PosterPath,
+                };
+
+                retourMovies.Add(movie);
+            }
+
+            return retourMovies;
+        }
+
+        [HttpGet("info")]
+        public async Task<DetailMovie> GetVideoInformation(Guid idMovie)
+        {
+            MovieModel filmSelected = _moviesManager.GetMovie(idMovie);
+
+            DetailMovie detailMovie = new DetailMovie()
+            {
+                IdMovie = filmSelected.Id,
+                Titre = filmSelected.MovieInformation.Titre,
+                Annee = filmSelected.MovieInformation.Annee,
+                Resolution = filmSelected.MovieInformation.Resolution,
+                Qualite = filmSelected.MovieInformation.Qualite,
+                FileName = filmSelected.MovieInformation.FileName,
+                Size = filmSelected.MovieInformation.Size,
+                DateAdded = filmSelected.DateAdded,
+                PosterPath = filmSelected.MovieTmDb.PosterPath,
+                Overview = filmSelected.MovieTmDb.Overview
+            };
+
+            return detailMovie;
         }
 
         /// <summary>

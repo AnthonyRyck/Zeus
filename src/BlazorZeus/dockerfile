@@ -1,20 +1,18 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build-env
-WORKDIR /src
-
-# copy csproj and restore as distinct layers
-RUN mkdir BlazorZeus
-
-COPY BlazorZeus/BlazorZeus.csproj ./BlazorZeus/BlazorZeus.csproj
-
-WORKDIR /src/BlazorZeus
-RUN dotnet restore
+FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 
 WORKDIR /src
 
-# copy everything else and build app
-COPY BlazorZeus/. ./BlazorZeus/
-WORKDIR /src/BlazorZeus
-RUN dotnet publish -c Release -o out
+COPY ["BlazorZeus/BlazorZeus.csproj", "BlazorZeus/"]
+COPY ["ZeusCore/ZeusCore.csproj", "ZeusCore/"]
+
+RUN dotnet restore "BlazorZeus/BlazorZeus.csproj"
+
+COPY . .
+WORKDIR "/src/BlazorZeus"
+#RUN dotnet build "BlazorZeus.csproj" -c Release -o /app/build
+
+# FROM build AS publish
+RUN dotnet publish "BlazorZeus.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim
 
@@ -27,7 +25,7 @@ RUN mkdir -p config
 RUN mkdir -p Database
 RUN mkdir -p Logs
 
-COPY --from=build-env /src/BlazorZeus/out .
+COPY --from=build /app/publish .
 
 EXPOSE 80
 ENTRYPOINT ["dotnet", "BlazorZeus.dll"]
