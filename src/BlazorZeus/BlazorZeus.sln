@@ -7,7 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorZeus", "BlazorZeus\Bl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Shared", "_Shared", "{AF46E2B0-6575-49ED-A635-BCF758B5AC7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZeusCore", "ZeusCore\ZeusCore.csproj", "{E9BD90C5-5C41-47A6-AA90-B643F44014D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZeusCore", "ZeusCore\ZeusCore.csproj", "{E9BD90C5-5C41-47A6-AA90-B643F44014D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mobile", "Mobile", "{114170B0-FDDF-4B97-BF10-0419ABDD12DF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZeusMobile", "ZeusMobile\ZeusMobile\ZeusMobile.csproj", "{300C574E-FACD-40AF-9EE8-C2A7BEEAF489}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZeusMobile.Android", "ZeusMobile\ZeusMobile.Android\ZeusMobile.Android.csproj", "{B50CB7A3-2362-4D67-84EC-884343942B72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,12 +29,24 @@ Global
 		{E9BD90C5-5C41-47A6-AA90-B643F44014D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9BD90C5-5C41-47A6-AA90-B643F44014D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9BD90C5-5C41-47A6-AA90-B643F44014D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{300C574E-FACD-40AF-9EE8-C2A7BEEAF489}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{300C574E-FACD-40AF-9EE8-C2A7BEEAF489}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{300C574E-FACD-40AF-9EE8-C2A7BEEAF489}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{300C574E-FACD-40AF-9EE8-C2A7BEEAF489}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B50CB7A3-2362-4D67-84EC-884343942B72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B50CB7A3-2362-4D67-84EC-884343942B72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B50CB7A3-2362-4D67-84EC-884343942B72}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{B50CB7A3-2362-4D67-84EC-884343942B72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B50CB7A3-2362-4D67-84EC-884343942B72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B50CB7A3-2362-4D67-84EC-884343942B72}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E9BD90C5-5C41-47A6-AA90-B643F44014D7} = {AF46E2B0-6575-49ED-A635-BCF758B5AC7B}
+		{300C574E-FACD-40AF-9EE8-C2A7BEEAF489} = {114170B0-FDDF-4B97-BF10-0419ABDD12DF}
+		{B50CB7A3-2362-4D67-84EC-884343942B72} = {114170B0-FDDF-4B97-BF10-0419ABDD12DF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {68A36D4E-8FB0-4B92-B399-1E98F2B8735B}

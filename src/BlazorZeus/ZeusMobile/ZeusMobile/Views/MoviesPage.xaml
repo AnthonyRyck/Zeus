@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+			 xmlns:vm="clr-namespace:ZeusMobile.ViewModels"
+			 x:Class="ZeusMobile.Views.MoviesPage"
+			 Title="Liste des films">
+
+	<ContentPage.BindingContext>
+		<vm:MoviesViewModel />
+	</ContentPage.BindingContext>
+
+	<ContentPage.Content>
+		<Grid>
+			
+			<ListView Margin="10"
+						RowHeight="400"
+						ItemsSource="{Binding AllMovies, Mode=OneWay}"
+						ItemSelected="OnFilmSelected">
+
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<ViewCell>
+							<Image Source="{Binding ImgSource}"
+										Margin="5"
+										HorizontalOptions="FillAndExpand"
+										VerticalOptions="FillAndExpand">
+							</Image>
+						</ViewCell>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+
+		</Grid>
+    </ContentPage.Content>
+</ContentPage>

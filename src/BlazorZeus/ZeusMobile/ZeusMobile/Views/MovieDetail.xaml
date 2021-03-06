@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ZeusMobile.Views.MovieDetail"
+			 Title="Infos sur le film">
+    <ContentPage.Content>
+		<Grid Margin="5">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="200" />
+				<RowDefinition />
+				<RowDefinition />
+			</Grid.RowDefinitions>
+
+		    <Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+
+				<!--L'image-->
+				<Image Grid.Column="0"
+						Source="{Binding Movie.ImgSource}"
+						HorizontalOptions="FillAndExpand"
+						VerticalOptions="FillAndExpand" />
+
+				<!--et le titre-->
+				<StackLayout Grid.Column="1"
+							Orientation="Vertical">
+					<Label Text="{Binding Movie.Titre}"
+							FontAttributes="Bold"
+							FontSize="Title"/>
+
+					<Label Text="{Binding TailleFilm, StringFormat='Taille : {0}'}" />
+
+					<Label Text="{Binding Movie.Annee, StringFormat='Année : {0}'}" />
+
+					<Label Text="{Binding Movie.Resolution, StringFormat='Résolution : {0}'}" />
+				</StackLayout>
+
+				
+
+			</Grid>
+
+			<!--Information sur le film-->
+			<Grid Grid.Row="1">
+				<Label Text="{Binding Movie.Overview}"
+						/>
+			</Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
