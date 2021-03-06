@@ -21,5 +21,7 @@ namespace ZeusCore
 
 		public string Overview { get; set; }
 
+		public List<Video> Videos { get; set; }
+
 	}
 }

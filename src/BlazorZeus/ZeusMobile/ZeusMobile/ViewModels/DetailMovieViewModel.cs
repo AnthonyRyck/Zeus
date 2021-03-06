@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using ZeusCore;
@@ -42,16 +41,61 @@ namespace ZeusMobile.ViewModels
 		}
 		private string _tailleFilm;
 
+		public List<Video> VideosPromo
+		{
+			get { return _videosPromo; }
+			set
+			{
+				_videosPromo = value;
+				OnNotifyPropertyChanged();
+			}
+		}
+		private List<Video> _videosPromo;
+
+		/// <summary>
+		/// Indique s'il y a des vidéos.
+		/// </summary>
+		public bool HasVideo
+		{
+			get { return _hasVideo; }
+			set
+			{
+				_hasVideo = value;
+				OnNotifyPropertyChanged();
+			}
+		}
+		private bool _hasVideo;
+
+		/// <summary>
+		/// Pas de vidéo.
+		/// </summary>
+		public bool PasDeVideo
+		{
+			get { return _pasDeVideo; }
+			set
+			{
+				_pasDeVideo = value;
+				OnNotifyPropertyChanged();
+			}
+		}
+		private bool _pasDeVideo;
+
+
+
 		public DetailMovieViewModel(Guid idMovie)
 		{
 			_idMovie = idMovie;
 		}
 
-
 		internal async Task LoadMovieDetail()
 		{
 			Movie = await ZeusService.GetMovie(_idMovie);
 			TailleFilm = Helpers.GetSize(Movie.Size);
+
+			VideosPromo = Movie.Videos;
+			HasVideo = Movie.Videos.Count > 0;
+			PasDeVideo = !HasVideo;
 		}
+
 	}
 }

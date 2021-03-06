@@ -20,7 +20,7 @@ namespace ZeusMobile.Services
 		public static string IPAddress = "";
 #endif
 		// Mettre VOTRE PORT donné par Conveyor
-		public static int Port = 44364;
+		public static int Port = 45455;
 		public static string BackendUrl = $"https://{IPAddress}:{Port}/";
 
 		public ZeusService()
@@ -33,7 +33,6 @@ namespace ZeusMobile.Services
 			{
 				//BaseAddress = new Uri($"{BackendUrl}")
 				BaseAddress = new Uri("https://192.168.1.24:45455/")
-
 			};
 		}
 

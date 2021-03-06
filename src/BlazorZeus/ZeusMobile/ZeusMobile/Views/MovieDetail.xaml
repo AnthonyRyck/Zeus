@@ -7,8 +7,8 @@
 		<Grid Margin="5">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="200" />
-				<RowDefinition />
-				<RowDefinition />
+				<RowDefinition Height="200" />
+				<RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
 
 		    <Grid Grid.Row="0">
@@ -28,7 +28,7 @@
 							Orientation="Vertical">
 					<Label Text="{Binding Movie.Titre}"
 							FontAttributes="Bold"
-							FontSize="Title"/>
+							FontSize="Medium"/>
 
 					<Label Text="{Binding TailleFilm, StringFormat='Taille : {0}'}" />
 
@@ -36,9 +36,6 @@
 
 					<Label Text="{Binding Movie.Resolution, StringFormat='Résolution : {0}'}" />
 				</StackLayout>
-
-				
-
 			</Grid>
 
 			<!--Information sur le film-->
@@ -46,6 +43,43 @@
 				<Label Text="{Binding Movie.Overview}"
 						/>
 			</Grid>
-        </Grid>
+
+			<Grid Grid.Row="2">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+
+				<Label Text="Vidéos" />
+
+				<Label Text="Ne contient pas de vidéo"
+						Grid.Row="1"
+						IsVisible="{Binding PasDeVideo}"/>
+
+				<ListView Grid.Row="1"
+						ItemsSource="{Binding VideosPromo}"
+						ItemSelected="OnSelectVideo"
+						IsVisible="{Binding HasVideo}">
+					<ListView.ItemTemplate>
+						<DataTemplate>
+							<ViewCell>
+								<Label>
+									<Label.FormattedText>
+										<FormattedString>
+											<Span Text="{Binding Name}"
+													TextColor="Blue"
+													TextDecorations="Underline">
+											</Span>
+										</FormattedString>
+									</Label.FormattedText>
+								</Label>
+							</ViewCell>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+
+			</Grid>
+
+		</Grid>
     </ContentPage.Content>
 </ContentPage>

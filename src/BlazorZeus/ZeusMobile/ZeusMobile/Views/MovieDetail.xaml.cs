@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using ZeusCore;
 using ZeusMobile.ViewModels;
 
 namespace ZeusMobile.Views
@@ -27,6 +28,12 @@ namespace ZeusMobile.Views
 			base.OnAppearing();
 
 			await _viewModel.LoadMovieDetail();
+		}
+
+		private async void OnSelectVideo(object sender, SelectedItemChangedEventArgs e)
+		{
+			Video videoSelected = e.SelectedItem as Video;
+			await Navigation.PushAsync(new VideoPage("https://www.youtube.com/embed/" + videoSelected.Key));
 		}
 	}
 }

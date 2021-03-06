@@ -66,6 +66,18 @@ namespace BlazorZeus.Controllers
         {
             MovieModel filmSelected = _moviesManager.GetMovie(idMovie);
 
+            List<Video> videos = new List<Video>();
+            
+            foreach(var videoPromo in filmSelected.MovieTmDb.Videos.Results)
+			{
+                videos.Add(new Video()
+                {
+                    Key = videoPromo.Key,
+                    Name = videoPromo.Name,
+                    Site = videoPromo.Site
+                });
+			}
+
             DetailMovie detailMovie = new DetailMovie()
             {
                 IdMovie = filmSelected.Id,
@@ -77,7 +89,8 @@ namespace BlazorZeus.Controllers
                 Size = filmSelected.MovieInformation.Size,
                 DateAdded = filmSelected.DateAdded,
                 PosterPath = filmSelected.MovieTmDb.PosterPath,
-                Overview = filmSelected.MovieTmDb.Overview
+                Overview = filmSelected.MovieTmDb.Overview,
+                Videos = videos
             };
 
             return detailMovie;

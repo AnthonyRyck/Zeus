@@ -409,7 +409,10 @@ namespace BlazorZeus.Codes
                 }
                 else
                 {
-                    movieDb = await ClientTmDb.GetMovieAsync(movieSelected.Id);
+                    //movieDb = await ClientTmDb.GetMovieAsync(movieSelected.Id);
+
+                    // Récupération des infos avec les vidéos.
+                    movieDb = await ClientTmDb.GetMovieAsync(movieSelected.Id, MovieMethods.Videos);
                 }
 
                 returnMovieModels.Add(new MovieModel(Guid.NewGuid())
