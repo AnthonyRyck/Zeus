@@ -14,21 +14,18 @@ namespace ZeusMobile.Services
 	{
 		private HttpClient Client;
 
-#if DEBUG
-		public static string IPAddress = "10.0.2.2";
-#else
-		public static string IPAddress = "";
-#endif
-		// Mettre VOTRE PORT donné par Conveyor
-		public static int Port = 45455;
-		public static string BackendUrl = $"https://{IPAddress}:{Port}/";
+		public bool IsServerAdressOk { get; set; }
 
 		public ZeusService()
 		{
 			string address = App.SettingManager.Setting.AddressServer;
 
 			if (string.IsNullOrEmpty(address))
+			{
+				IsServerAdressOk = false;
 				address = "http://www.google.com/";
+				return;
+			}
 
 			// Pour ignorer les erreurs SSL
 			var httpClientHandler = new HttpClientHandler();
@@ -36,8 +33,6 @@ namespace ZeusMobile.Services
 
 			Client = new HttpClient(httpClientHandler)
 			{
-				//BaseAddress = new Uri($"{BackendUrl}")
-				//BaseAddress = new Uri("https://192.168.1.24:45455/")
 				BaseAddress = new Uri(address)
 			};
 		}
@@ -45,6 +40,9 @@ namespace ZeusMobile.Services
 		public async Task<List<InformationMovie>> GetAllMovies()
 		{
 			List<InformationMovie> allMovies = new List<InformationMovie>();
+
+			if (!IsServerAdressOk)
+				return allMovies;
 
 			try
 			{
@@ -55,9 +53,9 @@ namespace ZeusMobile.Services
 					allMovies = JsonConvert.DeserializeObject<List<InformationMovie>>(content);
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
-				//Debug.WriteLine(@"\tERROR {0}", ex.Message);
+				throw;
 			}
 
 			return allMovies;
@@ -67,6 +65,9 @@ namespace ZeusMobile.Services
 		public async Task<DetailMovie> GetMovie(Guid idMovie)
 		{
 			DetailMovie movie = new DetailMovie();
+
+			if (!IsServerAdressOk)
+				return movie;
 
 			try
 			{
@@ -120,8 +121,6 @@ namespace ZeusMobile.Services
 			return testResult;
 		}
 
-
-
 		public void ChangeServerAddress(string addressServer)
 		{
 			// Pour ignorer les erreurs SSL
@@ -133,6 +132,8 @@ namespace ZeusMobile.Services
 			{
 				BaseAddress = new Uri(addressServer)
 			};
+
+			IsServerAdressOk = true;
 		}
 	}
 }

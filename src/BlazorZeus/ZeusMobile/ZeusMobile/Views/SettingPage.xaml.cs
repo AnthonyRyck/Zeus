@@ -31,12 +31,26 @@ namespace ZeusMobile.Views
 
 		private async void OnTestClicked(object sender, EventArgs e)
 		{
-			await settingViewModel.TestServeur();
+			try
+			{
+				await settingViewModel.TestServeur();
+			}
+			catch (Exception)
+			{
+				await DisplayAlert("Erreur", "Erreur sur le test du serveur", "OK");
+			}
 		}
 
-		private void OnSaveClicked(object sender, EventArgs e)
+		private async void OnSaveClicked(object sender, EventArgs e)
 		{
-			settingViewModel.SaveServeur();
+			try
+			{
+				settingViewModel.SaveServeur();
+			}
+			catch (Exception)
+			{
+				await DisplayAlert("Erreur", "Erreur sur la sauvegarde du serveur", "OK");
+			}
 		}
 	}
 }

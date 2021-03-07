@@ -34,9 +34,17 @@ namespace ZeusMobile.ViewModels
 		/// <returns></returns>
 		public async Task LoadMovies()
 		{
-			var temp = await ZeusSvc.GetAllMovies();
+			try
+			{
+				var temp = await ZeusSvc.GetAllMovies();
 
-			AllMovies = temp;
+				AllMovies = temp;
+			}
+			catch (Exception)
+			{
+				AllMovies = new List<InformationMovie>();
+				throw;
+			}
 		}
 	}
 }

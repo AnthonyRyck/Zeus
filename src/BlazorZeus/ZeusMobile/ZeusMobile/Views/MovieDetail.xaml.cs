@@ -27,7 +27,14 @@ namespace ZeusMobile.Views
 		{
 			base.OnAppearing();
 
-			await _viewModel.LoadMovieDetail();
+			try
+			{
+				await _viewModel.LoadMovieDetail();
+			}
+			catch (Exception)
+			{
+				await DisplayAlert("Erreur", "Erreur sur la récupération des informations du film", "OK");
+			}
 		}
 
 		private async void OnSelectVideo(object sender, SelectedItemChangedEventArgs e)

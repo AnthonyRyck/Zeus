@@ -26,7 +26,14 @@ namespace ZeusMobile.Views
 		protected async override void OnAppearing()
 		{
 			base.OnAppearing();
-			await ViewModel.LoadMovies();
+			try
+			{
+				await ViewModel.LoadMovies();
+			}
+			catch (Exception)
+			{
+				await DisplayAlert("Erreur", "Erreur sur la récupération de la liste des films", "OK");
+			}
 		}
 
 		private async void OnFilmSelected(object sender, SelectedItemChangedEventArgs e)
