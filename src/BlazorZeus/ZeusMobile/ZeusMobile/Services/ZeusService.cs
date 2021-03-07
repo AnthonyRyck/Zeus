@@ -23,7 +23,6 @@ namespace ZeusMobile.Services
 			if (string.IsNullOrEmpty(address))
 			{
 				IsServerAdressOk = false;
-				address = "http://www.google.com/";
 				return;
 			}
 
@@ -35,6 +34,7 @@ namespace ZeusMobile.Services
 			{
 				BaseAddress = new Uri(address)
 			};
+			IsServerAdressOk = true;
 		}
 
 		public async Task<List<InformationMovie>> GetAllMovies()
@@ -86,8 +86,6 @@ namespace ZeusMobile.Services
 
 			return movie;
 		}
-
-
 
 		public async Task<bool> TestServerUrl(string addresseServer)
 		{

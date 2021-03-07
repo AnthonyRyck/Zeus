@@ -41,6 +41,21 @@ namespace ZeusMobile.ViewModels
 		private bool _isTestOk;
 
 		/// <summary>
+		/// Indique que la sauvegarde est OK
+		/// </summary>
+		public bool IsSaveOk
+		{
+			get { return _isSaveOk; }
+			set
+			{
+				_isSaveOk = value;
+				OnNotifyPropertyChanged();
+			}
+		}
+		private bool _isSaveOk;
+
+
+		/// <summary>
 		/// Adresse du serveur à tester.
 		/// </summary>
 		public string AdresseServer
@@ -71,6 +86,9 @@ namespace ZeusMobile.ViewModels
 
 		public async Task TestServeur()
 		{
+			if (!HaveSlash(AdresseServer))
+				AdresseServer += "/";
+
 			IsTestOk = await ZeusService.TestServerUrl(AdresseServer);
 
 			if(IsTestOk)
@@ -87,6 +105,13 @@ namespace ZeusMobile.ViewModels
 		public void SaveServeur()
 		{
 			App.SettingManager.SaveServeur(AdresseServer);
+			IsSaveOk = true;
+		}
+
+
+		private bool HaveSlash(string adresseServer)
+		{
+			return adresseServer[adresseServer.Length - 1] == '/';
 		}
 	}
 }

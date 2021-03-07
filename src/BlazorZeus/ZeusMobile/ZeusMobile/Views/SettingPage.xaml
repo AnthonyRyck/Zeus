@@ -10,16 +10,21 @@
 	</ContentPage.BindingContext>
 
 	<ContentPage.Content>
-        <StackLayout Orientation="Vertical">
+        <StackLayout Orientation="Vertical"
+					Margin="5">
 
 			<Entry Placeholder="Enter URL server Zeus"
 					Text="{Binding AdresseServer, Mode=TwoWay}"></Entry>
+
+			<Label Text="Example :" FontAttributes="Bold" />
+			<Label Text="https://www.your-server.com/" />
 
 			<Button Text="Test connection" 
 					Clicked="OnTestClicked" />
 			<!--<Label Text="{Binding ResultTest}" TextColor="" />-->
 
-			<Label Text="{Binding ResultTest}">
+			<Label Text="{Binding ResultTest}"
+					TextColor="Green">
 				<Label.Style>
 					<Style TargetType="Label">
 						<Style.Triggers>
@@ -38,6 +43,10 @@
 			<Button Text="Sauvegarder" 
 					IsVisible="{Binding IsTestOk}"
 					Clicked="OnSaveClicked" />
+
+			<Label Text="Sauvegarde OK"
+					TextColor="Green"
+					IsVisible="{Binding IsSaveOk}"/>
 
 
 		</StackLayout>
