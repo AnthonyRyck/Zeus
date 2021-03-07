@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
 			 xmlns:vm="clr-namespace:ZeusMobile.ViewModels" 
 			 x:Class="ZeusMobile.Views.MoviesPage"
+			 xmlns:converters="clr-namespace:ZeusMobile.Converter"
 			 Title="Liste des films">
 
 	<ContentPage.BindingContext>
@@ -11,11 +12,15 @@
 
 	<ContentPage.Content>
 		<Grid>
-			
+
+			<Label Text="No movies, or problem connecting with the server. Go to Setting menu."
+					IsVisible="{Binding HasFilms, Converter={converters:BooleanConverter}}"/>
+
 			<ListView Margin="10"
 						RowHeight="400"
 						ItemsSource="{Binding AllMovies, Mode=OneWay}"
-						ItemSelected="OnFilmSelected">
+						ItemSelected="OnFilmSelected"
+						IsVisible="{Binding HasFilms}">
 
 				<ListView.ItemTemplate>
 					<DataTemplate>

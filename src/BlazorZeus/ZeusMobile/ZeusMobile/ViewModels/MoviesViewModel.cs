@@ -28,6 +28,29 @@ namespace ZeusMobile.ViewModels
 		private IZeusService ZeusSvc => DependencyService.Get<IZeusService>();
 
 
+		public string MessageNoFilm
+		{
+			get { return _messageNoFilm; }
+			set
+			{
+				_messageNoFilm = value;
+				OnNotifyPropertyChanged();
+			}
+		}
+		private string _messageNoFilm;
+
+		public bool HasFilms
+		{
+			get { return _hasFilms; }
+			set
+			{
+				_hasFilms = value;
+				OnNotifyPropertyChanged();
+			}
+		}
+		private bool _hasFilms;
+
+
 		/// <summary>
 		/// Charge tous les fans.
 		/// </summary>
@@ -39,6 +62,7 @@ namespace ZeusMobile.ViewModels
 				var temp = await ZeusSvc.GetAllMovies();
 
 				AllMovies = temp;
+				HasFilms = temp.Count > 0;
 			}
 			catch (Exception)
 			{
@@ -46,5 +70,6 @@ namespace ZeusMobile.ViewModels
 				throw;
 			}
 		}
+
 	}
 }
