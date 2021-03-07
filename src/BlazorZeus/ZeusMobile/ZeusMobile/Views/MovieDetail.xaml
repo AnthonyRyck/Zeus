@@ -21,7 +21,19 @@
 				<Image Grid.Column="0"
 						Source="{Binding Movie.ImgSource}"
 						HorizontalOptions="FillAndExpand"
-						VerticalOptions="FillAndExpand" />
+						VerticalOptions="FillAndExpand">
+					<Image.Style>
+						<Style TargetType="Image">
+							<Style.Triggers>
+								<DataTrigger TargetType="Image"
+											Binding="{Binding Movie.ImgSource}"
+											Value="https://image.tmdb.org/t/p/w370_and_h556_bestv2">
+									<Setter Property="Source" Value="VideoInconnu.jpg" />
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</Image.Style>
+				</Image>
 
 				<!--et le titre-->
 				<StackLayout Grid.Column="1"

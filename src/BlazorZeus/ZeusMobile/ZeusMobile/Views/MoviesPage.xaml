@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-			 xmlns:vm="clr-namespace:ZeusMobile.ViewModels"
+			 xmlns:vm="clr-namespace:ZeusMobile.ViewModels" 
 			 x:Class="ZeusMobile.Views.MoviesPage"
 			 Title="Liste des films">
 
@@ -24,6 +24,17 @@
 										Margin="5"
 										HorizontalOptions="FillAndExpand"
 										VerticalOptions="FillAndExpand">
+								<Image.Style>
+									<Style TargetType="Image">
+										<Style.Triggers>
+											<DataTrigger TargetType="Image" 
+														Binding="{Binding ImgSource}" 
+														Value="https://image.tmdb.org/t/p/w370_and_h556_bestv2">
+												<Setter Property="Source" Value="VideoInconnu.jpg"/>
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</Image.Style>
 							</Image>
 						</ViewCell>
 					</DataTemplate>

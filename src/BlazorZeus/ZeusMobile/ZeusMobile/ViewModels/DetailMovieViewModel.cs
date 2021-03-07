@@ -92,8 +92,8 @@ namespace ZeusMobile.ViewModels
 			Movie = await ZeusService.GetMovie(_idMovie);
 			TailleFilm = Helpers.GetSize(Movie.Size);
 
-			VideosPromo = Movie.Videos;
-			HasVideo = Movie.Videos.Count > 0;
+			VideosPromo = Movie.Videos ?? new List<Video>();
+			HasVideo = VideosPromo.Count > 0;
 			PasDeVideo = !HasVideo;
 		}
 
