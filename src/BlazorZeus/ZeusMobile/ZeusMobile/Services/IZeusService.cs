@@ -11,5 +11,7 @@ namespace ZeusMobile.Services
 	{
 		Task<List<InformationMovie>> GetAllMovies();
 		Task<DetailMovie> GetMovie(Guid idMovie);
+		Task<bool> TestServerUrl(string adresseServer);
+		void ChangeServerAddress(string addressServer);
 	}
 }

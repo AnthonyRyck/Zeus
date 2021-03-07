@@ -27,6 +27,19 @@ namespace BlazorZeus.Controllers
             _moviesManager = moviesManager;
         }
 
+
+        /// <summary>
+        /// Permet de tester la connection avec le serveur.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("testconnect")]
+        public async Task<string> GetTestConnection()
+		{
+            Log.Information("Test de connection reçu.");
+            return "Connexion OK";
+        }
+
+
         /// <summary>
         /// Permet la récupération des films présent sur le serveur.
         /// </summary>

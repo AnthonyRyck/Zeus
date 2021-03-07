@@ -8,12 +8,15 @@ namespace ZeusMobile
 {
 	public partial class App : Application
 	{
+		
+		public static SettingManager SettingManager { get; set; }
 
 		public App()
 		{
 			InitializeComponent();
 
-			DependencyService.Register<MockDataStore>();
+			SettingManager = new SettingManager();
+			SettingManager.LoadSetting();
 
 			DependencyService.Register<IZeusService, ZeusService>();
 			MainPage = new AppShell();

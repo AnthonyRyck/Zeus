@@ -1,0 +1,92 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using Xamarin.Forms;
+using ZeusMobile.Models;
+using ZeusMobile.Services;
+
+namespace ZeusMobile.ViewModels
+{
+	public class SettingViewModel : BaseViewModel
+	{
+		/// <summary>
+		/// Affiche le résultat du test.
+		/// </summary>
+		public string ResultTest
+		{
+			get { return _resultTest; }
+			set
+			{
+				_resultTest = value;
+				OnNotifyPropertyChanged();
+			}
+		}
+		private string _resultTest;
+
+		/// <summary>
+		/// Indique si le test est Ok.
+		/// </summary>
+		public bool IsTestOk
+		{
+			get { return _isTestOk; }
+			set
+			{
+				_isTestOk = value;
+				OnNotifyPropertyChanged();
+			}
+		}
+		private bool _isTestOk;
+
+		/// <summary>
+		/// Adresse du serveur à tester.
+		/// </summary>
+		public string AdresseServer
+		{
+			get { return _adresseServer; }
+			set
+			{
+				_adresseServer = value;
+				OnNotifyPropertyChanged();
+			}
+		}
+		private string _adresseServer;
+
+
+		private IZeusService ZeusService => DependencyService.Get<IZeusService>();
+
+		public Setting Setting { get; set; }
+
+
+		internal void LoadSetting()
+		{
+			App.SettingManager.LoadSetting();
+			var setting = App.SettingManager.Setting;
+
+			AdresseServer = setting.AddressServer;
+		}
+
+
+		public async Task TestServeur()
+		{
+			IsTestOk = await ZeusService.TestServerUrl(AdresseServer);
+
+			if(IsTestOk)
+			{
+				ResultTest = "Connexion serveur OK.";
+			}
+			else
+			{
+				ResultTest = "Pas de connexion au serveur demandé réussie.";
+			}
+		}
+
+
+		public void SaveServeur()
+		{
+			App.SettingManager.SaveServeur(AdresseServer);
+		}
+	}
+}
