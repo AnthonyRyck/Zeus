@@ -91,5 +91,9 @@ namespace BlazorZeus.ViewModel
 			SearchVideos = null;
 		}
 
+		public async Task OpenMovie(Guid idMovie)
+		{
+			MyNavigationManager.NavigateTo("/movie/" + idMovie.ToString());
+		}
 	}
 }

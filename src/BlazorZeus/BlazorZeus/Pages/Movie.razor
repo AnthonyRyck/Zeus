@@ -1,0 +1,75 @@
+﻿@page "/movie/{IdMovie}"
+
+@using BlazorZeus.ViewModel
+
+@inject IMovieViewModel ViewModel
+
+@if (ViewModel.MovieSelected == null)
+{
+	<div>Chargement des informations du film</div>
+}
+else
+{
+	<h2>@ViewModel.MovieSelected.MovieTmDb.Title</h2>
+
+	<div>
+		<div class="row">
+			<div class="col-2">
+				<img src="@("https://image.tmdb.org/t/p/w370_and_h556_bestv2" + ViewModel.MovieSelected.MovieTmDb.PosterPath)"
+				  class="img-fluid w-100" />
+			</div>
+
+			<div class="col-10">
+				<h4>
+					Synopsis
+				</h4>
+				<div>
+					@ViewModel.MovieSelected.MovieTmDb.Overview
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<h3>Vidéos</h3>
+			@if(ViewModel.MovieSelected.MovieTmDb.Videos != null
+				&& ViewModel.MovieSelected.MovieTmDb.Videos.Results.Count > 0)
+			{
+
+				@foreach (var video in ViewModel.MovieSelected.MovieTmDb.Videos.Results)
+				{
+				<div>
+					<a href="@("https://www.youtube.com/embed/" + @video.Key)" target="_blank" rel="noopener noreferrer">
+						@video.Name
+					</a>
+				</div>
+				}
+			}
+			else
+			{
+			<div>Aucune vidéo</div>
+			}
+
+
+
+		</div>
+	
+	</div>
+
+}
+
+
+
+
+
+@code {
+
+	[Parameter]
+	public string IdMovie { get; set; }
+
+
+	protected async override Task OnInitializedAsync()
+	{
+		ViewModel.LoadMovieInfo(new Guid(IdMovie));
+		//return base.OnInitializedAsync();
+	}
+}

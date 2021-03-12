@@ -19,7 +19,8 @@
 						Resolution="@item.MovieInformation.Resolution"
 						Size="@item.MovieInformation.Size"
 						Link="@(viewModel.MyNavigationManager.BaseUri + "api/movies/" + item.Id.ToString())"
-						OnClickChangeMovieCallback="@(e => viewModel.ChangeMovie(item))" />
+						OnClickChangeMovieCallback="@(e => viewModel.ChangeMovie(item))"
+						OnClickCard="@(e => viewModel.OpenMovie(item.Id))"/>
 	}
 
 </div>

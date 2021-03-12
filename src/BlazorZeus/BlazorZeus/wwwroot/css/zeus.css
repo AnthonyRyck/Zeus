@@ -401,5 +401,11 @@ p.top-separator {
 
 
 
+.grow-zeus {
+	transition: all .2s ease-in-out;
+}
 
+.grow-zeus:hover {
+	transform: scale(1.1);
+}
 

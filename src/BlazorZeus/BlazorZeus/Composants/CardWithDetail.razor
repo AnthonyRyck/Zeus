@@ -1,5 +1,6 @@
 ﻿
-<div class="zeuscard">
+<div class="zeuscard grow-zeus"
+	@onclick="@OnClickPourSelectionDuFilm">
 	<div class="test">
 
 		@if (string.IsNullOrEmpty(PathPoster))
@@ -22,7 +23,8 @@
 			</div>
 		}
 
-		<div class="meta" data-role="tooltip">
+		<div class="meta" data-role="tooltip" 
+			@onclick:stopPropagation="true">
 
 			<a href="@Link" target="_blank" rel="noopener noreferrer">
 				<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-download" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -78,6 +80,16 @@
 
 	[Parameter]
 	public EventCallback<MouseEventArgs> OnClickChangeMovieCallback { get; set; }
+
+	[Parameter]
+	public EventCallback<Guid> OnClickCard { get; set; }
+
+
+	public void OnClickPourSelectionDuFilm()
+	{
+		OnClickCard.InvokeAsync();
+	}
+
 
 	private static string FormatBytes(long octets)
 	{
