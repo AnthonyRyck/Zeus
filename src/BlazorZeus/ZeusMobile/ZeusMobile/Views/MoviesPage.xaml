@@ -12,39 +12,58 @@
 
 	<ContentPage.Content>
 		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition />
+			</Grid.RowDefinitions>
 
-			<Label Text="No movies, or problem connecting with the server. Go to Setting menu."
+			<!--Pour faire la sélection-->
+			<Picker x:Name="picker" 
+					Title="Choix de l'ordre"
+					SelectedIndexChanged="OnPickerSelectedChanged">
+				<Picker.ItemsSource>
+					<x:Array Type="{x:Type x:String}">
+						<x:String>Par date d'ajout</x:String>
+						<x:String>Par nom</x:String>
+					</x:Array>
+				</Picker.ItemsSource>
+			</Picker>
+
+			<!--Affiche liste de film-->
+			<Grid Grid.Row="1">
+				<Label Text="No movies, or problem connecting with the server. Go to Setting menu."
 					IsVisible="{Binding HasFilms, Converter={converters:BooleanConverter}}"/>
 
-			<ListView Margin="10"
+				<ListView Margin="10"
 						RowHeight="400"
 						ItemsSource="{Binding AllMovies, Mode=OneWay}"
 						ItemSelected="OnFilmSelected"
 						IsVisible="{Binding HasFilms}">
 
-				<ListView.ItemTemplate>
-					<DataTemplate>
-						<ViewCell>
-							<Image Source="{Binding ImgSource}"
+					<ListView.ItemTemplate>
+						<DataTemplate>
+							<ViewCell>
+								<Image Source="{Binding ImgSource}"
 										Margin="5"
 										HorizontalOptions="FillAndExpand"
 										VerticalOptions="FillAndExpand">
-								<Image.Style>
-									<Style TargetType="Image">
-										<Style.Triggers>
-											<DataTrigger TargetType="Image" 
+									<Image.Style>
+										<Style TargetType="Image">
+											<Style.Triggers>
+												<DataTrigger TargetType="Image" 
 														Binding="{Binding ImgSource}" 
 														Value="https://image.tmdb.org/t/p/w370_and_h556_bestv2">
-												<Setter Property="Source" Value="VideoInconnu.jpg"/>
-											</DataTrigger>
-										</Style.Triggers>
-									</Style>
-								</Image.Style>
-							</Image>
-						</ViewCell>
-					</DataTemplate>
-				</ListView.ItemTemplate>
-			</ListView>
+													<Setter Property="Source" Value="VideoInconnu.jpg"/>
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</Image.Style>
+								</Image>
+							</ViewCell>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+			</Grid>
 		</Grid>
     </ContentPage.Content>
 </ContentPage>

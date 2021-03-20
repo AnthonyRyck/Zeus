@@ -44,5 +44,22 @@ namespace ZeusMobile.Views
 
 			await Navigation.PushAsync(new MovieDetail(movieViewModel));
 		}
+
+		/// <summary>
+		/// Sur le changement de sélection
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void OnPickerSelectedChanged(object sender, EventArgs e)
+		{
+			var picker = (Picker)sender;
+			int selectedIndex = picker.SelectedIndex;
+
+			if (selectedIndex != -1)
+			{
+				ViewModel.ChangeOrdre(picker.SelectedItem.ToString());
+			}
+		}
+
 	}
 }

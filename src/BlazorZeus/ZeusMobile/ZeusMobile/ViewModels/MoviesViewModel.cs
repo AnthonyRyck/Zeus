@@ -1,6 +1,7 @@
 ﻿using MoviesLib.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -60,9 +61,10 @@ namespace ZeusMobile.ViewModels
 			try
 			{
 				var temp = await ZeusSvc.GetAllMovies();
+				var tempDate = temp.OrderByDescending(movie => movie.DateAdded).ToList();
 
-				AllMovies = temp;
-				HasFilms = temp.Count > 0;
+				AllMovies = tempDate;
+				HasFilms = tempDate.Count > 0;
 			}
 			catch (Exception)
 			{
@@ -71,5 +73,27 @@ namespace ZeusMobile.ViewModels
 			}
 		}
 
+		/// <summary>
+		/// Permet de changer l'ordonnancement.
+		/// </summary>
+		/// <param name="ordreVoulu"></param>
+		internal void ChangeOrdre(string ordreVoulu)
+		{
+			switch (ordreVoulu)
+			{
+				case "Par date d'ajout":
+					var tempDate = AllMovies.OrderByDescending(movie => movie.DateAdded).ToList();
+					AllMovies = tempDate;
+					break;
+
+				case "Par nom":
+					var tempName = AllMovies.OrderBy(movie => movie.Titre).ToList();
+					AllMovies = tempName;
+					break;
+
+				default:
+					break;
+			}
+		}
 	}
 }
