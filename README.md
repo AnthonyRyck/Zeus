@@ -12,7 +12,7 @@ Il y a une application sur le [Playstore](https://play.google.com/store/apps/det
     </kbd>
 </p>
 
-Vous indiquez à l'application ou trouver les films, les séries, et elle se charge de retrouver toutes les informations avec l'API de [**The Movie Database**](https://www.themoviedb.org/?language=fr).
+Vous indiquez à l'application ou trouver les films et elle se charge de retrouver toutes les informations avec l'API de [**The Movie Database**](https://www.themoviedb.org/?language=fr).
 
 ## Fonctionnalitées
 
