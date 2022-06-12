@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ZeusMaui.Views.SettingPage"
+             Title="Paramètres">
+
+    <StackLayout>
+		<StackLayout Orientation="Vertical"
+					Margin="5">
+
+			<Entry Placeholder="Enter URL server Zeus"
+					Text="{Binding AdresseServer, Mode=TwoWay}"></Entry>
+
+			<Label Text="Example :" FontAttributes="Bold" />
+			<Label Text="https://www.your-server.com/" />
+
+			<Button Text="Test connection" 
+					Clicked="OnTestClicked"
+					WidthRequest="140"
+					HorizontalOptions="Start" />
+			<!--<Label Text="{Binding ResultTest}" TextColor="" />-->
+
+			<Label Text="{Binding ResultTest}"
+					TextColor="Green">
+				<Label.Style>
+					<Style TargetType="Label">
+						<Style.Triggers>
+							<DataTrigger TargetType="Label"
+											Binding="{Binding IsTestOk}"
+											Value="False">
+								<Setter Property="TextColor"
+										Value="Red"></Setter>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Label.Style>
+			</Label>
+
+
+			<Button Text="Sauvegarder" 
+					IsVisible="{Binding IsTestOk}"
+					Clicked="OnSaveClicked"
+					WidthRequest="140"
+					HorizontalOptions="Start" />
+
+			<Label Text="Sauvegarde OK"
+					TextColor="Green"
+					IsVisible="{Binding IsSaveOk}"/>
+
+
+		</StackLayout>
+	</StackLayout>
+</ContentPage>
