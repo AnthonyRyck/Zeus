@@ -1,42 +1,32 @@
-﻿using MoviesLib.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System.Windows.Input;
 using ZeusCore;
-using ZeusMobile.Services;
+using ZeusMaui.Services;
 
-namespace ZeusMobile.ViewModels
+namespace ZeusMaui.ViewModels
 {
-	public class MoviesViewModel : BaseViewModel
+	[INotifyPropertyChanged]
+	public partial class MoviesViewModel
 	{
-		private IZeusService ZeusSvc => DependencyService.Get<IZeusService>();
-		
 		/// <summary>
 		/// Notre liste de Fan
 		/// </summary>
-		public List<InformationMovie> AllMovies
-		{
-			get { return _allMovies; }
-			set { SetProperty(ref _allMovies, value); }
-		}
-		private List<InformationMovie> _allMovies;
+		[ObservableProperty]
+		private List<InformationMovie> allMovies;
 
-		public string MessageNoFilm
-		{
-			get { return _messageNoFilm; }
-			set { SetProperty(ref _messageNoFilm, value); }
-		}
-		private string _messageNoFilm;
+		[ObservableProperty]
+		private string messageNoFilm;
 
-		public bool HasFilms
+		[ObservableProperty]
+		private bool hasFilms;
+
+		private IZeusService ZeusSvc;
+
+		public MoviesViewModel(IZeusService zeusService)
 		{
-			get { return _hasFilms; }
-			set { SetProperty(ref _hasFilms, value); }
+			ZeusSvc = zeusService;
 		}
-		private bool _hasFilms;
 
 
 		/// <summary>
@@ -68,12 +58,12 @@ namespace ZeusMobile.ViewModels
 		{
 			switch (ordreVoulu)
 			{
-				case "Par date d'ajout":
+				case "Date added":
 					var tempDate = AllMovies.OrderByDescending(movie => movie.DateAdded).ToList();
 					AllMovies = tempDate;
 					break;
 
-				case "Par nom":
+				case "Name":
 					var tempName = AllMovies.OrderBy(movie => movie.Titre).ToList();
 					AllMovies = tempName;
 					break;
@@ -81,6 +71,11 @@ namespace ZeusMobile.ViewModels
 				default:
 					break;
 			}
+		}
+
+		public void OpenMovieDetail()
+		{
+			
 		}
 	}
 }

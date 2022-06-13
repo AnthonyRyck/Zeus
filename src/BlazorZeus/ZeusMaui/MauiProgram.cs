@@ -1,4 +1,5 @@
-﻿using ZeusMaui.Services;
+﻿using CommunityToolkit.Maui;
+using ZeusMaui.Services;
 using ZeusMaui.ViewModels;
 using ZeusMaui.Views;
 
@@ -17,12 +18,16 @@ namespace ZeusMaui
 					fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 				});
 
+			// Initialise the toolkit
+			builder.UseMauiCommunityToolkit();
+
 			builder.Services.AddScoped<IZeusService, ZeusService>();
 
 			builder.Services.AddScoped<SettingViewModel>();
 			builder.Services.AddTransient<SettingPage>();
 
-
+			builder.Services.AddScoped<MoviesViewModel>();
+			builder.Services.AddTransient<MoviesPage>();
 
 			return builder.Build();
 		}

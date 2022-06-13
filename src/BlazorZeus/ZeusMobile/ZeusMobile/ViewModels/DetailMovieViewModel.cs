@@ -19,11 +19,7 @@ namespace ZeusMobile.ViewModels
 		public DetailMovie Movie
 		{
 			get { return _movie; }
-			set
-			{
-				_movie = value;
-				OnNotifyPropertyChanged();
-			}
+			set { SetProperty(ref _movie, value); }
 		}
 		private DetailMovie _movie;
 
@@ -33,22 +29,14 @@ namespace ZeusMobile.ViewModels
 		public string TailleFilm
 		{
 			get { return _tailleFilm; }
-			set
-			{
-				_tailleFilm = value;
-				OnNotifyPropertyChanged();
-			}
+			set { SetProperty(ref _tailleFilm, value); }
 		}
 		private string _tailleFilm;
 
 		public List<Video> VideosPromo
 		{
 			get { return _videosPromo; }
-			set
-			{
-				_videosPromo = value;
-				OnNotifyPropertyChanged();
-			}
+			set { SetProperty(ref _videosPromo, value); }
 		}
 		private List<Video> _videosPromo;
 
@@ -58,11 +46,7 @@ namespace ZeusMobile.ViewModels
 		public bool HasVideo
 		{
 			get { return _hasVideo; }
-			set
-			{
-				_hasVideo = value;
-				OnNotifyPropertyChanged();
-			}
+			set { SetProperty(ref _hasVideo, value); }
 		}
 		private bool _hasVideo;
 
@@ -72,11 +56,7 @@ namespace ZeusMobile.ViewModels
 		public bool PasDeVideo
 		{
 			get { return _pasDeVideo; }
-			set
-			{
-				_pasDeVideo = value;
-				OnNotifyPropertyChanged();
-			}
+			set { SetProperty(ref _pasDeVideo, value); }
 		}
 		private bool _pasDeVideo;
 

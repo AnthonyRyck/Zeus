@@ -10,7 +10,7 @@ using ZeusMobile.Services;
 
 namespace ZeusMobile.ViewModels
 {
-	public class BaseViewModel : INotifyPropertyChanged
+	public abstract class BaseViewModel : INotifyPropertyChanged
 	{
 		public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
 

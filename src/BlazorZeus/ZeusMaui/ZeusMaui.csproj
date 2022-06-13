@@ -49,14 +49,20 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Images\icon_info.png" />
+	  <None Remove="Resources\Images\VideoInconnu.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <AndroidResource Include="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+	  <MauiImage Include="Resources\Images\videoinconnu.jpg">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+	  </MauiImage>
 	  <MauiImage Include="Resources\Images\icon_info.png" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="CommunityToolkit.Maui" Version="1.0.0" />
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0-preview4" />
 	  <PackageReference Include="Ryck.MoviesLib" Version="1.2.0" />
 	</ItemGroup>
@@ -66,6 +72,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\MoviesPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\SettingPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

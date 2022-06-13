@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ZeusMaui.Views.MoviesPage"
+			 xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="Accueil">
+
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+		</ResourceDictionary>
+	</ContentPage.Resources>
+
+	<Grid Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+
+		<!--Pour faire la sélection-->
+		<Picker x:Name="picker" 
+					Title="Sort"
+					SelectedIndexChanged="OnPickerSelectedChanged">
+			<Picker.ItemsSource>
+				<x:Array Type="{x:Type x:String}">
+					<x:String>Date added</x:String>
+					<x:String>Name</x:String>
+				</x:Array>
+			</Picker.ItemsSource>
+		</Picker>
+
+		<!--Affiche liste de film-->
+		<Grid Grid.Row="1">
+			<Label Text="No movies, or problem connecting with the server. Go to Setting menu."
+					IsVisible="{Binding HasFilms, Converter={StaticResource InvertedBoolConverter}}"/>
+
+			<CollectionView Margin="10"
+						ItemsSource="{x:Binding AllMovies}"
+						SelectionMode="Single"
+						SelectionChanged="CollectionView_SelectionChanged"
+						ItemSizingStrategy="MeasureFirstItem"
+						IsVisible="{Binding HasFilms}">
+
+				<CollectionView.ItemsLayout>
+					<GridItemsLayout Orientation="Horizontal"
+                             HorizontalItemSpacing="5"
+                             VerticalItemSpacing="2"
+                             Span="2"/>
+				</CollectionView.ItemsLayout>
+
+				<CollectionView.ItemTemplate>
+					<DataTemplate>
+						<Border Stroke="black"
+								StrokeThickness="4"
+								HorizontalOptions="Center">
+							<Border.StrokeShape>
+								<RoundRectangle CornerRadius="20,20,20,20" />
+							</Border.StrokeShape>
+
+							<Grid RowDefinitions="*, auto">
+								<Image Source="{Binding ImgSource}"
+										HorizontalOptions="FillAndExpand"
+										VerticalOptions="FillAndExpand">
+									<Image.Style>
+										<Style TargetType="Image">
+											<Style.Triggers>
+												<DataTrigger TargetType="Image" 
+														Binding="{Binding ImgSource}" 
+														Value="https://image.tmdb.org/t/p/w370_and_h556_bestv2">
+													<Setter Property="Source" Value="videoinconnu.jpg"/>
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</Image.Style>
+								</Image>
+
+								<Label Grid.Row="1" 
+									LineBreakMode="WordWrap"
+									HorizontalTextAlignment="Center"
+									Padding="0,0,0,5"
+									Text="{Binding DateAdded, StringFormat='Added : {0:d}'}">
+								</Label>
+							</Grid>
+						</Border>
+					</DataTemplate>
+				</CollectionView.ItemTemplate>
+			</CollectionView>
+		</Grid>
+	</Grid>
+</ContentPage>

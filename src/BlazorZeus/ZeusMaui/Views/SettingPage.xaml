@@ -18,7 +18,6 @@
 					Clicked="OnTestClicked"
 					WidthRequest="140"
 					HorizontalOptions="Start" />
-			<!--<Label Text="{Binding ResultTest}" TextColor="" />-->
 
 			<Label Text="{Binding ResultTest}"
 					TextColor="Green">

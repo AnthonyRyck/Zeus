@@ -28,11 +28,11 @@
 
 	<FlyoutItem Title="Home" 
 				Icon="icon_info.png">
-		<ShellContent ContentTemplate="{DataTemplate views:MainPage}" />
+		<ShellContent ContentTemplate="{DataTemplate views:MoviesPage}" Route="movies" />
 	</FlyoutItem>
 
 	<FlyoutItem Title="Settings" 
 				Icon="icon_info.png">
-		<ShellContent ContentTemplate="{DataTemplate views:SettingPage}" />
+		<ShellContent ContentTemplate="{DataTemplate views:SettingPage}" Route="settings" />
 	</FlyoutItem>
 </Shell>

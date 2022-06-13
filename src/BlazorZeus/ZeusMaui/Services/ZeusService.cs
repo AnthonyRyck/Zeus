@@ -8,7 +8,6 @@ namespace ZeusMaui.Services
 	{
 		private HttpClient Client;
 		private Setting MySetting;
-		//private SettingManager settingManager;
 
 		public bool IsServerAdressOk { get; set; }
 
@@ -50,7 +49,7 @@ namespace ZeusMaui.Services
 			else
 			{
 				MySetting = new Setting();
-				SaveFile();
+				SaveFile().GetAwaiter().GetResult();
 			}
 
 			return;
@@ -96,8 +95,13 @@ namespace ZeusMaui.Services
 				HttpResponseMessage response = await Client.GetAsync("api/Movies/allmovies");
 				if (response.IsSuccessStatusCode)
 				{
+					JsonSerializerOptions opt = new JsonSerializerOptions()
+					{
+						PropertyNameCaseInsensitive = true
+					};
+
 					Stream content = await response.Content.ReadAsStreamAsync();
-					allMovies = await JsonSerializer.DeserializeAsync<List<InformationMovie>>(content);
+					allMovies = await JsonSerializer.DeserializeAsync<List<InformationMovie>>(content, opt);
 				}
 			}
 			catch (Exception)
