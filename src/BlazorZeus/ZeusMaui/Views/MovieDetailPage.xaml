@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ZeusMaui.Views.MovieDetailPage"
+             Title="MovieDetailPage">
+
+	<ContentPage.Content>
+		<Grid Margin="5">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="200" />
+				<RowDefinition Height="200" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+
+				<!--L'image-->
+				<Image Grid.Column="0"
+						Source="{Binding Movie.ImgSource}"
+						HorizontalOptions="FillAndExpand"
+						VerticalOptions="FillAndExpand">
+					<Image.Style>
+						<Style TargetType="Image">
+							<Style.Triggers>
+								<DataTrigger TargetType="Image"
+											Binding="{Binding Movie.ImgSource}"
+											Value="https://image.tmdb.org/t/p/w370_and_h556_bestv2">
+									<Setter Property="Source" Value="VideoInconnu.jpg" />
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</Image.Style>
+				</Image>
+
+				<!--et le titre-->
+				<StackLayout Grid.Column="1"
+							Orientation="Vertical">
+					<Label Text="{Binding Movie.Titre}"
+							FontAttributes="Bold"
+							FontSize="Medium"/>
+
+					<Label Text="{Binding TailleFilm, StringFormat='Taille : {0}'}" />
+
+					<Label Text="{Binding Movie.Annee, StringFormat='Année : {0}'}" />
+
+					<Label Text="{Binding Movie.Resolution, StringFormat='Résolution : {0}'}" />
+				</StackLayout>
+			</Grid>
+
+			<!--Information sur le film-->
+			<Grid Grid.Row="1">
+				<Label Text="{Binding Movie.Overview}"
+						/>
+			</Grid>
+
+			<Grid Grid.Row="2">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+
+				<Label Text="Vidéos" />
+
+				<Label Text="Ne contient pas de vidéo"
+						Grid.Row="1"
+						IsVisible="{Binding PasDeVideo}"/>
+
+				<ListView Grid.Row="1"
+						ItemsSource="{Binding VideosPromo}"
+						ItemSelected="OnSelectVideo"
+						IsVisible="{Binding HasVideo}">
+					<ListView.ItemTemplate>
+						<DataTemplate>
+							<ViewCell>
+								<Label>
+									<Label.FormattedText>
+										<FormattedString>
+											<Span Text="{Binding Name}"
+													TextColor="Blue"
+													TextDecorations="Underline">
+											</Span>
+										</FormattedString>
+									</Label.FormattedText>
+								</Label>
+							</ViewCell>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+
+			</Grid>
+
+		</Grid>
+	</ContentPage.Content>
+</ContentPage>

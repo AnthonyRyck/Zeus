@@ -2,17 +2,21 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ZeusMaui.Views.SettingPage"
-             Title="Settings">
+             Title="Settings"
+			 BackgroundColor="LightSkyBlue">
 
     <StackLayout>
 		<StackLayout Orientation="Vertical"
 					Margin="5">
 
 			<Entry Placeholder="Enter URL server Zeus"
-					Text="{Binding AdresseServer, Mode=TwoWay}"></Entry>
+					Text="{Binding AdresseServer, Mode=TwoWay}"
+					BackgroundColor="LightGray"
+					Completed="Entry_Completed"
+					TextColor="Black"></Entry>
 
-			<Label Text="Example :" FontAttributes="Bold" />
-			<Label Text="https://www.your-server.com/" />
+			<Label Text="Example :" FontAttributes="Bold" TextColor="Black" />
+			<Label Text="https://www.your-server.com/" TextColor="Black" />
 
 			<Button Text="Test connection" 
 					Clicked="OnTestClicked"

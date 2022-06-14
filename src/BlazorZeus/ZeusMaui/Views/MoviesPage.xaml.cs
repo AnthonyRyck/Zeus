@@ -27,16 +27,6 @@ public partial class MoviesPage : ContentPage
 		}
 	}
 
-
-	private async void OnFilmSelected(object sender, SelectedItemChangedEventArgs e)
-	{
-		//var filmSelected = e.SelectedItem as InformationMovie;
-
-		//var movieViewModel = new DetailMovieViewModel(filmSelected.IdMovie);
-
-		//await Navigation.PushAsync(new MovieDetail(movieViewModel));
-	}
-
 	/// <summary>
 	/// Sur le changement de sélection
 	/// </summary>
@@ -55,10 +45,15 @@ public partial class MoviesPage : ContentPage
 
 	private async void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		var filmSelected = e.CurrentSelection as InformationMovie;
-		await Shell.Current.GoToAsync("//settings");
-
-		//var movieViewModel = new DetailMovieViewModel(filmSelected.IdMovie);
-		//await Navigation.PushAsync(new MovieDetail(movieViewModel));
+		if(e.CurrentSelection.Count == 1)
+		{
+			var filmSelected = e.CurrentSelection[0] as InformationMovie;
+			
+			Dictionary<string, object> navigationParameter = new Dictionary<string, object>()
+			{
+				{ "idMovie", filmSelected.IdMovie }
+			};
+			await Shell.Current.GoToAsync(nameof(MovieDetailPage), navigationParameter);
+		}
 	}
 }

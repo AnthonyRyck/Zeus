@@ -38,4 +38,15 @@ public partial class SettingPage : ContentPage
 		}
 	}
 
+	private async void Entry_Completed(object sender, EventArgs e)
+	{
+		try
+		{
+			await Setting.TestServeur();
+		}
+		catch (Exception)
+		{
+			await DisplayAlert("Erreur", "Erreur sur le test du serveur", "OK");
+		}
+	}
 }

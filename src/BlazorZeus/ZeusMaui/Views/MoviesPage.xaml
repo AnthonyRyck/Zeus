@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ZeusMaui.Views.MoviesPage"
 			 xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             Title="Movies">
+             Title="Movies"
+			 BackgroundColor="LightSkyBlue">
 
 	<ContentPage.Resources>
 		<ResourceDictionary>
@@ -19,7 +20,7 @@
 
 		<!--Pour faire la sélection-->
 		<StackLayout Padding="5,0" Orientation="{OnPlatform Android='Vertical', Default='Horizontal'}">
-			<Label Text="Sort by : " VerticalOptions="Center" TextColor="AliceBlue" />
+			<Label Text="Sort by : " VerticalOptions="Center" TextColor="Black" />
 			<Picker x:Name="picker" 
 					Margin="3"
 					BackgroundColor="LightGray"

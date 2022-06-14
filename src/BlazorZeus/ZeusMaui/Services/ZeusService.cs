@@ -8,6 +8,7 @@ namespace ZeusMaui.Services
 	{
 		private HttpClient Client;
 		private Setting MySetting;
+		private JsonSerializerOptions OptJson;
 
 		public bool IsServerAdressOk { get; set; }
 
@@ -36,6 +37,11 @@ namespace ZeusMaui.Services
 				};
 				IsServerAdressOk = true;
 			}
+
+			OptJson = new JsonSerializerOptions()
+			{
+				PropertyNameCaseInsensitive = true
+			};
 		}
 
 		private void LoadSetting()
@@ -96,13 +102,8 @@ namespace ZeusMaui.Services
 				HttpResponseMessage response = await Client.GetAsync("api/Movies/allmovies");
 				if (response.IsSuccessStatusCode)
 				{
-					JsonSerializerOptions opt = new JsonSerializerOptions()
-					{
-						PropertyNameCaseInsensitive = true
-					};
-
 					Stream content = await response.Content.ReadAsStreamAsync();
-					allMovies = await JsonSerializer.DeserializeAsync<List<InformationMovie>>(content, opt);
+					allMovies = await JsonSerializer.DeserializeAsync<List<InformationMovie>>(content, OptJson);
 				}
 			}
 			catch (Exception)
@@ -128,7 +129,7 @@ namespace ZeusMaui.Services
 				if (response.IsSuccessStatusCode)
 				{
 					Stream content = await response.Content.ReadAsStreamAsync();
-					movie = await JsonSerializer.DeserializeAsync<DetailMovie>(content);
+					movie = await JsonSerializer.DeserializeAsync<DetailMovie>(content, OptJson);
 				}
 			}
 			catch (Exception)
