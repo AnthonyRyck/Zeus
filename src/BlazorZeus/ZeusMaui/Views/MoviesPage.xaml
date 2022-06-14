@@ -18,19 +18,19 @@
 		</Grid.RowDefinitions>
 
 		<!--Pour faire la sélection-->
-		<HorizontalStackLayout BackgroundColor="LightGray" Padding="5,0">
-			<Label Text="Sort by : " VerticalOptions="Center" />
+		<StackLayout Padding="5,0" Orientation="{OnPlatform Android='Vertical', Default='Horizontal'}">
+			<Label Text="Sort by : " VerticalOptions="Center" TextColor="AliceBlue" />
 			<Picker x:Name="picker" 
 					Margin="3"
-					SelectedIndexChanged="OnPickerSelectedChanged">
-			<Picker.ItemsSource>
-				<x:Array Type="{x:Type x:String}">
+					BackgroundColor="LightGray"
+					SelectedIndexChanged="OnPickerSelectedChanged"
+					TextColor="Blue">
+				<Picker.Items>
 					<x:String>Date added</x:String>
 					<x:String>Name</x:String>
-				</x:Array>
-			</Picker.ItemsSource>
-		</Picker>
-		</HorizontalStackLayout>
+				</Picker.Items>
+			</Picker>
+		</StackLayout>
 
 		<!--Affiche liste de film-->
 		<Grid Grid.Row="1">
@@ -57,8 +57,8 @@
 						<Border Stroke="black"
 								StrokeThickness="4"
 								HorizontalOptions="Center"
-								WidthRequest="{OnPlatform Android='100', Default='250'}"
-								HeightRequest="{OnPlatform Android='100', Default='400'}">
+								WidthRequest="{OnPlatform Android='300', Default='250'}"
+								HeightRequest="{OnPlatform Android='400', Default='400'}">
 
 							<Border.StrokeShape>
 								<RoundRectangle CornerRadius="20,20,20,20" />

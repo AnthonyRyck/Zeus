@@ -53,7 +53,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AndroidResource Include="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+	  <MauiImage Include="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
 	  <MauiImage Include="Resources\Images\videoinconnu.jpg">
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:UpdateGeneratedFiles</Generator>
