@@ -18,8 +18,10 @@
 		</Grid.RowDefinitions>
 
 		<!--Pour faire la sélection-->
-		<Picker x:Name="picker" 
-					Title="Sort"
+		<HorizontalStackLayout BackgroundColor="LightGray" Padding="5,0">
+			<Label Text="Sort by : " VerticalOptions="Center" />
+			<Picker x:Name="picker" 
+					Margin="3"
 					SelectedIndexChanged="OnPickerSelectedChanged">
 			<Picker.ItemsSource>
 				<x:Array Type="{x:Type x:String}">
@@ -28,6 +30,7 @@
 				</x:Array>
 			</Picker.ItemsSource>
 		</Picker>
+		</HorizontalStackLayout>
 
 		<!--Affiche liste de film-->
 		<Grid Grid.Row="1">
@@ -37,30 +40,33 @@
 			<CollectionView Margin="10"
 						ItemsSource="{x:Binding AllMovies}"
 						SelectionMode="Single"
+						HorizontalOptions="Center"
 						SelectionChanged="CollectionView_SelectionChanged"
-						ItemSizingStrategy="MeasureFirstItem"
-						IsVisible="{Binding HasFilms}">
+						IsVisible="{Binding HasFilms}"
+						MinimumWidthRequest="{OnPlatform Android='100', Default='1100'}">
 
 				<CollectionView.ItemsLayout>
-					<GridItemsLayout Orientation="Horizontal"
+					<GridItemsLayout Orientation="Vertical"
                              HorizontalItemSpacing="5"
                              VerticalItemSpacing="2"
-                             Span="2"/>
+							 Span="{OnPlatform Android='1', Default='4'}" />
 				</CollectionView.ItemsLayout>
 
 				<CollectionView.ItemTemplate>
 					<DataTemplate>
 						<Border Stroke="black"
 								StrokeThickness="4"
-								HorizontalOptions="Center">
+								HorizontalOptions="Center"
+								WidthRequest="{OnPlatform Android='100', Default='250'}"
+								HeightRequest="{OnPlatform Android='100', Default='400'}">
+
 							<Border.StrokeShape>
 								<RoundRectangle CornerRadius="20,20,20,20" />
 							</Border.StrokeShape>
 
-							<Grid RowDefinitions="*, auto">
+							<Grid RowDefinitions="*,auto">
 								<Image Source="{Binding ImgSource}"
-										HorizontalOptions="FillAndExpand"
-										VerticalOptions="FillAndExpand">
+										Aspect="AspectFit">
 									<Image.Style>
 										<Style TargetType="Image">
 											<Style.Triggers>
