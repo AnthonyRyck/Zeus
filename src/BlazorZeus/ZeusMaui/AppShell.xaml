@@ -27,12 +27,12 @@
 	</Shell.ItemTemplate>
 
 	<FlyoutItem Title="Home" 
-				Icon="icon_info.png">
+				Icon="tab_home.png">
 		<ShellContent ContentTemplate="{DataTemplate views:MoviesPage}" Route="movies" />
 	</FlyoutItem>
 
 	<FlyoutItem Title="Settings" 
-				Icon="icon_info.png">
+				Icon="tab_settings.png">
 		<ShellContent ContentTemplate="{DataTemplate views:SettingPage}" Route="settings" />
 	</FlyoutItem>
 </Shell>

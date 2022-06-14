@@ -63,6 +63,7 @@ namespace ZeusMaui.Services
 				MySetting.AddressServer = adresseSvr;
 				UrlServer = adresseSvr;
 				await SaveFile();
+				ChangeServerAddress(adresseSvr);
 			}
 			catch (Exception)
 			{

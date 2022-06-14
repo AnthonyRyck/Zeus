@@ -31,15 +31,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
-
-		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
-
-		<!-- Images -->
-		<!--<MauiImage Include="Resources\Images\*" />-->
-
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
 
@@ -48,16 +39,40 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\AppIcon\appicon - Copie.svg" />
+	  <None Remove="Resources\AppIcon\appicon.svg" />
+	  <None Remove="Resources\AppIcon\appiconfg.svg" />
 	  <None Remove="Resources\Images\icon_info.png" />
-	  <None Remove="Resources\Images\VideoInconnu.jpg" />
+	  <None Remove="Resources\Images\tab_home.svg" />
+	  <None Remove="Resources\Images\tab_settings.svg" />
+	  <None Remove="Resources\Images\videoinconnu.jpg" />
+	  <None Remove="Resources\Images\zeus512.png" />
+	  <None Remove="Resources\Images\zeusbackground.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiImage Include="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
-	  <MauiImage Include="Resources\Images\videoinconnu.jpg">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:UpdateGeneratedFiles</Generator>
-	  </MauiImage>
+	  <MauiImage Include="Resources\Images\tab_home.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiImage Include="Resources\Images\tab_settings.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiIcon Include="Resources\AppIcon\appicon.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiImage Include="Resources\Images\zeusbackground.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Splash Screen -->
+	  <MauiSplashScreen Include="Resources\Images\zeus512.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<MauiImage Include="Resources\Images\videoinconnu.jpg" />
 	  <MauiImage Include="Resources\Images\icon_info.png" />
 	</ItemGroup>
 
