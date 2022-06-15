@@ -26,10 +26,7 @@ namespace ZeusMaui
 			builder.Services.AddTransient<SettingPage>();
 
 			builder.Services.AddScoped<MoviesViewModel>();
-			//builder.Services.AddTransient<MoviesPage>();
-
 			builder.Services.AddTransient<DetailMovieViewModel>();
-			//builder.Services.AddTransient<MovieDetailPage>();
 
 			return builder.Build();
 		}

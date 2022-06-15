@@ -7,11 +7,9 @@ public partial class MoviesPage : ContentPage
 {
 	private MoviesViewModel ViewModel;
 
-	//public MoviesPage(MoviesViewModel viewModel)
 	public MoviesPage()
 	{
 		InitializeComponent();
-		//this.BindingContext = viewModel;
 		ViewModel = ServiceHelper.GetService<MoviesViewModel>();
 		BindingContext = ViewModel;
 	}

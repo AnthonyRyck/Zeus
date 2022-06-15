@@ -2,13 +2,20 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ZeusMaui.Views.MovieDetailPage"
-             Title="MovieDetailPage">
+			 xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="Infos">
+
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+		</ResourceDictionary>
+	</ContentPage.Resources>
 
 	<ContentPage.Content>
 		<Grid Margin="5">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="200" />
-				<RowDefinition Height="200" />
+				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
 
@@ -52,37 +59,41 @@
 			</Grid>
 
 			<!--Information sur le film-->
-			<Grid Grid.Row="1">
-				<Label Text="{Binding Movie.Overview}"
-						/>
-			</Grid>
+			<ScrollView Grid.Row="1">
+				<Label Text="{Binding Movie.Overview}" />
+			</ScrollView>
 
 			<Grid Grid.Row="2">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
-					<RowDefinition />
+					<RowDefinition Height="200" />
 				</Grid.RowDefinitions>
 
-				<Label Text="Vidéos" />
+				<Rectangle HeightRequest="1" BackgroundColor="AliceBlue" Margin="10" />
 
-				<Label Text="Ne contient pas de vidéo"
-						Grid.Row="1"
-						IsVisible="{Binding PasDeVideo}"/>
-
-				<ListView Grid.Row="1"
-						ItemsSource="{Binding VideosPromo}"
+				<VerticalStackLayout Grid.Row="1">
+					<Label FontSize="Default" TextColor="AliceBlue">
+						<Label.FormattedText>
+							<FormattedString>
+								<Span Text=" Trailers" TextDecorations="Underline"/>
+								<Span Text=" : (" />
+								<Span Text="{Binding VideosPromo.Count}" FontAttributes="Bold" />
+								<Span Text=")" />
+							</FormattedString>
+						</Label.FormattedText>
+					</Label>
+					<ListView ItemsSource="{Binding VideosPromo}"
 						ItemSelected="OnSelectVideo"
 						IsVisible="{Binding HasVideo}">
+
 					<ListView.ItemTemplate>
 						<DataTemplate>
 							<ViewCell>
-								<Label>
+								<Label TextColor="Blue">
 									<Label.FormattedText>
 										<FormattedString>
-											<Span Text="{Binding Name}"
-													TextColor="Blue"
-													TextDecorations="Underline">
-											</Span>
+											<Span Text=" + " FontAttributes="Bold" />
+											<Span Text="{Binding Name}" TextDecorations="Underline" />
 										</FormattedString>
 									</Label.FormattedText>
 								</Label>
@@ -90,6 +101,7 @@
 						</DataTemplate>
 					</ListView.ItemTemplate>
 				</ListView>
+				</VerticalStackLayout>
 
 			</Grid>
 

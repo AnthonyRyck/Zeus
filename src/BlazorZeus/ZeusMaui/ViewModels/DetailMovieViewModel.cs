@@ -39,13 +39,7 @@ namespace ZeusMaui.ViewModels
 		/// </summary>
 		[ObservableProperty]
 		private bool _hasVideo;
-
-		/// <summary>
-		/// Pas de vidéo.
-		/// </summary>
-		[ObservableProperty]
-		private bool _pasDeVideo;
-				
+						
 
 		internal async Task LoadMovieDetail()
 		{
@@ -54,7 +48,6 @@ namespace ZeusMaui.ViewModels
 
 			VideosPromo = Movie.Videos ?? new List<Video>();
 			HasVideo = VideosPromo.Count > 0;
-			PasDeVideo = !HasVideo;
 		}
 
 		public void ApplyQueryAttributes(IDictionary<string, object> query)
