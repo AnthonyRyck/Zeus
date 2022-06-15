@@ -1,15 +1,13 @@
-using ZeusMaui.ViewModels;
-
 namespace ZeusMaui.Views;
 
 public partial class MovieDetailPage : ContentPage
 {
 	private DetailMovieViewModel ViewModel;
 
-	public MovieDetailPage(DetailMovieViewModel viewModel)
+	public MovieDetailPage()
 	{
 		InitializeComponent();
-		ViewModel = viewModel;
+		ViewModel = ServiceHelper.GetService<DetailMovieViewModel>();
 		this.BindingContext = ViewModel;
 	}
 

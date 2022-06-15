@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Maui;
 using ZeusMaui.Services;
-using ZeusMaui.ViewModels;
 using ZeusMaui.Views;
 
 namespace ZeusMaui
@@ -21,16 +20,16 @@ namespace ZeusMaui
 			// Initialise the toolkit
 			builder.UseMauiCommunityToolkit();
 
-			builder.Services.AddScoped<IZeusService, ZeusService>();
+			builder.Services.AddSingleton<IZeusService, ZeusService>();
 
 			builder.Services.AddScoped<SettingViewModel>();
 			builder.Services.AddTransient<SettingPage>();
 
 			builder.Services.AddScoped<MoviesViewModel>();
-			builder.Services.AddTransient<MoviesPage>();
+			//builder.Services.AddTransient<MoviesPage>();
 
-			builder.Services.AddScoped<DetailMovieViewModel>();
-			builder.Services.AddTransient<MovieDetailPage>();
+			builder.Services.AddTransient<DetailMovieViewModel>();
+			//builder.Services.AddTransient<MovieDetailPage>();
 
 			return builder.Build();
 		}

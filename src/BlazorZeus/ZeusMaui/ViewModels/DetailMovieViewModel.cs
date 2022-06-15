@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using ZeusCore;
 using ZeusMaui.Services;
 
 namespace ZeusMaui.ViewModels
@@ -51,7 +50,7 @@ namespace ZeusMaui.ViewModels
 		internal async Task LoadMovieDetail()
 		{
 			Movie = await ZeusSvc.GetMovie(_idMovie);
-			TailleFilm = Helpers.GetSize(Movie.Size);
+			TailleFilm = ZeusCore.Helpers.GetSize(Movie.Size);
 
 			VideosPromo = Movie.Videos ?? new List<Video>();
 			HasVideo = VideosPromo.Count > 0;

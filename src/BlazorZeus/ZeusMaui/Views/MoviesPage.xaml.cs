@@ -7,11 +7,13 @@ public partial class MoviesPage : ContentPage
 {
 	private MoviesViewModel ViewModel;
 
-	public MoviesPage(MoviesViewModel viewModel)
+	//public MoviesPage(MoviesViewModel viewModel)
+	public MoviesPage()
 	{
 		InitializeComponent();
-		this.BindingContext = viewModel;
-		ViewModel = viewModel;
+		//this.BindingContext = viewModel;
+		ViewModel = ServiceHelper.GetService<MoviesViewModel>();
+		BindingContext = ViewModel;
 	}
 
 	protected async override void OnAppearing()
