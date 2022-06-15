@@ -16,7 +16,7 @@
 			<Grid.RowDefinitions>
 				<RowDefinition Height="200" />
 				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
+				<!--<RowDefinition Height="Auto" />-->
 			</Grid.RowDefinitions>
 
 			<Grid Grid.Row="0">
@@ -63,7 +63,7 @@
 				<Label Text="{Binding Movie.Overview}" />
 			</ScrollView>
 
-			<Grid Grid.Row="2">
+			<!--<Grid Grid.Row="2">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="200" />
@@ -103,7 +103,7 @@
 				</ListView>
 				</VerticalStackLayout>
 
-			</Grid>
+			</Grid>-->
 
 		</Grid>
 	</ContentPage.Content>

@@ -8,6 +8,7 @@ namespace ZeusMaui
 		{
 			InitializeComponent();
 			Routing.RegisterRoute(nameof(MovieDetailPage), typeof(MovieDetailPage));
+			Routing.RegisterRoute(nameof(TrailerPage), typeof(TrailerPage));
 		}
 	}
 }

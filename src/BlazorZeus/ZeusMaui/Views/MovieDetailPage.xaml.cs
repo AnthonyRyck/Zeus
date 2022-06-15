@@ -26,9 +26,14 @@ public partial class MovieDetailPage : ContentPage
 	}
 
 
-	private async void OnSelectVideo(object sender, SelectedItemChangedEventArgs e)
-	{
-		//Video videoSelected = e.SelectedItem as Video;
-		//await Navigation.PushAsync(new VideoPage("https://www.youtube.com/embed/" + videoSelected.Key));
-	}
+	//private async void OnSelectVideo(object sender, SelectedItemChangedEventArgs e)
+	//{
+	//	Video videoSelected = e.SelectedItem as Video;
+
+	//	Dictionary<string, object> navigationParameter = new Dictionary<string, object>()
+	//		{
+	//			{ "url", "https://www.youtube.com/embed/" + videoSelected.Key }
+	//		};
+	//	await Shell.Current.GoToAsync(nameof(TrailerPage), navigationParameter);
+	//}
 }
