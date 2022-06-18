@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Windows.Input;
 using ZeusCore;
 using ZeusMaui.Services;
+using ZeusMaui.Views;
 
 namespace ZeusMaui.ViewModels
 {
@@ -73,9 +74,13 @@ namespace ZeusMaui.ViewModels
 			}
 		}
 
-		public void OpenMovieDetail()
+		public async Task OpenMovieDetail(InformationMovie movieSelected)
 		{
-			
+			Dictionary<string, object> navigationParameter = new Dictionary<string, object>()
+			{
+				{ "idMovie", movieSelected.IdMovie }
+			};
+			await Shell.Current.GoToAsync(nameof(MovieDetailPage), navigationParameter);
 		}
 	}
 }

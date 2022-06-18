@@ -48,12 +48,7 @@ public partial class MoviesPage : ContentPage
 		if(e.CurrentSelection.Count == 1)
 		{
 			var filmSelected = e.CurrentSelection[0] as InformationMovie;
-			
-			Dictionary<string, object> navigationParameter = new Dictionary<string, object>()
-			{
-				{ "idMovie", filmSelected.IdMovie }
-			};
-			await Shell.Current.GoToAsync(nameof(MovieDetailPage), navigationParameter);
+			await ViewModel.OpenMovieDetail(filmSelected);
 		}
 	}
 }
